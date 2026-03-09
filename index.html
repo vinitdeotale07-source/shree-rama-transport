@@ -235,8 +235,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--ink);m
   <div class="login-sub">Timber Haulage Operations</div>
   <div class="login-card">
     <label class="login-label">🔒 Password</label>
-    <input type="password" class="login-input" id="login-password" placeholder="Enter password..." onkeydown="if(event.key==='Enter')doLogin()">
-    <button class="login-btn" onclick="doLogin()">Sign In →</button>
+    <input type="password" class="login-input" id="login-password" placeholder="Enter password..." onkeydown="if(event.key==='Enter')window._doLogin()">
+    <button class="login-btn" onclick="window._doLogin()">Sign In →</button>
     <div class="login-error" id="login-error">❌ Incorrect password. Try again.</div>
   </div>
   <div class="install-hint">📱 Tip: Open in Chrome → tap menu → "Add to Home Screen"<br>for a full app experience on your phone</div>
@@ -264,7 +264,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--ink);m
       <div class="topbar-sub"><span class="sync-dot" id="sync-dot"></span><span id="sync-status">Connecting...</span></div>
     </div>
   </div>
-  <button class="logout-btn" onclick="doLogout()">Logout</button>
+  <button class="logout-btn" onclick="window._doLogout()">Logout</button>
 </div>
 
 <!-- ── DASHBOARD ── -->
@@ -575,6 +575,20 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--ink);m
 
 <div class="toast" id="toast"></div>
 
+<!-- LOGIN BRIDGE -->
+<script>
+window._doLogin = function() {
+  var pw = document.getElementById("login-password").value;
+  window._pendingLogin = pw;
+  document.getElementById("login-password").value = "";
+  if(window._loginHandler) window._loginHandler(pw);
+  else window._pendingLoginPw = pw;
+};
+window._doLogout = function() {
+  if(window._logoutHandler) window._logoutHandler();
+  else { sessionStorage.clear(); location.reload(); }
+};
+</script>
 <!-- ══ FIREBASE + APP LOGIC ════════════════════════════════════════ -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -608,7 +622,10 @@ const SHORT=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','
 // ── AUTH ──────────────────────────────────────────────────────
 if(sessionStorage.getItem('srt_auth')==='ok') showApp();
 
-window.doLogin=function(){
+window._loginHandler = function(pw) { handleLogin(pw); };
+window._logoutHandler = function() { handleLogout(); };
+if(window._pendingLoginPw) { handleLogin(window._pendingLoginPw); window._pendingLoginPw=null; }
+function handleLogin(pw) {
   if(document.getElementById('login-password').value===APP_PASSWORD){
     sessionStorage.setItem('srt_auth','ok'); showApp();
   } else {
@@ -616,7 +633,7 @@ window.doLogin=function(){
     document.getElementById('login-password').value='';
   }
 };
-window.doLogout=function(){
+function handleLogout(){
   sessionStorage.removeItem('srt_auth'); unsubscribers.forEach(u=>u()); location.reload();
 };
 
