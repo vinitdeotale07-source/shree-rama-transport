@@ -387,6 +387,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--ink);m
 <div class="screen" id="screen-more">
   <div class="tabs">
     <button class="tab active" onclick="switchMoreTab('vehicles',this)">🚗 Fleet</button>
+    <button class="tab" onclick="switchMoreTab('settings',this)">⚙️ Settings</button>
     <button class="tab" onclick="switchMoreTab('report',this)">📄 Report</button>
   </div>
   <!-- FLEET / REMINDERS -->
@@ -406,6 +407,19 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--ink);m
     <div id="report-content"></div>
   </div>
 </div>
+
+
+  <!-- SETTINGS -->
+  <div id="more-settings" style="display:none">
+    <div class="card">
+      <div class="card-title">🔑 Change Password</div>
+      <div class="form-group"><label class="form-label">Current Password</label><input type="password" class="form-input" id="pw-current" placeholder="Enter current password"></div>
+      <div class="form-group"><label class="form-label">New Password</label><input type="password" class="form-input" id="pw-new" placeholder="Enter new password"></div>
+      <div class="form-group"><label class="form-label">Confirm New Password</label><input type="password" class="form-input" id="pw-confirm" placeholder="Confirm new password"></div>
+      <button class="btn btn-primary" onclick="changePassword()">🔑 Update Password</button>
+      <div id="pw-msg" style="margin-top:10px;font-size:0.8rem;text-align:center"></div>
+    </div>
+  </div>
 
 <div class="bottom-nav">
   <button class="nav-item active" onclick="showScreen('dashboard',this)"><span class="nav-icon">📊</span>Dashboard</button>
@@ -452,7 +466,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--ink);m
     <select class="form-select" id="exp-category">
       <option value="">Select...</option>
       <option>Fuel & Oil</option><option>Spare Parts</option><option>Maintenance</option>
-      <option>Staff Wages</option><option>Driver Bata</option><option>Labour Cost</option>
+      <option>Staff Wages</option><option>Labour Cost</option>
       <option>Crane Operator</option><option>Mechanic (External)</option><option>Lubricants</option><option>Other</option>
     </select>
   </div>
@@ -580,7 +594,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--ink);m
 window._doLogin = function() {
   // Direct check as fallback
   var pw = document.getElementById("login-password").value;
-  if(pw === "transport2024") {
+  if(pw === (localStorage.getItem("srt_pw")||"transport2024")) {
     sessionStorage.setItem("srt_auth","ok");
     document.getElementById("login-screen").style.display="none";
     document.getElementById("main-app").style.display="block";
@@ -640,7 +654,7 @@ window._logoutHandler = function() { handleLogout(); };
 if(window._pendingLoginPw) { handleLogin(window._pendingLoginPw); window._pendingLoginPw=null; }
 function handleLogin(pw) {
   if(!pw) pw = document.getElementById('login-password').value;
-  if(pw===APP_PASSWORD){
+  if(pw===getAppPassword()){
     sessionStorage.setItem('srt_auth','ok'); showApp();
   } else {
     document.getElementById('login-error').style.display='block';
@@ -692,6 +706,105 @@ async function delRec(col,id){
   if(db){ try{await deleteDoc(doc(db,col,id));return;}catch(e){} }
   localData[col]=localData[col].filter(i=>i.id!=id); saveLocal(); refreshView();
 }
+async function updateRec(col,id,data){
+  if(db){ try{const {updateDoc}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");await updateDoc(doc(db,col,id),data);return;}catch(e){} }
+  const idx=localData[col].findIndex(i=>i.id==id);
+  if(idx>=0) localData[col][idx]={...localData[col][idx],...data};
+  saveLocal(); refreshView();
+}
+
+let editingId=null, editingCol=null;
+
+window.editItem=function(col,id){
+  editingId=id; editingCol=col;
+  const item=localData[col].find(i=>i.id==id);
+  if(!item) return;
+  if(col==='trips'){
+    document.getElementById('trip-date').value=item.date||'';
+    document.getElementById('trip-vehicle').value=item.vehicle||'';
+    document.getElementById('trip-source').value=item.source||'';
+    document.getElementById('trip-dest').value=item.dest||'';
+    document.getElementById('trip-driver').value=item.driver||'';
+    document.getElementById('trip-qty').value=item.qty||'';
+    document.getElementById('trip-revenue').value=item.revenue||'';
+    document.getElementById('trip-fuel').value=item.fuel||'';
+    document.getElementById('trip-remarks').value=item.remarks||'';
+    document.getElementById('modal-trip').querySelector('.modal-title').textContent='✏️ Edit Trip';
+    openModal('modal-trip');
+  } else if(col==='expenses'){
+    document.getElementById('exp-date').value=item.date||'';
+    document.getElementById('exp-amount').value=item.amount||'';
+    document.getElementById('exp-category').value=item.category||'';
+    document.getElementById('exp-desc').value=item.desc||'';
+    document.getElementById('exp-paid-to').value=item.paidTo||'';
+    document.getElementById('exp-mode').value=item.mode||'Cash';
+    document.getElementById('modal-expense').querySelector('.modal-title').textContent='✏️ Edit Expense';
+    openModal('modal-expense');
+  } else if(col==='diesel'){
+    document.getElementById('dsl-date').value=item.date||'';
+    document.getElementById('dsl-vehicle').value=item.vehicle||'';
+    document.getElementById('dsl-litres').value=item.litres||'';
+    document.getElementById('dsl-rate').value=item.rate||'';
+    document.getElementById('dsl-total').value=item.total||'';
+    document.getElementById('dsl-station').value=item.station||'';
+    document.getElementById('dsl-driver').value=item.driver||'';
+    document.getElementById('dsl-odometer').value=item.odometer||'';
+    document.getElementById('modal-diesel').querySelector('.modal-title').textContent='✏️ Edit Diesel Entry';
+    openModal('modal-diesel');
+  } else if(col==='hired'){
+    document.getElementById('hv-date').value=item.date||'';
+    document.getElementById('hv-type').value=item.type||'Truck';
+    document.getElementById('hv-owner').value=item.owner||'';
+    document.getElementById('hv-vno').value=item.vno||'';
+    document.getElementById('hv-work').value=item.work||'';
+    document.getElementById('hv-rate').value=item.rate||'';
+    document.getElementById('hv-qty').value=item.qty||'';
+    document.getElementById('hv-gross').value=item.gross||'';
+    document.getElementById('hv-advance').value=item.advance||'';
+    document.getElementById('modal-hired').querySelector('.modal-title').textContent='✏️ Edit Hired Entry';
+    openModal('modal-hired');
+  } else if(col==='vehicles'){
+    document.getElementById('veh-no').value=item.vno||'';
+    document.getElementById('veh-type').value=item.type||'Truck';
+    document.getElementById('veh-model').value=item.model||'';
+    document.getElementById('veh-year').value=item.year||'';
+    document.getElementById('veh-insurance').value=item.insurance||'';
+    document.getElementById('veh-fitness').value=item.fitness||'';
+    document.getElementById('veh-permit').value=item.permit||'';
+    document.getElementById('veh-status').value=item.status||'Active';
+    document.getElementById('modal-vehicle').querySelector('.modal-title').textContent='✏️ Edit Vehicle';
+    openModal('modal-vehicle');
+  } else if(col==='advances'){
+    document.getElementById('adv-date').value=item.date||'';
+    document.getElementById('adv-amount').value=item.amount||'';
+    document.getElementById('adv-recovered').value=item.recovered||'';
+    document.getElementById('adv-recovery-date').value=item.recoveryDate||'';
+    document.getElementById('adv-notes').value=item.notes||'';
+    const s=document.getElementById('adv-staff');
+    s.innerHTML='<option value="">Select staff...</option>';
+    localData.staff.forEach(st=>{const o=document.createElement('option');o.value=st.id;o.textContent=st.name+' ('+st.role+')';if(st.id==item.staffId)o.selected=true;s.appendChild(o);});
+    document.getElementById('modal-advance').querySelector('.modal-title').textContent='✏️ Edit Advance';
+    openModal('modal-advance');
+  }
+};
+
+// APP PASSWORD stored in localStorage so it persists
+function getAppPassword(){ return localStorage.getItem('srt_pw')||'transport2024'; }
+
+window.changePassword=function(){
+  const cur=document.getElementById('pw-current').value;
+  const nw=document.getElementById('pw-new').value;
+  const cf=document.getElementById('pw-confirm').value;
+  const msg=document.getElementById('pw-msg');
+  if(cur!==getAppPassword()){msg.style.color='var(--danger)';msg.textContent='❌ Current password is wrong';return;}
+  if(!nw||nw.length<4){msg.style.color='var(--danger)';msg.textContent='❌ New password must be at least 4 characters';return;}
+  if(nw!==cf){msg.style.color='var(--danger)';msg.textContent='❌ New passwords do not match';return;}
+  localStorage.setItem('srt_pw',nw);
+  msg.style.color='var(--pine)';msg.textContent='✅ Password changed successfully!';
+  document.getElementById('pw-current').value='';
+  document.getElementById('pw-new').value='';
+  document.getElementById('pw-confirm').value='';
+};
 
 // ── HELPERS ───────────────────────────────────────────────────
 function fmtDate(d){ if(!d)return''; const dt=new Date(d); return`${dt.getDate()} ${SHORT[dt.getMonth()]} ${dt.getFullYear()}`; }
@@ -743,10 +856,12 @@ window.openModal=function(id){
   m.classList.add('open');
 };
 window.closeModal=function(id){
+  editingId=null;editingCol=null;
   const m=document.getElementById(id); m.classList.remove('open');
   m.querySelectorAll('input:not([type=date])').forEach(i=>i.value='');
   m.querySelectorAll('textarea').forEach(t=>t.value='');
   m.querySelectorAll('select').forEach(s=>s.selectedIndex=0);
+  m.querySelector('.modal-title') && (m.querySelector('.modal-title').textContent = m.querySelector('.modal-title').textContent.replace('✏️ Edit','➕ Add'));
 };
 document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
 
@@ -765,18 +880,46 @@ window.calcHired=function(){ const r=Number(document.getElementById('hv-rate').v
 window.saveTrip=async function(){
   const d={date:document.getElementById('trip-date').value,vehicle:document.getElementById('trip-vehicle').value.trim(),source:document.getElementById('trip-source').value.trim(),dest:document.getElementById('trip-dest').value.trim(),driver:document.getElementById('trip-driver').value.trim(),qty:Number(document.getElementById('trip-qty').value)||0,revenue:Number(document.getElementById('trip-revenue').value)||0,fuel:Number(document.getElementById('trip-fuel').value)||0,remarks:document.getElementById('trip-remarks').value.trim()};
   if(!d.date||!d.source){showToast('⚠️ Date and source required');return;}
-  await addRec('trips',d);closeModal('modal-trip');showToast('✅ Trip saved!');
+  if(editingId&&editingCol==='trips'){
+    await updateRec('trips',editingId,d);editingId=null;editingCol=null;
+    closeModal('modal-trip');showToast('✅ Trip updated!');return;
+  }
+  await addRec('trips',d);
+  // Auto-add fuel cost to expenses if fuel > 0
+  if(d.fuel>0){
+    await addRec('expenses',{date:d.date,amount:d.fuel,category:'Fuel & Oil',desc:'Trip fuel: '+d.source+'→'+d.dest,paidTo:d.driver||'',mode:'Cash',autoLinked:true,linkedVehicle:d.vehicle});
+    showToast('✅ Trip saved + fuel added to expenses!');
+  } else {
+    showToast('✅ Trip saved!');
+  }
+  closeModal('modal-trip');
 };
 window.saveExpense=async function(){
   const d={date:document.getElementById('exp-date').value,amount:Number(document.getElementById('exp-amount').value)||0,category:document.getElementById('exp-category').value,desc:document.getElementById('exp-desc').value.trim(),paidTo:document.getElementById('exp-paid-to').value.trim(),mode:document.getElementById('exp-mode').value};
   if(!d.date||!d.category){showToast('⚠️ Date and category required');return;}
+  if(editingId&&editingCol==='expenses'){
+    await updateRec('expenses',editingId,d);editingId=null;editingCol=null;
+    closeModal('modal-expense');showToast('✅ Expense updated!');return;
+  }
   await addRec('expenses',d);closeModal('modal-expense');showToast('✅ Expense saved!');
 };
 window.saveDiesel=async function(){
   const d={date:document.getElementById('dsl-date').value,vehicle:document.getElementById('dsl-vehicle').value.trim(),litres:Number(document.getElementById('dsl-litres').value)||0,rate:Number(document.getElementById('dsl-rate').value)||0,total:Number(document.getElementById('dsl-total').value)||0,station:document.getElementById('dsl-station').value.trim(),driver:document.getElementById('dsl-driver').value.trim(),odometer:Number(document.getElementById('dsl-odometer').value)||0};
   if(!d.date||!d.litres){showToast('⚠️ Date and litres required');return;}
   if(!d.total&&d.litres&&d.rate) d.total=d.litres*d.rate;
-  await addRec('diesel',d);closeModal('modal-diesel');showToast('✅ Diesel entry saved!');
+  if(editingId&&editingCol==='diesel'){
+    await updateRec('diesel',editingId,d);editingId=null;editingCol=null;
+    closeModal('modal-diesel');showToast('✅ Diesel entry updated!');return;
+  }
+  await addRec('diesel',d);
+  // Auto-add to expenses
+  if(d.total>0){
+    await addRec('expenses',{date:d.date,amount:d.total,category:'Fuel & Oil',desc:'Diesel: '+d.litres+'L @ ₹'+d.rate+'/L — '+d.vehicle,paidTo:d.station||'',mode:'Cash',autoLinked:true,linkedVehicle:d.vehicle});
+    showToast('✅ Diesel saved + added to expenses!');
+  } else {
+    showToast('✅ Diesel entry saved!');
+  }
+  closeModal('modal-diesel');
 };
 window.saveStaff=async function(){
   const d={name:document.getElementById('staff-name').value.trim(),role:document.getElementById('staff-role').value,rate:Number(document.getElementById('staff-rate').value)||0,phone:document.getElementById('staff-phone').value.trim(),attendance:{}};
@@ -787,17 +930,29 @@ window.saveAdvance=async function(){
   const given=Number(document.getElementById('adv-amount').value)||0,recovered=Number(document.getElementById('adv-recovered').value)||0,staffId=document.getElementById('adv-staff').value,sm=localData.staff.find(s=>s.id==staffId);
   const d={date:document.getElementById('adv-date').value,staffId,staffName:sm?sm.name:'Unknown',amount:given,recovered,balance:given-recovered,recoveryDate:document.getElementById('adv-recovery-date').value,notes:document.getElementById('adv-notes').value.trim()};
   if(!d.date||!d.staffId){showToast('⚠️ Date and staff required');return;}
+  if(editingId&&editingCol==='advances'){
+    await updateRec('advances',editingId,d);editingId=null;editingCol=null;
+    closeModal('modal-advance');showToast('✅ Advance updated!');return;
+  }
   await addRec('advances',d);closeModal('modal-advance');showToast('✅ Advance recorded!');
 };
 window.saveHired=async function(){
   const rate=Number(document.getElementById('hv-rate').value)||0,qty=Number(document.getElementById('hv-qty').value)||0,advance=Number(document.getElementById('hv-advance').value)||0,gross=Number(document.getElementById('hv-gross').value)||rate*qty;
   const d={date:document.getElementById('hv-date').value,type:document.getElementById('hv-type').value,owner:document.getElementById('hv-owner').value.trim(),vno:document.getElementById('hv-vno').value.trim(),work:document.getElementById('hv-work').value.trim(),rate,qty,gross,advance,balance:gross-advance};
   if(!d.date||!d.owner){showToast('⚠️ Date and owner required');return;}
+  if(editingId&&editingCol==='hired'){
+    await updateRec('hired',editingId,d);editingId=null;editingCol=null;
+    closeModal('modal-hired');showToast('✅ Entry updated!');return;
+  }
   await addRec('hired',d);closeModal('modal-hired');showToast('✅ Entry saved!');
 };
 window.saveVehicle=async function(){
   const d={vno:document.getElementById('veh-no').value.trim(),type:document.getElementById('veh-type').value,model:document.getElementById('veh-model').value.trim(),year:document.getElementById('veh-year').value,insurance:document.getElementById('veh-insurance').value,fitness:document.getElementById('veh-fitness').value,permit:document.getElementById('veh-permit').value,status:document.getElementById('veh-status').value};
   if(!d.vno){showToast('⚠️ Vehicle number required');return;}
+  if(editingId&&editingCol==='vehicles'){
+    await updateRec('vehicles',editingId,d);editingId=null;editingCol=null;
+    closeModal('modal-vehicle');showToast('✅ Vehicle updated!');return;
+  }
   await addRec('vehicles',d);closeModal('modal-vehicle');showToast('✅ Vehicle added!');
 };
 window.deleteItem=async function(col,id){ if(!confirm('Delete this record?'))return; await delRec(col,id);showToast('🗑️ Deleted'); };
@@ -839,6 +994,7 @@ window.switchMoreTab=function(tab,btn){
   btn.classList.add('active');
   document.getElementById('more-vehicles').style.display=tab==='vehicles'?'':'none';
   document.getElementById('more-report').style.display=tab==='report'?'':'none';
+  document.getElementById('more-settings').style.display=tab==='settings'?'':'none';
   if(tab==='report')renderReport();
   if(tab==='vehicles')renderVehicles();
 };
@@ -943,6 +1099,7 @@ function renderTrips(){
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
       <div class="list-amount">${fmtMoney(t.revenue)}</div>
+      <button class="del-btn" style="color:var(--pine)" onclick="editItem('trips','${t.id}')">✏️</button>
       <button class="del-btn" onclick="deleteItem('trips','${t.id}')">🗑</button>
     </div>
   </div>`).join('');
@@ -966,6 +1123,7 @@ function renderExpenses(){
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
       <div class="list-amount expense">${fmtMoney(e.amount)}</div>
+      <button class="del-btn" style="color:var(--pine)" onclick="editItem('expenses','${e.id}')">✏️</button>
       <button class="del-btn" onclick="deleteItem('expenses','${e.id}')">🗑</button>
     </div>
   </div>`).join('');
@@ -994,6 +1152,7 @@ function renderDiesel(){
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
       <div class="list-amount">${fmtMoney(d.total)}</div>
+      <button class="del-btn" style="color:var(--pine)" onclick="editItem('diesel','${d.id}')">✏️</button>
       <button class="del-btn" onclick="deleteItem('diesel','${d.id}')">🗑</button>
     </div>
   </div>`).join('');
@@ -1054,6 +1213,7 @@ function renderAdvances(){
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
       <div class="list-amount balance">${fmtMoney(a.balance)}</div>
+      <button class="del-btn" style="color:var(--pine)" onclick="editItem('advances','${a.id}')">✏️</button>
       <button class="del-btn" onclick="deleteItem('advances','${a.id}')">🗑</button>
     </div>
   </div>`).join('');
@@ -1078,6 +1238,7 @@ function renderHired(){
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
       <div class="list-amount balance">${fmtMoney(h.balance)}</div>
+      <button class="del-btn" style="color:var(--pine)" onclick="editItem('hired','${h.id}')">✏️</button>
       <button class="del-btn" onclick="deleteItem('hired','${h.id}')">🗑</button>
     </div>
   </div>`).join('');
@@ -1105,17 +1266,27 @@ function renderVehicles(){
   const statusColor={Active:'chip-green','Under Repair':'chip-red',Idle:'chip-amber'};
   list.innerHTML=localData.vehicles.map(v=>{
     const ins=daysUntil(v.insurance),fit=daysUntil(v.fitness),per=daysUntil(v.permit);
+    const vTrips=localData.trips.filter(t=>t.vehicle&&t.vehicle.toUpperCase()===v.vno.toUpperCase());
+    const vDiesel=localData.diesel.filter(d=>d.vehicle&&d.vehicle.toUpperCase()===v.vno.toUpperCase());
+    const vTripRev=vTrips.reduce((s,t)=>s+t.revenue,0);
+    const vDieselL=vDiesel.reduce((s,d)=>s+d.litres,0);
+    const vDieselCost=vDiesel.reduce((s,d)=>s+d.total,0);
     return`<div class="list-item vehicle">
       <div class="list-icon">${v.type==='Truck'?'🚛':v.type==='Crane'?'🏗️':v.type==='Car'?'🚗':v.type==='Pickup/Bolero'?'🛻':'🚛'}</div>
       <div class="list-content">
         <div class="list-main">${v.vno} <span class="chip ${statusColor[v.status]||'chip-green'}" style="font-size:0.6rem">${v.status}</span></div>
         <div class="list-sub">${v.type} · ${v.model||''} ${v.year?'· '+v.year:''}</div>
         <div class="chip-row">
+          <span class="chip chip-green">🚛 ${vTrips.length} trips · ${fmtMoney(vTripRev)}</span>
+          <span class="chip chip-blue">⛽ ${vDieselL.toFixed(0)}L · ${fmtMoney(vDieselCost)}</span>
+        </div>
+        <div class="chip-row">
           ${v.insurance?`<span class="chip ${ins<=14?'chip-red':ins<=30?'chip-amber':'chip-green'}">Ins: ${fmtDate(v.insurance)}</span>`:''}
           ${v.fitness?`<span class="chip ${fit<=14?'chip-red':fit<=30?'chip-amber':'chip-green'}">Fit: ${fmtDate(v.fitness)}</span>`:''}
           ${v.permit?`<span class="chip ${per<=14?'chip-red':per<=30?'chip-amber':'chip-green'}">Pmt: ${fmtDate(v.permit)}</span>`:''}
         </div>
       </div>
+      <button class="del-btn" style="color:var(--pine)" onclick="editItem('vehicles','${v.id}')">✏️</button>
       <button class="del-btn" onclick="deleteItem('vehicles','${v.id}')">🗑</button>
     </div>`;
   }).join('');
