@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Shree Rama">
+<meta name="theme-color" content="#1a3a2a">
+<title>Shree Rama Transport</title>
+<link rel="manifest" href="data:application/json,{&quot;name&quot;:&quot;Shree Rama Transport&quot;,&quot;short_name&quot;:&quot;Shree Rama&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;#1a3a2a&quot;,&quot;theme_color&quot;:&quot;#1a3a2a&quot;}">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  --forest: #1a3a2a; --pine: #2d6a4f; --leaf: #40916c; --sage: #74c69d;
+  --mist: #d8f3dc; --amber: #f4a261; --rust: #e76f51; --ink: #0f1f17;
+  --gray: #6b7c72; --light: #f0f7f4; --white: #ffffff; --danger: #e63946;
+  --gold: #c9a84c; --radius: 16px; --radius-sm: 10px;
+  --shadow: 0 4px 24px rgba(26,58,42,0.10); --shadow-lg: 0 8px 40px rgba(26,58,42,0.16);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--ink);min-height:100vh;overscroll-behavior:none}
+
+/* ── LOGIN ── */
+.login-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;background:linear-gradient(160deg,var(--forest) 0%,#0a1f12 100%);position:relative;overflow:hidden}
+.login-screen::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2340916c' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+
+/* LOGO SVG */
+.logo-wrap{margin-bottom:20px;animation:fadeDown 0.6s ease}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+.login-title{font-family:'Syne',sans-serif;font-size:1.7rem;font-weight:800;color:white;text-align:center;margin-bottom:4px;letter-spacing:-0.02em}
+.login-title span{color:var(--gold)}
+.login-sub{color:var(--sage);font-size:0.8rem;text-align:center;margin-bottom:32px;letter-spacing:0.06em;text-transform:uppercase}
+.login-card{background:rgba(255,255,255,0.97);border-radius:20px;padding:28px 24px;width:100%;max-width:340px;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+.login-label{font-size:0.72rem;font-weight:600;color:var(--forest);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;display:block}
+.login-input{width:100%;padding:13px 16px;border:1.5px solid #e0ebe4;border-radius:var(--radius-sm);font-size:1rem;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none;transition:border-color 0.2s;margin-bottom:14px}
+.login-input:focus{border-color:var(--leaf)}
+.login-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--pine),var(--forest));color:white;border:none;border-radius:var(--radius-sm);font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;transition:opacity 0.2s;letter-spacing:0.02em}
+.login-btn:active{opacity:0.85}
+.login-error{color:var(--danger);font-size:0.8rem;text-align:center;margin-top:10px;display:none}
+.install-hint{color:rgba(255,255,255,0.5);font-size:0.7rem;text-align:center;margin-top:20px;line-height:1.6}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--forest);color:white;padding:10px 14px 8px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,0.25)}
+.topbar-left{display:flex;align-items:center;gap:10px}
+.topbar-logo{width:36px;height:36px;flex-shrink:0}
+.topbar-text .topbar-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;line-height:1.1}
+.topbar-text .topbar-title span{color:var(--gold)}
+.topbar-sub{font-size:0.6rem;color:var(--sage);margin-top:1px;display:flex;align-items:center;gap:4px}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:var(--sage);display:inline-block;transition:background 0.3s;flex-shrink:0}
+.sync-dot.syncing{background:var(--amber);animation:pulse 1s infinite}
+.sync-dot.error{background:var(--danger)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.logout-btn{background:rgba(255,255,255,0.1);border:none;color:white;padding:5px 10px;border-radius:20px;font-size:0.68rem;cursor:pointer;font-family:'DM Sans',sans-serif}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--forest);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -2px 20px rgba(0,0,0,0.2)}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:9px 2px 7px;cursor:pointer;color:var(--sage);font-size:0.52rem;font-weight:500;letter-spacing:0.02em;transition:all 0.2s;border:none;background:none;text-transform:uppercase}
+.nav-item .nav-icon{font-size:1.2rem;margin-bottom:2px;transition:transform 0.2s}
+.nav-item.active{color:white}
+.nav-item.active .nav-icon{transform:translateY(-2px)}
+
+/* ── SCREENS ── */
+.screen{display:none;padding:14px 14px 100px}
+.screen.active{display:block}
+
+/* ── CARDS ── */
+.card{background:white;border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.card-title{font-family:'Syne',sans-serif;font-weight:700;font-size:0.92rem;color:var(--forest);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+
+/* ── STATS ── */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.stat-card{background:white;border-radius:var(--radius);padding:14px 12px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.stat-card.green::before{background:var(--leaf)}
+.stat-card.amber::before{background:var(--amber)}
+.stat-card.rust::before{background:var(--rust)}
+.stat-card.pine::before{background:var(--pine)}
+.stat-card.gold::before{background:var(--gold)}
+.stat-label{font-size:0.62rem;color:var(--gray);font-weight:500;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:5px}
+.stat-value{font-family:'Syne',sans-serif;font-size:1.28rem;font-weight:800;color:var(--forest);line-height:1}
+.stat-sub{font-size:0.65rem;color:var(--gray);margin-top:3px}
+
+/* ── FORMS ── */
+.form-group{margin-bottom:12px}
+.form-label{font-size:0.7rem;font-weight:600;color:var(--forest);margin-bottom:5px;display:block;text-transform:uppercase;letter-spacing:0.04em}
+.form-input,.form-select,.form-textarea{width:100%;padding:11px 13px;border:1.5px solid #e0ebe4;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:0.93rem;color:var(--ink);background:white;outline:none;transition:border-color 0.2s;-webkit-appearance:none;appearance:none}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--leaf);box-shadow:0 0 0 3px rgba(64,145,108,0.1)}
+.form-textarea{min-height:65px;resize:none}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:12px 20px;border-radius:var(--radius-sm);font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem;border:none;cursor:pointer;transition:all 0.2s;width:100%}
+.btn:active{transform:scale(0.97)}
+.btn-primary{background:var(--pine);color:white}
+.btn-secondary{background:var(--mist);color:var(--pine);margin-top:8px}
+.btn-gold{background:linear-gradient(135deg,#c9a84c,#a07828);color:white}
+.btn-sm{padding:7px 13px;font-size:0.72rem;width:auto}
+
+/* ── SECTION HEADER ── */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
+.section-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:var(--forest)}
+
+/* ── LIST ITEMS ── */
+.list-item{background:white;border-radius:var(--radius-sm);padding:13px;margin-bottom:9px;box-shadow:0 2px 10px rgba(26,58,42,0.07);display:flex;align-items:flex-start;gap:11px;position:relative;overflow:hidden}
+.list-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:4px 0 0 4px}
+.list-item.trip::before{background:var(--leaf)}
+.list-item.expense::before{background:var(--rust)}
+.list-item.advance::before{background:var(--amber)}
+.list-item.hired::before{background:var(--pine)}
+.list-item.diesel::before{background:#2196f3}
+.list-item.vehicle::before{background:var(--gold)}
+.list-icon{font-size:1.25rem;margin-top:1px;flex-shrink:0}
+.list-content{flex:1;min-width:0}
+.list-main{font-weight:600;font-size:0.86rem;color:var(--ink);margin-bottom:2px}
+.list-sub{font-size:0.7rem;color:var(--gray)}
+.list-amount{font-family:'Syne',sans-serif;font-weight:800;font-size:0.92rem;color:var(--pine);white-space:nowrap}
+.list-amount.expense{color:var(--rust)}
+.list-amount.balance{color:var(--amber)}
+.del-btn{background:none;border:none;color:#ccc;font-size:0.95rem;cursor:pointer;padding:3px;flex-shrink:0}
+.del-btn:active{color:var(--danger)}
+
+/* ── TABS ── */
+.tabs{display:flex;background:var(--mist);border-radius:var(--radius-sm);padding:4px;margin-bottom:14px;gap:3px}
+.tab{flex:1;padding:8px 4px;border:none;background:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.68rem;font-weight:600;color:var(--pine);cursor:pointer;transition:all 0.2s;text-align:center}
+.tab.active{background:white;color:var(--forest);box-shadow:0 1px 6px rgba(0,0,0,0.1)}
+
+/* ── ATTENDANCE ── */
+.att-staff-row{background:white;border-radius:var(--radius-sm);padding:13px;margin-bottom:9px;box-shadow:0 2px 10px rgba(26,58,42,0.07)}
+.att-staff-name{font-weight:600;font-size:0.87rem;margin-bottom:9px;color:var(--ink)}
+.att-staff-role{font-size:0.66rem;color:var(--gray);margin-left:5px;font-weight:400}
+.att-day-grid{display:flex;flex-wrap:wrap;gap:4px}
+.att-day{width:32px;height:32px;border-radius:7px;border:1.5px solid #e0ebe4;background:white;font-size:0.58rem;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:all 0.15s;color:var(--gray);gap:1px}
+.att-day .day-num{font-size:0.52rem;color:var(--gray);font-weight:400}
+.att-day.P{background:var(--pine);color:white;border-color:var(--pine)}
+.att-day.P .day-num{color:rgba(255,255,255,0.7)}
+.att-day.A{background:#fff0f0;color:var(--danger);border-color:#ffcdd2}
+.att-day.A .day-num{color:#ffaaaa}
+.att-day.HD{background:var(--mist);color:var(--pine);border-color:var(--sage)}
+.att-day.H{background:#fff8e1;color:#f59e0b;border-color:#fde68a}
+
+/* ── CHIPS ── */
+.chip-row{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.chip{padding:3px 9px;border-radius:20px;font-size:0.65rem;font-weight:600}
+.chip-green{background:var(--mist);color:var(--pine)}
+.chip-red{background:#fff0f0;color:var(--danger)}
+.chip-amber{background:#fff8e1;color:#b45309}
+.chip-blue{background:#e3f2fd;color:#1565c0}
+
+/* ── MONTH BAR ── */
+.month-bar{background:white;border-radius:var(--radius-sm);padding:9px 13px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow)}
+.month-nav{background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--pine);padding:4px 8px}
+.month-label{font-family:'Syne',sans-serif;font-weight:700;color:var(--forest);font-size:0.92rem}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(135deg,var(--forest) 0%,var(--pine) 100%);border-radius:var(--radius);padding:18px;margin-bottom:12px;color:white;position:relative;overflow:hidden}
+.hero-bg{position:absolute;right:-5px;bottom:-10px;opacity:0.06;font-size:90px;line-height:1}
+.hero-label{font-size:0.65rem;color:var(--sage);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px}
+.hero-amount{font-family:'Syne',sans-serif;font-size:1.9rem;font-weight:800;line-height:1;margin-bottom:3px}
+.hero-sub{font-size:0.75rem;color:var(--sage)}
+.hero-row{display:flex;gap:12px;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.1);flex-wrap:wrap}
+.hero-mini-label{font-size:0.6rem;color:var(--sage);margin-bottom:2px;text-transform:uppercase}
+.hero-mini-val{font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem}
+
+/* ── ALERT BANNER ── */
+.alert-banner{background:#fff8e1;border-left:4px solid var(--amber);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:10px;font-size:0.78rem;color:#5a3e00;line-height:1.5}
+.alert-banner.danger{background:#fff0f0;border-color:var(--danger);color:#7f1d1d}
+.alert-title{font-weight:700;margin-bottom:4px;font-size:0.82rem}
+
+/* ── CHART ── */
+.chart-wrap{position:relative;height:200px;margin-top:8px}
+
+/* ── V-TAG ── */
+.v-tag{display:inline-block;padding:2px 8px;border-radius:20px;font-size:0.58rem;font-weight:700;text-transform:uppercase}
+.v-tag.truck{background:#e8f5e9;color:#2e7d32}
+.v-tag.crane{background:#e3f2fd;color:#1565c0}
+.v-tag.tractor{background:#fff8e1;color:#b45309}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,31,23,0.65);z-index:200;display:none;align-items:flex-end;backdrop-filter:blur(4px)}
+.modal-overlay.open{display:flex}
+.modal{background:white;border-radius:24px 24px 0 0;padding:20px 18px 40px;width:100%;max-height:92vh;overflow-y:auto;animation:slideUp 0.3s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-handle{width:38px;height:4px;background:#e0e0e0;border-radius:4px;margin:0 auto 16px}
+.modal-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:var(--forest);margin-bottom:16px}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--forest);color:white;padding:10px 20px;border-radius:30px;font-size:0.8rem;font-weight:600;z-index:999;opacity:0;transition:all 0.3s;white-space:nowrap;pointer-events:none;box-shadow:var(--shadow-lg)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── EMPTY ── */
+.empty{text-align:center;padding:32px 20px;color:var(--gray)}
+.empty-icon{font-size:2rem;margin-bottom:7px}
+.empty-text{font-size:0.8rem}
+
+/* ── REPORT ── */
+.report-section{margin-bottom:16px}
+.report-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:0.84rem}
+.report-row:last-child{border-bottom:none}
+.report-total{font-weight:700;color:var(--forest);font-size:0.9rem}
+@media print{.bottom-nav,.topbar,.btn,.del-btn{display:none!important}.screen{display:block!important;padding:0!important}.print-only{display:block!important}}
+.print-only{display:none}
+.mt-8{margin-top:8px}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══════════════════════════════════════════════════════ -->
+<div id="login-screen" class="login-screen">
+  <!-- SVG LOGO -->
+  <div class="logo-wrap">
+    <svg width="90" height="90" viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="45" cy="45" r="45" fill="#2d6a4f"/>
+      <circle cx="45" cy="45" r="40" fill="#1a3a2a"/>
+      <!-- Truck body -->
+      <rect x="14" y="38" width="44" height="22" rx="3" fill="#40916c"/>
+      <rect x="52" y="32" width="22" height="28" rx="3" fill="#2d6a4f"/>
+      <rect x="54" y="34" width="18" height="12" rx="2" fill="#74c69d" opacity="0.7"/>
+      <!-- Wheels -->
+      <circle cx="24" cy="62" r="7" fill="#0f1f17"/>
+      <circle cx="24" cy="62" r="4" fill="#6b7c72"/>
+      <circle cx="62" cy="62" r="7" fill="#0f1f17"/>
+      <circle cx="62" cy="62" r="4" fill="#6b7c72"/>
+      <!-- Tree on cargo -->
+      <polygon points="33,38 38,26 43,38" fill="#c9a84c"/>
+      <polygon points="30,38 38,20 46,38" fill="#c9a84c" opacity="0.7"/>
+      <!-- Road line -->
+      <rect x="10" y="69" width="70" height="3" rx="1.5" fill="#2d6a4f"/>
+    </svg>
+  </div>
+  <div class="login-title">Shree Rama <span>Transport</span></div>
+  <div class="login-sub">Timber Haulage Operations</div>
+  <div class="login-card">
+    <label class="login-label">🔒 Password</label>
+    <input type="password" class="login-input" id="login-password" placeholder="Enter password..." onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Sign In →</button>
+    <div class="login-error" id="login-error">❌ Incorrect password. Try again.</div>
+  </div>
+  <div class="install-hint">📱 Tip: Open in Chrome → tap menu → "Add to Home Screen"<br>for a full app experience on your phone</div>
+</div>
+
+<!-- ══ MAIN APP ═══════════════════════════════════════════════════ -->
+<div id="main-app" style="display:none">
+
+<div class="topbar">
+  <div class="topbar-left">
+    <svg class="topbar-logo" viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="45" cy="45" r="45" fill="#2d6a4f"/>
+      <circle cx="45" cy="45" r="40" fill="#1a3a2a"/>
+      <rect x="14" y="38" width="44" height="22" rx="3" fill="#40916c"/>
+      <rect x="52" y="32" width="22" height="28" rx="3" fill="#2d6a4f"/>
+      <rect x="54" y="34" width="18" height="12" rx="2" fill="#74c69d" opacity="0.7"/>
+      <circle cx="24" cy="62" r="7" fill="#0f1f17"/><circle cx="24" cy="62" r="4" fill="#6b7c72"/>
+      <circle cx="62" cy="62" r="7" fill="#0f1f17"/><circle cx="62" cy="62" r="4" fill="#6b7c72"/>
+      <polygon points="33,38 38,26 43,38" fill="#c9a84c"/>
+      <polygon points="30,38 38,20 46,38" fill="#c9a84c" opacity="0.7"/>
+      <rect x="10" y="69" width="70" height="3" rx="1.5" fill="#2d6a4f"/>
+    </svg>
+    <div class="topbar-text">
+      <div class="topbar-title">Shree Rama <span>Transport</span></div>
+      <div class="topbar-sub"><span class="sync-dot" id="sync-dot"></span><span id="sync-status">Connecting...</span></div>
+    </div>
+  </div>
+  <button class="logout-btn" onclick="doLogout()">Logout</button>
+</div>
+
+<!-- ── DASHBOARD ── -->
+<div class="screen active" id="screen-dashboard">
+  <div id="expiry-alerts"></div>
+  <div class="month-bar">
+    <button class="month-nav" onclick="changeMonth(-1)">‹</button>
+    <div class="month-label" id="current-month-label"></div>
+    <button class="month-nav" onclick="changeMonth(1)">›</button>
+  </div>
+  <div class="hero">
+    <div class="hero-bg">🌲</div>
+    <div class="hero-label">Total Revenue This Month</div>
+    <div class="hero-amount" id="dash-revenue">₹0</div>
+    <div class="hero-sub" id="dash-trips">0 trips logged</div>
+    <div class="hero-row">
+      <div><div class="hero-mini-label">Expenses</div><div class="hero-mini-val" id="dash-expenses" style="color:var(--rust)">₹0</div></div>
+      <div><div class="hero-mini-label">Net Profit</div><div class="hero-mini-val" id="dash-profit">₹0</div></div>
+      <div><div class="hero-mini-label">Diesel Used</div><div class="hero-mini-val" id="dash-diesel">0 L</div></div>
+    </div>
+  </div>
+  <div class="stat-grid">
+    <div class="stat-card green"><div class="stat-label">Present Today</div><div class="stat-value" id="dash-present">–</div><div class="stat-sub">of total staff</div></div>
+    <div class="stat-card amber"><div class="stat-label">Advances Due</div><div class="stat-value" id="dash-advances">₹0</div><div class="stat-sub">outstanding</div></div>
+    <div class="stat-card rust"><div class="stat-label">Hired Due</div><div class="stat-value" id="dash-vendor">₹0</div><div class="stat-sub">balance</div></div>
+    <div class="stat-card gold"><div class="stat-label">Diesel Cost</div><div class="stat-value" id="dash-diesel-cost">₹0</div><div class="stat-sub">this month</div></div>
+  </div>
+  <!-- Charts -->
+  <div class="card">
+    <div class="card-title">📊 Revenue vs Expenses (Last 6 Months)</div>
+    <div class="chart-wrap"><canvas id="rev-exp-chart"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-title">⛽ Diesel Consumption (Last 6 Months)</div>
+    <div class="chart-wrap"><canvas id="diesel-chart"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-title">📋 Recent Activity</div>
+    <div id="recent-list"><div class="empty"><div class="empty-icon">📭</div><div class="empty-text">No records yet.</div></div></div>
+  </div>
+</div>
+
+<!-- ── TRIPS ── -->
+<div class="screen" id="screen-trips">
+  <div class="section-header">
+    <div class="section-title">🚛 Trip Log</div>
+    <button class="btn btn-primary btn-sm" onclick="openModal('modal-trip')">+ Add Trip</button>
+  </div>
+  <div id="trip-list"><div class="empty"><div class="empty-icon">🛣️</div><div class="empty-text">No trips yet.</div></div></div>
+</div>
+
+<!-- ── EXPENSES + DIESEL ── -->
+<div class="screen" id="screen-expenses">
+  <div class="tabs">
+    <button class="tab active" onclick="switchExpTab('expenses',this)">💸 Expenses</button>
+    <button class="tab" onclick="switchExpTab('diesel',this)">⛽ Diesel</button>
+  </div>
+  <div id="exp-tab-expenses">
+    <div class="section-header">
+      <div class="section-title">💸 Expenses</div>
+      <button class="btn btn-primary btn-sm" onclick="openModal('modal-expense')">+ Add</button>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="filterExpenses('all',this)">All</button>
+      <button class="tab" onclick="filterExpenses('Fuel',this)">Fuel</button>
+      <button class="tab" onclick="filterExpenses('Parts',this)">Parts</button>
+      <button class="tab" onclick="filterExpenses('Maintenance',this)">Repair</button>
+      <button class="tab" onclick="filterExpenses('Staff',this)">Staff</button>
+    </div>
+    <div id="expense-list"><div class="empty"><div class="empty-icon">🧾</div><div class="empty-text">No expenses yet.</div></div></div>
+  </div>
+  <div id="exp-tab-diesel" style="display:none">
+    <div class="section-header">
+      <div class="section-title">⛽ Diesel Log</div>
+      <button class="btn btn-primary btn-sm" onclick="openModal('modal-diesel')">+ Fill Entry</button>
+    </div>
+    <div id="diesel-summary" class="stat-grid" style="margin-bottom:12px"></div>
+    <div id="diesel-list"><div class="empty"><div class="empty-icon">⛽</div><div class="empty-text">No diesel entries yet.</div></div></div>
+  </div>
+</div>
+
+<!-- ── STAFF ── -->
+<div class="screen" id="screen-staff">
+  <div class="tabs">
+    <button class="tab active" onclick="switchStaffTab('attendance',this)">Attendance</button>
+    <button class="tab" onclick="switchStaffTab('advances',this)">Advances</button>
+    <button class="tab" onclick="switchStaffTab('manage',this)">Staff List</button>
+  </div>
+  <div id="staff-attendance">
+    <div class="month-bar">
+      <button class="month-nav" onclick="changeAttMonth(-1)">‹</button>
+      <div class="month-label" id="att-month-label"></div>
+      <button class="month-nav" onclick="changeAttMonth(1)">›</button>
+    </div>
+    <div id="att-list"><div class="empty"><div class="empty-icon">👷</div><div class="empty-text">Add staff from Staff List tab first.</div></div></div>
+  </div>
+  <div id="staff-advances" style="display:none">
+    <div class="section-header"><div class="section-title">💵 Advances</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-advance')">+ Add</button></div>
+    <div id="advance-list"><div class="empty"><div class="empty-icon">💵</div><div class="empty-text">No advances recorded.</div></div></div>
+  </div>
+  <div id="staff-manage" style="display:none">
+    <div class="section-header"><div class="section-title">👥 Staff List</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-staff')">+ Add Staff</button></div>
+    <div id="staff-list"><div class="empty"><div class="empty-icon">👤</div><div class="empty-text">No staff added yet.</div></div></div>
+  </div>
+</div>
+
+<!-- ── HIRED ── -->
+<div class="screen" id="screen-hired">
+  <div class="section-header"><div class="section-title">🚜 Hired Vehicles</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-hired')">+ Add</button></div>
+  <div class="tabs">
+    <button class="tab active" onclick="filterHired('all',this)">All</button>
+    <button class="tab" onclick="filterHired('Truck',this)">Trucks</button>
+    <button class="tab" onclick="filterHired('Crane',this)">Cranes</button>
+    <button class="tab" onclick="filterHired('Tractor',this)">Tractors</button>
+  </div>
+  <div id="hired-list"><div class="empty"><div class="empty-icon">🚜</div><div class="empty-text">No entries yet.</div></div></div>
+</div>
+
+<!-- ── MORE (Vehicles + Report) ── -->
+<div class="screen" id="screen-more">
+  <div class="tabs">
+    <button class="tab active" onclick="switchMoreTab('vehicles',this)">🚗 Fleet</button>
+    <button class="tab" onclick="switchMoreTab('report',this)">📄 Report</button>
+  </div>
+  <!-- FLEET / REMINDERS -->
+  <div id="more-vehicles">
+    <div id="expiry-reminders"></div>
+    <div class="section-header"><div class="section-title">🚗 Fleet Register</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-vehicle')">+ Add Vehicle</button></div>
+    <div id="vehicle-list"><div class="empty"><div class="empty-icon">🚗</div><div class="empty-text">No vehicles added yet.</div></div></div>
+  </div>
+  <!-- MONTHLY REPORT -->
+  <div id="more-report" style="display:none">
+    <div class="month-bar">
+      <button class="month-nav" onclick="changeReportMonth(-1)">‹</button>
+      <div class="month-label" id="report-month-label"></div>
+      <button class="month-nav" onclick="changeReportMonth(1)">›</button>
+    </div>
+    <button class="btn btn-gold" onclick="printReport()" style="margin-bottom:12px">🖨️ Print / Export Report</button>
+    <div id="report-content"></div>
+  </div>
+</div>
+
+<div class="bottom-nav">
+  <button class="nav-item active" onclick="showScreen('dashboard',this)"><span class="nav-icon">📊</span>Dashboard</button>
+  <button class="nav-item" onclick="showScreen('trips',this)"><span class="nav-icon">🚛</span>Trips</button>
+  <button class="nav-item" onclick="showScreen('expenses',this)"><span class="nav-icon">💸</span>Expenses</button>
+  <button class="nav-item" onclick="showScreen('staff',this)"><span class="nav-icon">👷</span>Staff</button>
+  <button class="nav-item" onclick="showScreen('hired',this)"><span class="nav-icon">🚜</span>Hired</button>
+  <button class="nav-item" onclick="showScreen('more',this)"><span class="nav-icon">⋯</span>More</button>
+</div>
+</div>
+
+<!-- ══ MODALS ══════════════════════════════════════════════════════ -->
+
+<!-- TRIP -->
+<div class="modal-overlay" id="modal-trip"><div class="modal">
+  <div class="modal-handle"></div><div class="modal-title">🚛 Add New Trip</div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">Date</label><input type="date" class="form-input" id="trip-date"></div>
+    <div class="form-group"><label class="form-label">Vehicle No.</label><input type="text" class="form-input" id="trip-vehicle" placeholder="Reg. no."></div>
+  </div>
+  <div class="form-group"><label class="form-label">Forest Region / Source</label><input type="text" class="form-input" id="trip-source" placeholder="e.g. Gadchiroli Forest"></div>
+  <div class="form-group"><label class="form-label">Destination Depot</label><input type="text" class="form-input" id="trip-dest" placeholder="e.g. Nagpur Depot"></div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">Driver Name</label><input type="text" class="form-input" id="trip-driver" placeholder="Name"></div>
+    <div class="form-group"><label class="form-label">Timber (CBM)</label><input type="number" class="form-input" id="trip-qty" placeholder="0"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">Revenue (₹)</label><input type="number" class="form-input" id="trip-revenue" placeholder="0"></div>
+    <div class="form-group"><label class="form-label">Fuel Cost (₹)</label><input type="number" class="form-input" id="trip-fuel" placeholder="0"></div>
+  </div>
+  <div class="form-group"><label class="form-label">Remarks</label><textarea class="form-textarea" id="trip-remarks" placeholder="Optional notes..."></textarea></div>
+  <button class="btn btn-primary" onclick="saveTrip()">✓ Save Trip</button>
+  <button class="btn btn-secondary" onclick="closeModal('modal-trip')">Cancel</button>
+</div></div>
+
+<!-- EXPENSE -->
+<div class="modal-overlay" id="modal-expense"><div class="modal">
+  <div class="modal-handle"></div><div class="modal-title">💸 Add Expense</div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">Date</label><input type="date" class="form-input" id="exp-date"></div>
+    <div class="form-group"><label class="form-label">Amount (₹)</label><input type="number" class="form-input" id="exp-amount" placeholder="0"></div>
+  </div>
+  <div class="form-group"><label class="form-label">Category</label>
+    <select class="form-select" id="exp-category">
+      <option value="">Select...</option>
+      <option>Fuel & Oil</option><option>Spare Parts</option><option>Maintenance</option>
+      <option>Staff Wages</option><option>Driver Bata</option><option>Labour Cost</option>
+      <option>Crane Operator</option><option>Mechanic (External)</option><option>Lubricants</option><option>Other</option>
+    </select>
+  </div>
+  <div class="form-group"><label class="form-label">Description</label><input type="text" class="form-input" id="exp-desc" placeholder="What was this for?"></div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">Paid To</label><input type="text" class="form-input" id="exp-paid-to" placeholder="Vendor / Name"></div>
+    <div class="form-group"><label class="form-label">Payment Mode</label>
+      <select class="form-select" id="exp-mode"><option>Cash</option><option>UPI</option><option>Bank Transfer</option><option>Cheque</option></select>
+    </div>
+  </div>
+  <button class="btn btn-primary" onclick="saveExpense()">✓ Save Expense</button>
+  <button class="btn btn-secondary" onclick="closeModal('modal-expense')">Cancel</button>
+</div></div>
+
+<!-- DIESEL -->
+<div class="modal-overlay" id="modal-diesel"><div class="modal">
+  <div class="modal-handle"></div><div class="modal-title">⛽ Diesel Fill Entry</div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">Date</label><input type="date" class="form-input" id="dsl-date"></div>
+    <div class="form-group"><label class="form-label">Vehicle No.</label><input type="text" class="form-input" id="dsl-vehicle" placeholder="Reg. no."></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">Litres Filled</label><input type="number" class="form-input" id="dsl-litres" placeholder="0" oninput="calcDiesel()"></div>
+    <div class="form-group"><label class="form-label">Rate per Litre (₹)</label><input type="number" class="form-input" id="dsl-rate" placeholder="e.g. 92" oninput="calcDiesel()"></div>
+  </div>
+  <div class="form-group"><label class="form-label">Total Amount (₹) — Auto calculated</label><input type="number" class="form-input" id="dsl-total" placeholder="0" style="background:#f9f9f9"></div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">Fuel Station</label><input type="text" class="form-input" id="dsl-station" placeholder="Station name"></div>
+    <div class="form-group"><label class="form-label">Driver</label><input type="text" class="form-input" id="dsl-driver" placeholder="Driver name"></div>
+  </div>
+  <div class="form-group"><label class="form-label">Odometer Reading (km)</label><input type="number" class="form-input" id="dsl-odometer" placeholder="Optional"></div>
+  <button class="btn btn-primary" onclick="saveDiesel()">✓ Save Entry</button>
+  <button class="btn btn-secondary" onclick="closeModal('modal-diesel')">Cancel</button>
+</div></div>
+
+<!-- STAFF -->
+<div class="modal-overlay" id="modal-staff"><div class="modal">
+  <div class="modal-handle"></div><div class="modal-title">👤 Add Staff Member</div>
+  <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input" id="staff-name" placeholder="Staff name"></div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">Role</label>
+      <select class="form-select" id="staff-role"><option>Driver</option><option>Crane Operator</option><option>Labour</option><option>Supervisor</option><option>Helper</option></select>
+    </div>
+    <div class="form-group"><label class="form-label">Daily Rate (₹)</label><input type="number" class="form-input" id="staff-rate" placeholder="0"></div>
+  </div>
+  <div class="form-group"><label class="form-label">Phone</label><input type="tel" class="form-input" id="staff-phone" placeholder="Contact number"></div>
+  <button class="btn btn-primary" onclick="saveStaff()">✓ Add Staff</button>
+  <button class="btn btn-secondary" onclick="closeModal('modal-staff')">Cancel</button>
+</div></div>
+
+<!-- ADVANCE -->
+<div class="modal-overlay" id="modal-advance"><div class="modal">
+  <div class="modal-handle"></div><div class="modal-title">💵 Record Advance</div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">Date</label><input type="date" class="form-input" id="adv-date"></div>
+    <div class="form-group"><label class="form-label">Amount Given (₹)</label><input type="number" class="form-input" id="adv-amount" placeholder="0"></div>
+  </div>
+  <div class="form-group"><label class="form-label">Staff Member</label><select class="form-select" id="adv-staff"><option value="">Select staff...</option></select></div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">Recovered (₹)</label><input type="number" class="form-input" id="adv-recovered" placeholder="0"></div>
+    <div class="form-group"><label class="form-label">Recovery Date</label><input type="date" class="form-input" id="adv-recovery-date"></div>
+  </div>
+  <div class="form-group"><label class="form-label">Notes</label><input type="text" class="form-input" id="adv-notes" placeholder="Reason for advance..."></div>
+  <button class="btn btn-primary" onclick="saveAdvance()">✓ Save</button>
+  <button class="btn btn-secondary" onclick="closeModal('modal-advance')">Cancel</button>
+</div></div>
+
+<!-- HIRED -->
+<div class="modal-overlay" id="modal-hired"><div class="modal">
+  <div class="modal-handle"></div><div class="modal-title">🚜 Add Hired Vehicle Entry</div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">Date</label><input type="date" class="form-input" id="hv-date"></div>
+    <div class="form-group"><label class="form-label">Vehicle Type</label>
+      <select class="form-select" id="hv-type"><option>Truck</option><option>Crane</option><option>Tractor</option><option>Other</option></select>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">Owner Name</label><input type="text" class="form-input" id="hv-owner" placeholder="Owner name"></div>
+    <div class="form-group"><label class="form-label">Vehicle No.</label><input type="text" class="form-input" id="hv-vno" placeholder="Reg. no."></div>
+  </div>
+  <div class="form-group"><label class="form-label">Work Description</label><input type="text" class="form-input" id="hv-work" placeholder="What work was done?"></div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">Rate (₹)</label><input type="number" class="form-input" id="hv-rate" placeholder="0" oninput="calcHired()"></div>
+    <div class="form-group"><label class="form-label">Qty / Trips / Days</label><input type="number" class="form-input" id="hv-qty" placeholder="0" oninput="calcHired()"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">Gross Amount (₹)</label><input type="number" class="form-input" id="hv-gross" placeholder="0" style="background:#f9f9f9"></div>
+    <div class="form-group"><label class="form-label">Advance Paid (₹)</label><input type="number" class="form-input" id="hv-advance" placeholder="0"></div>
+  </div>
+  <button class="btn btn-primary" onclick="saveHired()">✓ Save Entry</button>
+  <button class="btn btn-secondary" onclick="closeModal('modal-hired')">Cancel</button>
+</div></div>
+
+<!-- VEHICLE -->
+<div class="modal-overlay" id="modal-vehicle"><div class="modal">
+  <div class="modal-handle"></div><div class="modal-title">🚗 Add Vehicle to Fleet</div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">Vehicle No.</label><input type="text" class="form-input" id="veh-no" placeholder="Reg. no."></div>
+    <div class="form-group"><label class="form-label">Type</label>
+      <select class="form-select" id="veh-type"><option>Truck</option><option>Crane</option><option>Pickup/Bolero</option><option>Car</option><option>Other</option></select>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">Make / Model</label><input type="text" class="form-input" id="veh-model" placeholder="e.g. Tata 407"></div>
+    <div class="form-group"><label class="form-label">Year</label><input type="number" class="form-input" id="veh-year" placeholder="2020"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">Insurance Expiry</label><input type="date" class="form-input" id="veh-insurance"></div>
+    <div class="form-group"><label class="form-label">Fitness Expiry</label><input type="date" class="form-input" id="veh-fitness"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">Permit Expiry</label><input type="date" class="form-input" id="veh-permit"></div>
+    <div class="form-group"><label class="form-label">Status</label>
+      <select class="form-select" id="veh-status"><option>Active</option><option>Under Repair</option><option>Idle</option></select>
+    </div>
+  </div>
+  <button class="btn btn-primary" onclick="saveVehicle()">✓ Add Vehicle</button>
+  <button class="btn btn-secondary" onclick="closeModal('modal-vehicle')">Cancel</button>
+</div></div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ══ FIREBASE + APP LOGIC ════════════════════════════════════════ -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAOKspUBIsh97nwtxs5Nb_LVwM9FVk4fgk",
+  authDomain: "shree-rama-transport-b6b15.firebaseapp.com",
+  projectId: "shree-rama-transport-b6b15",
+  storageBucket: "shree-rama-transport-b6b15.firebasestorage.app",
+  messagingSenderId: "603261489225",
+  appId: "1:603261489225:web:7bcd320edbed905dc9ef98"
+};
+
+// ── CHANGE PASSWORD HERE ──────────────────────────────────────
+const APP_PASSWORD = "transport2024";
+// ─────────────────────────────────────────────────────────────
+
+let db = null, unsubscribers = [];
+let localData = { trips:[], expenses:[], staff:[], advances:[], hired:[], diesel:[], vehicles:[] };
+const now = new Date();
+let currentMonth = now.getMonth(), currentYear = now.getFullYear();
+let attMonth = now.getMonth(), attYear = now.getFullYear();
+let reportMonth = now.getMonth(), reportYear = now.getFullYear();
+let expFilter='all', hiredFilter='all', expTabActive='expenses', moreTabActive='vehicles';
+let revExpChart=null, dieselChart=null;
+
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const SHORT=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+// ── AUTH ──────────────────────────────────────────────────────
+if(sessionStorage.getItem('srt_auth')==='ok') showApp();
+
+window.doLogin=function(){
+  if(document.getElementById('login-password').value===APP_PASSWORD){
+    sessionStorage.setItem('srt_auth','ok'); showApp();
+  } else {
+    document.getElementById('login-error').style.display='block';
+    document.getElementById('login-password').value='';
+  }
+};
+window.doLogout=function(){
+  sessionStorage.removeItem('srt_auth'); unsubscribers.forEach(u=>u()); location.reload();
+};
+
+function showApp(){
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('main-app').style.display='block';
+  try {
+    const app=initializeApp(firebaseConfig);
+    db=getFirestore(app);
+    setSyncStatus('syncing','Connecting...');
+    subscribeAll();
+  } catch(e){ setSyncStatus('error','Offline mode'); loadLocal(); }
+  updateLabels(); renderDashboard();
+}
+
+function subscribeAll(){
+  ['trips','expenses','staff','advances','hired','diesel','vehicles'].forEach(col=>{
+    const u=onSnapshot(collection(db,col),snap=>{
+      localData[col]=snap.docs.map(d=>({id:d.id,...d.data()}));
+      localData[col].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+      setSyncStatus('online','Synced ✓');
+      saveLocal(); refreshView();
+    },()=>setSyncStatus('error','Sync error'));
+    unsubscribers.push(u);
+  });
+}
+
+function setSyncStatus(s,m){
+  const d=document.getElementById('sync-dot');
+  d.className='sync-dot'+(s==='syncing'?' syncing':s==='error'?' error':'');
+  document.getElementById('sync-status').textContent=m;
+}
+function saveLocal(){ try{localStorage.setItem('srt_data',JSON.stringify(localData));}catch(e){} }
+function loadLocal(){ try{const d=localStorage.getItem('srt_data');if(d)localData=JSON.parse(d);}catch(e){} refreshView(); }
+
+async function addRec(col,data){ 
+  if(db){ try{await addDoc(collection(db,col),{...data,createdAt:Date.now()});return;}catch(e){} }
+  localData[col].unshift({...data,id:Date.now().toString(),createdAt:Date.now()});
+  saveLocal(); refreshView();
+}
+async function delRec(col,id){
+  if(db){ try{await deleteDoc(doc(db,col,id));return;}catch(e){} }
+  localData[col]=localData[col].filter(i=>i.id!=id); saveLocal(); refreshView();
+}
+
+// ── HELPERS ───────────────────────────────────────────────────
+function fmtDate(d){ if(!d)return''; const dt=new Date(d); return`${dt.getDate()} ${SHORT[dt.getMonth()]} ${dt.getFullYear()}`; }
+function fmtMoney(n){ return'₹'+(Number(n)||0).toLocaleString('en-IN'); }
+function getDays(m,y){ return new Date(y,m+1,0).getDate(); }
+function todayStr(){ return new Date().toISOString().split('T')[0]; }
+function daysUntil(dateStr){ if(!dateStr)return 999; return Math.ceil((new Date(dateStr)-new Date())/(1000*60*60*24)); }
+
+function updateLabels(){
+  document.getElementById('current-month-label').textContent=MONTHS[currentMonth]+' '+currentYear;
+  document.getElementById('att-month-label').textContent=MONTHS[attMonth]+' '+attYear;
+  document.getElementById('report-month-label').textContent=MONTHS[reportMonth]+' '+reportYear;
+}
+
+// ── NAVIGATION ────────────────────────────────────────────────
+window.showScreen=function(name,btn){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active'); btn.classList.add('active');
+  if(name==='dashboard') renderDashboard();
+  if(name==='trips') renderTrips();
+  if(name==='expenses') renderExpenses();
+  if(name==='staff') renderStaffScreen();
+  if(name==='hired') renderHired();
+  if(name==='more') renderMore();
+};
+
+function refreshView(){
+  const a=document.querySelector('.screen.active');
+  if(!a) return;
+  const id=a.id.replace('screen-','');
+  if(id==='dashboard') renderDashboard();
+  else if(id==='trips') renderTrips();
+  else if(id==='expenses') renderExpenses();
+  else if(id==='staff') renderStaffScreen();
+  else if(id==='hired') renderHired();
+  else if(id==='more') renderMore();
+}
+
+// ── MODALS ────────────────────────────────────────────────────
+window.openModal=function(id){
+  const m=document.getElementById(id);
+  m.querySelectorAll('input[type="date"]').forEach(i=>{if(!i.value)i.value=todayStr();});
+  if(id==='modal-advance'){
+    const s=document.getElementById('adv-staff');
+    s.innerHTML='<option value="">Select staff...</option>';
+    localData.staff.forEach(st=>{const o=document.createElement('option');o.value=st.id;o.textContent=st.name+' ('+st.role+')';s.appendChild(o);});
+  }
+  m.classList.add('open');
+};
+window.closeModal=function(id){
+  const m=document.getElementById(id); m.classList.remove('open');
+  m.querySelectorAll('input:not([type=date])').forEach(i=>i.value='');
+  m.querySelectorAll('textarea').forEach(t=>t.value='');
+  m.querySelectorAll('select').forEach(s=>s.selectedIndex=0);
+};
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
+
+function showToast(m){ const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500); }
+
+// ── MONTH NAV ─────────────────────────────────────────────────
+window.changeMonth=function(d){ currentMonth+=d;if(currentMonth>11){currentMonth=0;currentYear++;}if(currentMonth<0){currentMonth=11;currentYear--;}updateLabels();renderDashboard(); };
+window.changeAttMonth=function(d){ attMonth+=d;if(attMonth>11){attMonth=0;attYear++;}if(attMonth<0){attMonth=11;attYear--;}updateLabels();renderAttendance(); };
+window.changeReportMonth=function(d){ reportMonth+=d;if(reportMonth>11){reportMonth=0;reportYear++;}if(reportMonth<0){reportMonth=11;reportYear--;}updateLabels();renderReport(); };
+
+// ── AUTO CALC ─────────────────────────────────────────────────
+window.calcDiesel=function(){ const l=Number(document.getElementById('dsl-litres').value)||0,r=Number(document.getElementById('dsl-rate').value)||0; document.getElementById('dsl-total').value=l&&r?Math.round(l*r):''; };
+window.calcHired=function(){ const r=Number(document.getElementById('hv-rate').value)||0,q=Number(document.getElementById('hv-qty').value)||0; document.getElementById('hv-gross').value=r&&q?Math.round(r*q):''; };
+
+// ── SAVE FUNCTIONS ────────────────────────────────────────────
+window.saveTrip=async function(){
+  const d={date:document.getElementById('trip-date').value,vehicle:document.getElementById('trip-vehicle').value.trim(),source:document.getElementById('trip-source').value.trim(),dest:document.getElementById('trip-dest').value.trim(),driver:document.getElementById('trip-driver').value.trim(),qty:Number(document.getElementById('trip-qty').value)||0,revenue:Number(document.getElementById('trip-revenue').value)||0,fuel:Number(document.getElementById('trip-fuel').value)||0,remarks:document.getElementById('trip-remarks').value.trim()};
+  if(!d.date||!d.source){showToast('⚠️ Date and source required');return;}
+  await addRec('trips',d);closeModal('modal-trip');showToast('✅ Trip saved!');
+};
+window.saveExpense=async function(){
+  const d={date:document.getElementById('exp-date').value,amount:Number(document.getElementById('exp-amount').value)||0,category:document.getElementById('exp-category').value,desc:document.getElementById('exp-desc').value.trim(),paidTo:document.getElementById('exp-paid-to').value.trim(),mode:document.getElementById('exp-mode').value};
+  if(!d.date||!d.category){showToast('⚠️ Date and category required');return;}
+  await addRec('expenses',d);closeModal('modal-expense');showToast('✅ Expense saved!');
+};
+window.saveDiesel=async function(){
+  const d={date:document.getElementById('dsl-date').value,vehicle:document.getElementById('dsl-vehicle').value.trim(),litres:Number(document.getElementById('dsl-litres').value)||0,rate:Number(document.getElementById('dsl-rate').value)||0,total:Number(document.getElementById('dsl-total').value)||0,station:document.getElementById('dsl-station').value.trim(),driver:document.getElementById('dsl-driver').value.trim(),odometer:Number(document.getElementById('dsl-odometer').value)||0};
+  if(!d.date||!d.litres){showToast('⚠️ Date and litres required');return;}
+  if(!d.total&&d.litres&&d.rate) d.total=d.litres*d.rate;
+  await addRec('diesel',d);closeModal('modal-diesel');showToast('✅ Diesel entry saved!');
+};
+window.saveStaff=async function(){
+  const d={name:document.getElementById('staff-name').value.trim(),role:document.getElementById('staff-role').value,rate:Number(document.getElementById('staff-rate').value)||0,phone:document.getElementById('staff-phone').value.trim(),attendance:{}};
+  if(!d.name){showToast('⚠️ Name required');return;}
+  await addRec('staff',d);closeModal('modal-staff');showToast('✅ Staff added!');
+};
+window.saveAdvance=async function(){
+  const given=Number(document.getElementById('adv-amount').value)||0,recovered=Number(document.getElementById('adv-recovered').value)||0,staffId=document.getElementById('adv-staff').value,sm=localData.staff.find(s=>s.id==staffId);
+  const d={date:document.getElementById('adv-date').value,staffId,staffName:sm?sm.name:'Unknown',amount:given,recovered,balance:given-recovered,recoveryDate:document.getElementById('adv-recovery-date').value,notes:document.getElementById('adv-notes').value.trim()};
+  if(!d.date||!d.staffId){showToast('⚠️ Date and staff required');return;}
+  await addRec('advances',d);closeModal('modal-advance');showToast('✅ Advance recorded!');
+};
+window.saveHired=async function(){
+  const rate=Number(document.getElementById('hv-rate').value)||0,qty=Number(document.getElementById('hv-qty').value)||0,advance=Number(document.getElementById('hv-advance').value)||0,gross=Number(document.getElementById('hv-gross').value)||rate*qty;
+  const d={date:document.getElementById('hv-date').value,type:document.getElementById('hv-type').value,owner:document.getElementById('hv-owner').value.trim(),vno:document.getElementById('hv-vno').value.trim(),work:document.getElementById('hv-work').value.trim(),rate,qty,gross,advance,balance:gross-advance};
+  if(!d.date||!d.owner){showToast('⚠️ Date and owner required');return;}
+  await addRec('hired',d);closeModal('modal-hired');showToast('✅ Entry saved!');
+};
+window.saveVehicle=async function(){
+  const d={vno:document.getElementById('veh-no').value.trim(),type:document.getElementById('veh-type').value,model:document.getElementById('veh-model').value.trim(),year:document.getElementById('veh-year').value,insurance:document.getElementById('veh-insurance').value,fitness:document.getElementById('veh-fitness').value,permit:document.getElementById('veh-permit').value,status:document.getElementById('veh-status').value};
+  if(!d.vno){showToast('⚠️ Vehicle number required');return;}
+  await addRec('vehicles',d);closeModal('modal-vehicle');showToast('✅ Vehicle added!');
+};
+window.deleteItem=async function(col,id){ if(!confirm('Delete this record?'))return; await delRec(col,id);showToast('🗑️ Deleted'); };
+
+// ── ATTENDANCE CYCLE ──────────────────────────────────────────
+window.cycleAtt=async function(staffId,mk,day){
+  const s=localData.staff.find(s=>s.id==staffId); if(!s)return;
+  if(!s.attendance)s.attendance={};
+  if(!s.attendance[mk])s.attendance[mk]={};
+  const states=['','P','A','H','HD'];
+  s.attendance[mk][day]=states[(states.indexOf(s.attendance[mk][day]||'')+1)%states.length];
+  if(db){try{await setDoc(doc(db,'staff',staffId),{attendance:s.attendance},{merge:true});}catch(e){saveLocal();}}
+  else saveLocal();
+  renderAttendance();
+};
+
+// ── TAB SWITCHES ──────────────────────────────────────────────
+window.switchExpTab=function(tab,btn){
+  expTabActive=tab;
+  document.querySelectorAll('#screen-expenses>.tabs .tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('exp-tab-expenses').style.display=tab==='expenses'?'':'none';
+  document.getElementById('exp-tab-diesel').style.display=tab==='diesel'?'':'none';
+  if(tab==='diesel')renderDiesel();
+};
+window.switchStaffTab=function(tab,btn){
+  document.querySelectorAll('#screen-staff>.tabs .tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('staff-attendance').style.display=tab==='attendance'?'':'none';
+  document.getElementById('staff-advances').style.display=tab==='advances'?'':'none';
+  document.getElementById('staff-manage').style.display=tab==='manage'?'':'none';
+  if(tab==='attendance')renderAttendance();
+  if(tab==='advances')renderAdvances();
+  if(tab==='manage')renderStaffList();
+};
+window.switchMoreTab=function(tab,btn){
+  moreTabActive=tab;
+  document.querySelectorAll('#screen-more>.tabs .tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('more-vehicles').style.display=tab==='vehicles'?'':'none';
+  document.getElementById('more-report').style.display=tab==='report'?'':'none';
+  if(tab==='report')renderReport();
+  if(tab==='vehicles')renderVehicles();
+};
+
+// ── FILTER ────────────────────────────────────────────────────
+window.filterExpenses=function(cat,btn){ expFilter=cat; document.querySelectorAll('#exp-tab-expenses .tabs .tab').forEach(t=>t.classList.remove('active')); btn.classList.add('active'); renderExpenses(); };
+window.filterHired=function(type,btn){ hiredFilter=type; document.querySelectorAll('#screen-hired>.tabs .tab').forEach(t=>t.classList.remove('active')); btn.classList.add('active'); renderHired(); };
+
+// ── RENDER: DASHBOARD ─────────────────────────────────────────
+function renderDashboard(){
+  const mTrips=localData.trips.filter(t=>{const d=new Date(t.date);return d.getMonth()===currentMonth&&d.getFullYear()===currentYear;});
+  const mExp=localData.expenses.filter(e=>{const d=new Date(e.date);return d.getMonth()===currentMonth&&d.getFullYear()===currentYear;});
+  const mDiesel=localData.diesel.filter(d=>{const dt=new Date(d.date);return dt.getMonth()===currentMonth&&dt.getFullYear()===currentYear;});
+  const rev=mTrips.reduce((s,t)=>s+t.revenue,0);
+  const exp=mExp.reduce((s,e)=>s+e.amount,0);
+  const dslLitres=mDiesel.reduce((s,d)=>s+d.litres,0);
+  const dslCost=mDiesel.reduce((s,d)=>s+d.total,0);
+  document.getElementById('dash-revenue').textContent=fmtMoney(rev);
+  document.getElementById('dash-trips').textContent=mTrips.length+' trips logged';
+  document.getElementById('dash-expenses').textContent=fmtMoney(exp);
+  document.getElementById('dash-profit').textContent=fmtMoney(rev-exp);
+  document.getElementById('dash-diesel').textContent=dslLitres.toFixed(1)+' L';
+  document.getElementById('dash-diesel-cost').textContent=fmtMoney(dslCost);
+  document.getElementById('dash-advances').textContent=fmtMoney(localData.advances.reduce((s,a)=>s+(a.balance||0),0));
+  document.getElementById('dash-vendor').textContent=fmtMoney(localData.hired.reduce((s,h)=>s+(h.balance||0),0));
+  const todayDay=new Date().getDate().toString();
+  const mk=attYear+'-'+String(attMonth+1).padStart(2,'0');
+  let present=0; localData.staff.forEach(s=>{const v=s.attendance?.[mk]?.[todayDay];if(v==='P'||v==='HD')present++;});
+  document.getElementById('dash-present').textContent=present+'/'+localData.staff.length;
+  // Expiry alerts
+  renderExpiryAlerts();
+  // Charts
+  renderCharts();
+  // Recent
+  const recent=[];
+  localData.trips.slice(0,4).forEach(t=>recent.push({type:'trip',date:t.date,label:(t.source||'')+'→'+(t.dest||''),amount:t.revenue,icon:'🚛'}));
+  localData.expenses.slice(0,3).forEach(e=>recent.push({type:'expense',date:e.date,label:e.category+(e.desc?': '+e.desc:''),amount:e.amount,icon:'💸'}));
+  localData.diesel.slice(0,2).forEach(d=>recent.push({type:'diesel',date:d.date,label:'⛽ '+d.vehicle+' · '+d.litres+'L @ ₹'+d.rate,amount:d.total,icon:'⛽'}));
+  recent.sort((a,b)=>new Date(b.date)-new Date(a.date));
+  const rl=document.getElementById('recent-list');
+  if(!recent.length){rl.innerHTML='<div class="empty"><div class="empty-icon">📭</div><div class="empty-text">No records yet.</div></div>';return;}
+  rl.innerHTML=recent.slice(0,6).map(r=>`<div class="list-item ${r.type}">
+    <div class="list-icon">${r.icon}</div>
+    <div class="list-content"><div class="list-main">${r.label||'–'}</div><div class="list-sub">${fmtDate(r.date)}</div></div>
+    <div class="list-amount ${r.type==='expense'?'expense':''}">${fmtMoney(r.amount)}</div>
+  </div>`).join('');
+}
+
+function renderExpiryAlerts(){
+  const alerts=[];
+  localData.vehicles.forEach(v=>{
+    const fields=[['Insurance',v.insurance],['Fitness',v.fitness],['Permit',v.permit]];
+    fields.forEach(([label,date])=>{
+      if(!date) return;
+      const days=daysUntil(date);
+      if(days<=30) alerts.push({vno:v.vno,label,date,days,danger:days<=7});
+    });
+  });
+  const el=document.getElementById('expiry-alerts');
+  if(!alerts.length){el.innerHTML='';return;}
+  el.innerHTML=alerts.map(a=>`<div class="alert-banner ${a.danger?'danger':''}">
+    <div class="alert-title">${a.danger?'🚨':'⚠️'} ${a.vno} — ${a.label} Expiring ${a.days<=0?'TODAY / OVERDUE':'in '+a.days+' day(s)'}</div>
+    Expiry date: ${fmtDate(a.date)} — Please renew soon.
+  </div>`).join('');
+}
+
+function renderCharts(){
+  // Build last 6 months data
+  const months=[], revs=[], exps=[], dslData=[];
+  for(let i=5;i>=0;i--){
+    let m=currentMonth-i, y=currentYear;
+    if(m<0){m+=12;y--;}
+    months.push(SHORT[m]);
+    revs.push(localData.trips.filter(t=>{const d=new Date(t.date);return d.getMonth()===m&&d.getFullYear()===y;}).reduce((s,t)=>s+t.revenue,0));
+    exps.push(localData.expenses.filter(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y;}).reduce((s,e)=>s+e.amount,0));
+    dslData.push(localData.diesel.filter(d=>{const dt=new Date(d.date);return dt.getMonth()===m&&dt.getFullYear()===y;}).reduce((s,d)=>s+d.litres,0));
+  }
+  // Revenue vs Expenses chart
+  const ctx1=document.getElementById('rev-exp-chart').getContext('2d');
+  if(revExpChart) revExpChart.destroy();
+  revExpChart=new Chart(ctx1,{type:'bar',data:{labels:months,datasets:[{label:'Revenue',data:revs,backgroundColor:'rgba(45,106,79,0.8)',borderRadius:6},{label:'Expenses',data:exps,backgroundColor:'rgba(231,111,81,0.7)',borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{family:'DM Sans'},color:'#6b7c72',boxWidth:12}}},scales:{x:{grid:{display:false},ticks:{color:'#6b7c72',font:{family:'DM Sans',size:11}}},y:{grid:{color:'#f0f0f0'},ticks:{color:'#6b7c72',font:{family:'DM Sans',size:10},callback:v=>'₹'+(v>=1000?Math.round(v/1000)+'k':v)}}}}});
+  // Diesel chart
+  const ctx2=document.getElementById('diesel-chart').getContext('2d');
+  if(dieselChart) dieselChart.destroy();
+  dieselChart=new Chart(ctx2,{type:'line',data:{labels:months,datasets:[{label:'Litres',data:dslData,borderColor:'#2196f3',backgroundColor:'rgba(33,150,243,0.1)',borderWidth:2.5,pointBackgroundColor:'#2196f3',tension:0.4,fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{family:'DM Sans'},color:'#6b7c72',boxWidth:12}}},scales:{x:{grid:{display:false},ticks:{color:'#6b7c72',font:{family:'DM Sans',size:11}}},y:{grid:{color:'#f0f0f0'},ticks:{color:'#6b7c72',font:{family:'DM Sans',size:10},callback:v=>v+'L'}}}}});
+}
+
+// ── RENDER: TRIPS ─────────────────────────────────────────────
+function renderTrips(){
+  const list=document.getElementById('trip-list');
+  if(!localData.trips.length){list.innerHTML='<div class="empty"><div class="empty-icon">🛣️</div><div class="empty-text">No trips recorded yet.</div></div>';return;}
+  list.innerHTML=localData.trips.map(t=>`<div class="list-item trip">
+    <div class="list-icon">🚛</div>
+    <div class="list-content">
+      <div class="list-main">${t.source||'–'} → ${t.dest||'–'}</div>
+      <div class="list-sub">${fmtDate(t.date)} · ${t.vehicle||''} · ${t.driver||''}</div>
+      <div class="chip-row">
+        ${t.qty?`<span class="chip chip-green">📦 ${t.qty} CBM</span>`:''}
+        ${t.fuel?`<span class="chip chip-amber">⛽ ${fmtMoney(t.fuel)}</span>`:''}
+        <span class="chip chip-green">Net: ${fmtMoney(t.revenue-t.fuel)}</span>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
+      <div class="list-amount">${fmtMoney(t.revenue)}</div>
+      <button class="del-btn" onclick="deleteItem('trips','${t.id}')">🗑</button>
+    </div>
+  </div>`).join('');
+}
+
+// ── RENDER: EXPENSES ──────────────────────────────────────────
+function renderExpenses(){
+  const f=expFilter==='all'?localData.expenses:localData.expenses.filter(e=>e.category&&e.category.includes(expFilter));
+  const total=f.reduce((s,e)=>s+e.amount,0);
+  const list=document.getElementById('expense-list');
+  if(!f.length){list.innerHTML='<div class="empty"><div class="empty-icon">🧾</div><div class="empty-text">No expenses found.</div></div>';return;}
+  list.innerHTML=`<div class="card" style="background:var(--forest);color:white;margin-bottom:12px">
+    <div style="font-size:0.65rem;color:var(--sage);text-transform:uppercase;margin-bottom:3px">Total (filtered)</div>
+    <div style="font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800">${fmtMoney(total)}</div>
+  </div>`+f.map(e=>`<div class="list-item expense">
+    <div class="list-icon">💸</div>
+    <div class="list-content">
+      <div class="list-main">${e.category}</div>
+      <div class="list-sub">${fmtDate(e.date)} · ${e.paidTo||''} · ${e.mode||''}</div>
+      ${e.desc?`<div class="list-sub" style="color:var(--ink);margin-top:2px">${e.desc}</div>`:''}
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
+      <div class="list-amount expense">${fmtMoney(e.amount)}</div>
+      <button class="del-btn" onclick="deleteItem('expenses','${e.id}')">🗑</button>
+    </div>
+  </div>`).join('');
+}
+
+// ── RENDER: DIESEL ────────────────────────────────────────────
+function renderDiesel(){
+  const list=document.getElementById('diesel-list');
+  const totalL=localData.diesel.reduce((s,d)=>s+d.litres,0);
+  const totalCost=localData.diesel.reduce((s,d)=>s+d.total,0);
+  const avgRate=totalL>0?totalCost/totalL:0;
+  document.getElementById('diesel-summary').innerHTML=`
+    <div class="stat-card blue" style="--before-bg:#2196f3"><div class="stat-label">Total Litres</div><div class="stat-value">${totalL.toFixed(1)} L</div></div>
+    <div class="stat-card pine"><div class="stat-label">Total Cost</div><div class="stat-value">${fmtMoney(totalCost)}</div></div>`;
+  if(!localData.diesel.length){list.innerHTML='<div class="empty"><div class="empty-icon">⛽</div><div class="empty-text">No diesel entries yet.</div></div>';return;}
+  list.innerHTML=localData.diesel.map(d=>`<div class="list-item diesel">
+    <div class="list-icon">⛽</div>
+    <div class="list-content">
+      <div class="list-main">${d.vehicle||'–'} · ${d.driver||''}</div>
+      <div class="list-sub">${fmtDate(d.date)} · ${d.station||''}</div>
+      <div class="chip-row">
+        <span class="chip chip-blue">${d.litres} L</span>
+        <span class="chip chip-amber">₹${d.rate}/L</span>
+        ${d.odometer?`<span class="chip chip-green">${d.odometer} km</span>`:''}
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
+      <div class="list-amount">${fmtMoney(d.total)}</div>
+      <button class="del-btn" onclick="deleteItem('diesel','${d.id}')">🗑</button>
+    </div>
+  </div>`).join('');
+}
+
+// ── RENDER: STAFF ─────────────────────────────────────────────
+function renderStaffScreen(){ renderAttendance();renderStaffList();renderAdvances(); }
+
+function renderStaffList(){
+  const list=document.getElementById('staff-list');
+  if(!localData.staff.length){list.innerHTML='<div class="empty"><div class="empty-icon">👤</div><div class="empty-text">No staff added yet.</div></div>';return;}
+  list.innerHTML=localData.staff.map(s=>`<div class="list-item trip">
+    <div class="list-icon">👤</div>
+    <div class="list-content">
+      <div class="list-main">${s.name}</div>
+      <div class="list-sub">${s.role} · ${s.phone||'No phone'} · ${fmtMoney(s.rate)}/day</div>
+    </div>
+    <button class="del-btn" onclick="deleteItem('staff','${s.id}')">🗑</button>
+  </div>`).join('');
+}
+
+function renderAttendance(){
+  const list=document.getElementById('att-list');
+  if(!localData.staff.length){list.innerHTML='<div class="empty"><div class="empty-icon">👷</div><div class="empty-text">Add staff from Staff List tab first.</div></div>';return;}
+  const days=getDays(attMonth,attYear);
+  const mk=attYear+'-'+String(attMonth+1).padStart(2,'0');
+  list.innerHTML=localData.staff.map(s=>{
+    if(!s.attendance)s.attendance={};
+    if(!s.attendance[mk])s.attendance[mk]={};
+    const att=s.attendance[mk];
+    const present=Object.values(att).filter(v=>v==='P').length+Object.values(att).filter(v=>v==='HD').length*0.5;
+    const absent=Object.values(att).filter(v=>v==='A').length;
+    const wages=present*(s.rate||0);
+    const dayBtns=Array.from({length:days},(_,i)=>{const day=i+1;const status=att[day]||'';
+      return`<div class="att-day ${status}" onclick="cycleAtt('${s.id}','${mk}',${day})"><span>${status||'–'}</span><span class="day-num">${day}</span></div>`;
+    }).join('');
+    return`<div class="att-staff-row">
+      <div class="att-staff-name">${s.name}<span class="att-staff-role">${s.role}</span></div>
+      <div class="att-day-grid">${dayBtns}</div>
+      <div class="chip-row"><span class="chip chip-green">✅ ${present} days</span><span class="chip chip-red">❌ ${absent} absent</span><span class="chip chip-amber">💰 ${fmtMoney(wages)}</span></div>
+    </div>`;
+  }).join('');
+}
+
+function renderAdvances(){
+  const list=document.getElementById('advance-list');
+  if(!localData.advances.length){list.innerHTML='<div class="empty"><div class="empty-icon">💵</div><div class="empty-text">No advances recorded.</div></div>';return;}
+  const totalBal=localData.advances.reduce((s,a)=>s+(a.balance||0),0);
+  list.innerHTML=`<div class="card" style="background:var(--forest);color:white;margin-bottom:12px">
+    <div style="font-size:0.65rem;color:var(--sage);text-transform:uppercase;margin-bottom:3px">Total Outstanding</div>
+    <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800">${fmtMoney(totalBal)}</div>
+  </div>`+localData.advances.map(a=>`<div class="list-item advance">
+    <div class="list-icon">💵</div>
+    <div class="list-content">
+      <div class="list-main">${a.staffName||'–'}</div>
+      <div class="list-sub">${fmtDate(a.date)} ${a.notes?'· '+a.notes:''}</div>
+      <div class="chip-row"><span class="chip chip-amber">Given: ${fmtMoney(a.amount)}</span><span class="chip chip-green">Recovered: ${fmtMoney(a.recovered)}</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
+      <div class="list-amount balance">${fmtMoney(a.balance)}</div>
+      <button class="del-btn" onclick="deleteItem('advances','${a.id}')">🗑</button>
+    </div>
+  </div>`).join('');
+}
+
+// ── RENDER: HIRED ─────────────────────────────────────────────
+function renderHired(){
+  const f=hiredFilter==='all'?localData.hired:localData.hired.filter(h=>h.type===hiredFilter);
+  const list=document.getElementById('hired-list');
+  if(!f.length){list.innerHTML='<div class="empty"><div class="empty-icon">🚜</div><div class="empty-text">No entries found.</div></div>';return;}
+  const totalBal=f.reduce((s,h)=>s+(h.balance||0),0);
+  const tc={Truck:'truck',Crane:'crane',Tractor:'tractor',Other:'truck'};
+  list.innerHTML=`<div class="card" style="background:var(--forest);color:white;margin-bottom:12px">
+    <div style="font-size:0.65rem;color:var(--sage);text-transform:uppercase;margin-bottom:3px">Total Balance Due</div>
+    <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800">${fmtMoney(totalBal)}</div>
+  </div>`+f.map(h=>`<div class="list-item hired">
+    <div class="list-icon">${h.type==='Truck'?'🚛':h.type==='Crane'?'🏗️':'🚜'}</div>
+    <div class="list-content">
+      <div class="list-main">${h.owner||'–'} <span class="v-tag ${tc[h.type]||'truck'}">${h.type}</span></div>
+      <div class="list-sub">${fmtDate(h.date)} · ${h.vno||''} · ${h.work||''}</div>
+      <div class="chip-row"><span class="chip chip-green">Gross: ${fmtMoney(h.gross)}</span><span class="chip chip-amber">Adv: ${fmtMoney(h.advance)}</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
+      <div class="list-amount balance">${fmtMoney(h.balance)}</div>
+      <button class="del-btn" onclick="deleteItem('hired','${h.id}')">🗑</button>
+    </div>
+  </div>`).join('');
+}
+
+// ── RENDER: MORE (FLEET + REPORT) ─────────────────────────────
+function renderMore(){ renderVehicles(); if(moreTabActive==='report')renderReport(); }
+
+function renderVehicles(){
+  // Reminders
+  const rem=document.getElementById('expiry-reminders');
+  const alerts=[];
+  localData.vehicles.forEach(v=>{
+    [['Insurance',v.insurance],['Fitness',v.fitness],['Permit',v.permit]].forEach(([label,date])=>{
+      if(!date)return; const days=daysUntil(date);
+      if(days<=60) alerts.push({vno:v.vno,label,date,days,danger:days<=14});
+    });
+  });
+  rem.innerHTML=alerts.length?alerts.map(a=>`<div class="alert-banner ${a.danger?'danger':''}">
+    <div class="alert-title">${a.danger?'🚨':'⚠️'} ${a.vno} — ${a.label} ${a.days<=0?'EXPIRED':'expires in '+a.days+' days'}</div>
+    Expiry: ${fmtDate(a.date)}
+  </div>`).join(''):'';
+  const list=document.getElementById('vehicle-list');
+  if(!localData.vehicles.length){list.innerHTML='<div class="empty"><div class="empty-icon">🚗</div><div class="empty-text">No vehicles added yet.</div></div>';return;}
+  const statusColor={Active:'chip-green','Under Repair':'chip-red',Idle:'chip-amber'};
+  list.innerHTML=localData.vehicles.map(v=>{
+    const ins=daysUntil(v.insurance),fit=daysUntil(v.fitness),per=daysUntil(v.permit);
+    return`<div class="list-item vehicle">
+      <div class="list-icon">${v.type==='Truck'?'🚛':v.type==='Crane'?'🏗️':v.type==='Car'?'🚗':v.type==='Pickup/Bolero'?'🛻':'🚛'}</div>
+      <div class="list-content">
+        <div class="list-main">${v.vno} <span class="chip ${statusColor[v.status]||'chip-green'}" style="font-size:0.6rem">${v.status}</span></div>
+        <div class="list-sub">${v.type} · ${v.model||''} ${v.year?'· '+v.year:''}</div>
+        <div class="chip-row">
+          ${v.insurance?`<span class="chip ${ins<=14?'chip-red':ins<=30?'chip-amber':'chip-green'}">Ins: ${fmtDate(v.insurance)}</span>`:''}
+          ${v.fitness?`<span class="chip ${fit<=14?'chip-red':fit<=30?'chip-amber':'chip-green'}">Fit: ${fmtDate(v.fitness)}</span>`:''}
+          ${v.permit?`<span class="chip ${per<=14?'chip-red':per<=30?'chip-amber':'chip-green'}">Pmt: ${fmtDate(v.permit)}</span>`:''}
+        </div>
+      </div>
+      <button class="del-btn" onclick="deleteItem('vehicles','${v.id}')">🗑</button>
+    </div>`;
+  }).join('');
+}
+
+// ── MONTHLY REPORT ────────────────────────────────────────────
+function renderReport(){
+  const mTrips=localData.trips.filter(t=>{const d=new Date(t.date);return d.getMonth()===reportMonth&&d.getFullYear()===reportYear;});
+  const mExp=localData.expenses.filter(e=>{const d=new Date(e.date);return d.getMonth()===reportMonth&&d.getFullYear()===reportYear;});
+  const mDiesel=localData.diesel.filter(d=>{const dt=new Date(d.date);return dt.getMonth()===reportMonth&&dt.getFullYear()===reportYear;});
+  const mHired=localData.hired.filter(h=>{const d=new Date(h.date);return d.getMonth()===reportMonth&&d.getFullYear()===reportYear;});
+  const totalRev=mTrips.reduce((s,t)=>s+t.revenue,0);
+  const totalExp=mExp.reduce((s,e)=>s+e.amount,0);
+  const totalDieselCost=mDiesel.reduce((s,d)=>s+d.total,0);
+  const totalDieselL=mDiesel.reduce((s,d)=>s+d.litres,0);
+  const totalHired=mHired.reduce((s,h)=>s+h.gross,0);
+  const totalAdvances=localData.advances.reduce((s,a)=>s+(a.balance||0),0);
+  // Expense by category
+  const expByCat={};
+  mExp.forEach(e=>{expByCat[e.category]=(expByCat[e.category]||0)+e.amount;});
+
+  const rc=document.getElementById('report-content');
+  rc.innerHTML=`
+    <div class="card">
+      <div style="text-align:center;margin-bottom:16px">
+        <div style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:var(--forest)">🚛 Shree Rama Transport</div>
+        <div style="font-size:0.8rem;color:var(--gray);margin-top:2px">Monthly Summary — ${MONTHS[reportMonth]} ${reportYear}</div>
+      </div>
+      <div class="report-section">
+        <div class="card-title" style="margin-bottom:8px">💰 Revenue</div>
+        <div class="report-row"><span>Total Trips</span><span class="report-total">${mTrips.length}</span></div>
+        <div class="report-row"><span>Total Revenue</span><span class="report-total" style="color:var(--pine)">${fmtMoney(totalRev)}</span></div>
+      </div>
+      <div class="report-section">
+        <div class="card-title" style="margin-bottom:8px">💸 Expenses by Category</div>
+        ${Object.entries(expByCat).map(([cat,amt])=>`<div class="report-row"><span>${cat}</span><span>${fmtMoney(amt)}</span></div>`).join('')}
+        <div class="report-row" style="border-top:2px solid #e0e0e0;margin-top:4px;padding-top:8px"><span><strong>Total Expenses</strong></span><span class="report-total" style="color:var(--rust)">${fmtMoney(totalExp)}</span></div>
+      </div>
+      <div class="report-section">
+        <div class="card-title" style="margin-bottom:8px">⛽ Diesel</div>
+        <div class="report-row"><span>Total Litres Filled</span><span class="report-total">${totalDieselL.toFixed(1)} L</span></div>
+        <div class="report-row"><span>Total Diesel Cost</span><span class="report-total">${fmtMoney(totalDieselCost)}</span></div>
+      </div>
+      <div class="report-section">
+        <div class="card-title" style="margin-bottom:8px">🚜 Hired Vehicles</div>
+        <div class="report-row"><span>Total Deployments</span><span class="report-total">${mHired.length}</span></div>
+        <div class="report-row"><span>Total Amount</span><span class="report-total">${fmtMoney(totalHired)}</span></div>
+      </div>
+      <div class="report-section">
+        <div class="card-title" style="margin-bottom:8px">👷 Staff</div>
+        <div class="report-row"><span>Total Staff</span><span class="report-total">${localData.staff.length}</span></div>
+        <div class="report-row"><span>Total Advance Outstanding</span><span class="report-total" style="color:var(--amber)">${fmtMoney(totalAdvances)}</span></div>
+      </div>
+      <div style="background:var(--forest);border-radius:var(--radius-sm);padding:14px;margin-top:8px">
+        <div style="color:var(--sage);font-size:0.68rem;text-transform:uppercase;margin-bottom:4px">Net Profit / Loss</div>
+        <div style="font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:${totalRev-totalExp>=0?'var(--sage)':'var(--rust)'}">${fmtMoney(totalRev-totalExp)}</div>
+        <div style="color:var(--sage);font-size:0.72rem;margin-top:4px">Revenue ${fmtMoney(totalRev)} − Expenses ${fmtMoney(totalExp)}</div>
+      </div>
+    </div>`;
+}
+
+window.printReport=function(){
+  renderReport();
+  window.print();
+};
+
+updateLabels();
+</script>
+</body>
+</html>
