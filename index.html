@@ -793,8 +793,9 @@ function boot(){
 function subAll(){
   [...Object.keys(D)].forEach(col=>{
     const u=onSnapshot(collection(db,col),snap=>{
-      D[col]=snap.docs.map(d=>({id:d.id,...d.data()}));
-      D[col].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+      const fromFirebase=snap.docs.map(d=>({id:d.id,...d.data()}));
+      fromFirebase.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+      D[col]=fromFirebase;
       setSS('ok','Synced ✓');saveLocal();refresh();
     },()=>setSS('error','Sync error'));
     uns.push(u);
@@ -810,19 +811,26 @@ function saveLocal(){try{localStorage.setItem('srt_d',JSON.stringify(D));}catch(
 function loadLocal(){try{const d=localStorage.getItem('srt_d');if(d)D=JSON.parse(d);}catch(e){}refresh();}
 
 async function addR(col,data){
-  if(db){try{await addDoc(collection(db,col),{...data,createdAt:Date.now()});return;}catch(e){}}
-  D[col].unshift({...data,id:Date.now().toString(),createdAt:Date.now()});
+  const newId=Date.now().toString();
+  const newItem={...data,id:newId,createdAt:Date.now()};
+  // Optimistically update local data immediately
+  D[col].unshift(newItem);
   saveLocal();refresh();
+  // Then sync to Firebase in background
+  if(db){try{await addDoc(collection(db,col),{...data,createdAt:newItem.createdAt});}catch(e){setSS('error','Sync error');}}
+  return newId;
 }
 async function delR(col,id){
-  if(db){try{await deleteDoc(doc(db,col,id));return;}catch(e){}}
+  // Optimistically remove locally first
   D[col]=D[col].filter(i=>i.id!=id);saveLocal();refresh();
+  if(db){try{await deleteDoc(doc(db,col,id));}catch(e){setSS('error','Sync error');}}
 }
 async function updR(col,id,data){
-  if(db){try{await updateDoc(doc(db,col,id),data);return;}catch(e){}}
+  // Optimistically update locally first
   const i=D[col].findIndex(x=>x.id==id);
   if(i>=0)D[col][i]={...D[col][i],...data};
   saveLocal();refresh();
+  if(db){try{await updateDoc(doc(db,col,id),data);}catch(e){setSS('error','Sync error');}}
 }
 
 // ─ HELPERS ─
@@ -913,8 +921,16 @@ window.showScreen=function(name,btn){
 function refresh(){
   const a=document.querySelector('.screen.active');if(!a)return;
   const id=a.id.replace('screen-','');
-  const r={dashboard:renderDashboard,trips:renderTrips,expenses:renderExpenses,staff:renderStaffScreen,hired:renderHired,tenders:renderTenders,more:renderMore};
-  if(r[id])r[id]();
+  if(id==='dashboard')renderDashboard();
+  else if(id==='trips')renderTrips();
+  else if(id==='expenses'){
+    renderExpenses();
+    if(expTab==='diesel')renderDiesel();
+  }
+  else if(id==='staff')renderStaffScreen();
+  else if(id==='hired')renderHired();
+  else if(id==='tenders')renderTenders();
+  else if(id==='more')renderMore();
 }
 
 // ─ MODALS ─
@@ -993,18 +1009,13 @@ window.saveTrip=async function(){
   if(!d.date||!d.source){toast('⚠️ Date and source required');return;}
   if(editId&&editCol==='trips'){
     await updR('trips',editId,d);
-    // If previously linked diesel, unlink it first
     const old=D.trips.find(t=>t.id===editId);
     if(old?.dieselId&&old.dieselId!==dieselLinkId)await updR('diesel',old.dieselId,{linkedTripId:null});
     if(dieselLinkId)await updR('diesel',dieselLinkId,{linkedTripId:editId});
     editId=null;editCol=null;closeModal('modal-trip');toast('✅ Trip updated!');return;
   }
-  const tripRef=await new Promise(async res=>{
-    if(db){try{const r=await addDoc(collection(db,'trips'),{...d,createdAt:Date.now()});res(r.id);return;}catch(e){}}
-    const id=Date.now().toString();D.trips.unshift({...d,id,createdAt:Date.now()});saveLocal();res(id);
-  });
-  // Mark diesel as linked
-  if(dieselLinkId)await updR('diesel',dieselLinkId,{linkedTripId:tripRef});
+  const newTripId=await addR('trips',d);
+  if(dieselLinkId)await updR('diesel',dieselLinkId,{linkedTripId:newTripId});
   closeModal('modal-trip');toast('✅ Trip saved!'+(dieselEntry?(' + '+dieselEntry.litres+'L diesel linked'):''));
 };
 
@@ -1018,14 +1029,33 @@ window.saveExpense=async function(){
 
 // ─ SAVE: DIESEL ─
 window.saveDiesel=async function(){
-  const d={date:document.getElementById('dsl-date').value,vehicle:document.getElementById('dsl-vehicle').value.trim(),litres:Number(document.getElementById('dsl-litres').value)||0,rate:Number(document.getElementById('dsl-rate').value)||0,total:Number(document.getElementById('dsl-total').value)||0,station:document.getElementById('dsl-station').value.trim(),driver:document.getElementById('dsl-driver').value.trim(),odometer:Number(document.getElementById('dsl-odometer').value)||0,linkedTripId:null};
+  const d={date:document.getElementById('dsl-date').value,vehicle:document.getElementById('dsl-vehicle').value.trim(),litres:Number(document.getElementById('dsl-litres').value)||0,rate:Number(document.getElementById('dsl-rate').value)||0,total:Number(document.getElementById('dsl-total').value)||0,station:document.getElementById('dsl-station').value.trim(),driver:document.getElementById('dsl-driver').value.trim(),odometer:Number(document.getElementById('dsl-odometer').value)||0};
   if(!d.date||!d.litres){toast('⚠️ Date and litres required');return;}
   if(!d.total&&d.litres&&d.rate)d.total=d.litres*d.rate;
-  if(editId&&editCol==='diesel'){await updR('diesel',editId,d);editId=null;editCol=null;closeModal('modal-diesel');toast('✅ Diesel updated!');return;}
-  await addR('diesel',d);
+  if(editId&&editCol==='diesel'){
+    await updR('diesel',editId,d);
+    // Also update the linked expense entry if it exists
+    const linkedExp=D.expenses.find(e=>e.dieselId===editId);
+    if(linkedExp){
+      await updR('expenses',linkedExp.id,{
+        date:d.date,amount:d.total,
+        desc:`Diesel: ${d.litres}L @ ₹${d.rate}/L — ${d.vehicle}`,
+        paidTo:d.station||'',linkedVehicle:d.vehicle
+      });
+    }
+    editId=null;editCol=null;closeModal('modal-diesel');toast('✅ Diesel updated!');return;
+  }
+  // New entry — store with placeholder id, then link expense
+  const newDieselId=Date.now().toString();
+  const newDiesel={...d,linkedTripId:null,id:newDieselId,createdAt:newDieselId};
+  D.diesel.unshift(newDiesel);saveLocal();refresh();
+  if(db){try{await addDoc(collection(db,'diesel'),{...d,linkedTripId:null,createdAt:Number(newDieselId)});}catch(e){setSS('error','Sync error');}}
   if(d.total>0){
-    await addR('expenses',{date:d.date,amount:d.total,category:'Fuel & Oil',desc:`Diesel: ${d.litres}L @ ₹${d.rate}/L — ${d.vehicle}`,paidTo:d.station||'',mode:'Cash',autoLinked:true,linkedVehicle:d.vehicle});
-    toast('✅ Diesel saved + added to Expenses!');
+    const expData={date:d.date,amount:d.total,category:'Fuel & Oil',
+      desc:`Diesel: ${d.litres}L @ ₹${d.rate}/L — ${d.vehicle}`,
+      paidTo:d.station||'',mode:'Cash',autoLinked:true,linkedVehicle:d.vehicle,dieselId:newDieselId};
+    await addR('expenses',expData);
+    toast('✅ Diesel saved + added to Fuel & Oil!');
   }else toast('✅ Diesel saved!');
   closeModal('modal-diesel');
 };
@@ -1174,7 +1204,7 @@ window.switchExpTab=function(tab,btn){
   document.querySelectorAll('#screen-expenses>.tabs .tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');
   document.getElementById('exp-tab-expenses').style.display=tab==='expenses'?'':'none';
   document.getElementById('exp-tab-diesel').style.display=tab==='diesel'?'':'none';
-  if(tab==='diesel')renderDiesel();
+  renderExpenses();renderDiesel();
 };
 window.switchStaffTab=function(tab,btn){
   document.querySelectorAll('#screen-staff>.tabs .tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');
