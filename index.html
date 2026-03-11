@@ -1145,7 +1145,7 @@ function loadPhotosLocal(tripId){
   try{const p=localStorage.getItem('srt_photos_'+tripId);return p?JSON.parse(p):[];}catch(e){return[];}
 }
 function deletePhotosLocal(tripId){try{localStorage.removeItem('srt_photos_'+tripId);}catch(e){}}
-=function(){const l=Number(document.getElementById('dsl-litres').value)||0,r=Number(document.getElementById('dsl-rate').value)||0;document.getElementById('dsl-total').value=l&&r?Math.round(l*r):'';};
+window.calcDiesel=function(){const l=Number(document.getElementById('dsl-litres').value)||0,r=Number(document.getElementById('dsl-rate').value)||0;document.getElementById('dsl-total').value=l&&r?Math.round(l*r):'';};
 window.calcHired=function(){const r=Number(document.getElementById('hv-rate').value)||0,q=Number(document.getElementById('hv-qty').value)||0;document.getElementById('hv-gross').value=r&&q?Math.round(r*q):'';};
 
 // TAB SWITCHES
