@@ -903,13 +903,20 @@ function boot(){
   document.getElementById('main-app').style.display='block';
   applyRoleUI();
   loadQueue();
-  updateOnlineStatus();
+  // Load local data FIRST — app is fully usable immediately
+  loadLocal();
+  updateLabels();renderDashboard();
+  // Then try Firebase in background
   try{
     const app=initializeApp(FB);db=getFirestore(app);
-    setSS('syncing',syncQueue.length?'Syncing '+syncQueue.length+' queued item(s)...':'Connecting...');
-    subAll();flushQueue();
-  }catch(e){setSS('error','Offline');loadLocal();}
-  updateLabels();renderDashboard();
+    setSS('syncing','Connecting...');
+    subAll();
+    // Flush any queued offline operations once Firebase is ready
+    setTimeout(()=>flushQueue(),2000);
+  }catch(e){setSS('error','Offline — data saved locally');}
+  // Listen for online/offline changes
+  window.addEventListener('online',()=>{isOnline=true;if(db){setSS('syncing','Back online, syncing...');setTimeout(()=>flushQueue(),1000);}});
+  window.addEventListener('offline',()=>{isOnline=false;setSS('error','Offline — saved locally');});
 }
 
 function applyRoleUI(){
@@ -946,27 +953,19 @@ function applyRoleUI(){
 // Firebase snapshots act as a reconciliation layer when connection returns.
 
 let isOnline=navigator.onLine;
-let syncQueue=[];  // [{op:'add'|'upd'|'del', col, id, data}]
+let syncQueue=[];
 let flushLock=false;
 
 function loadQueue(){try{const q=localStorage.getItem('srt_queue');if(q)syncQueue=JSON.parse(q);}catch(e){syncQueue=[];}}
 function saveQueue(){try{localStorage.setItem('srt_queue',JSON.stringify(syncQueue));}catch(e){}}
 function saveLocal(){try{localStorage.setItem('srt_d',JSON.stringify(D));}catch(e){}}
-function loadLocal(){try{const d=localStorage.getItem('srt_d');if(d)D=JSON.parse(d);}catch(e){}refresh();}
+function loadLocal(){try{const d=localStorage.getItem('srt_d');if(d)D=JSON.parse(d);}catch(e){}}
 
 function setSS(s,m){
   const dot=document.getElementById('sync-dot');
   dot.className='sync-dot'+(s==='syncing'?' syncing':s==='error'?' error':'');
   document.getElementById('sync-status').textContent=m;
 }
-
-function updateOnlineStatus(){
-  isOnline=navigator.onLine;
-  if(isOnline){setSS('syncing','Syncing...');flushQueue();}
-  else{setSS('error','Offline — saved locally');}
-}
-window.addEventListener('online',updateOnlineStatus);
-window.addEventListener('offline',updateOnlineStatus);
 
 async function flushQueue(){
   if(flushLock||!db||!isOnline||!syncQueue.length)return;
@@ -1010,22 +1009,34 @@ function queueOp(op){
   saveQueue();
 }
 
+let collectionsLoaded=0;
+const TOTAL_COLS=Object.keys(D).length;
+
 function subAll(){
+  collectionsLoaded=0;
   [...Object.keys(D)].forEach(col=>{
     const u=onSnapshot(collection(db,col),snap=>{
-      // Reconcile: merge Firebase data, but keep any locally-queued items as source of truth
+      // Reconcile: Firebase is truth, but locally-queued items override
       const queuedIds=new Set(syncQueue.filter(q=>q.col===col&&q.op!=='del').map(q=>q.id));
       const deletedIds=new Set(syncQueue.filter(q=>q.col===col&&q.op==='del').map(q=>q.id));
       const fbData=snap.docs.map(d=>({id:d.id,...d.data()})).filter(d=>!deletedIds.has(d.id));
-      // Keep local versions of queued items, take Firebase for everything else
       D[col]=[
         ...D[col].filter(item=>queuedIds.has(item.id)),
         ...fbData.filter(d=>!queuedIds.has(d.id))
       ];
       D[col].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
       saveLocal();refresh();
-      if(!syncQueue.length)setSS('ok','Synced ✓');
-    },e=>{setSS('error','Offline — saved locally');console.warn(e);});
+      collectionsLoaded++;
+      if(collectionsLoaded>=TOTAL_COLS){
+        setSS('ok',syncQueue.length?syncQueue.length+' item(s) pending':'Synced ✓');
+        if(syncQueue.length)flushQueue();
+      }
+    },e=>{
+      // Individual collection error — don't block the whole app
+      console.warn('Snapshot error for',col,e);
+      collectionsLoaded++;
+      if(collectionsLoaded>=TOTAL_COLS&&!syncQueue.length)setSS('ok','Synced ✓');
+    });
     uns.push(u);
   });
 }
