@@ -488,6 +488,30 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
 .filter-clear:hover{border-color:var(--neg);color:var(--neg)}
 .filter-count{font-size:.62rem;color:var(--t3);padding:4px 0 2px;align-self:flex-end;white-space:nowrap}
 
+
+/* ══ SEARCH BAR ══ */
+.search-wrap{position:relative;margin-bottom:10px}
+.search-input{width:100%;padding:10px 36px 10px 14px;border:1.5px solid var(--border);border-radius:var(--r-pill);font-size:.82rem;font-family:var(--font);color:var(--t1);background:var(--surface);outline:none;transition:all .18s}
+.search-input:focus{border-color:var(--green2);box-shadow:0 0 0 3px var(--green4)}
+.search-icon{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:.9rem;pointer-events:none;color:var(--t3)}
+.search-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:.7rem;cursor:pointer;background:var(--border2);border:none;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;color:var(--t2);font-weight:700}
+
+/* ══ ATTENDANCE SHEET ══ */
+.att-sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:300;display:none;align-items:flex-end}
+.att-sheet-overlay.open{display:flex}
+.att-sheet{background:var(--surface);border-radius:22px 22px 0 0;padding:18px 16px 44px;width:100%;animation:slideUp .22s ease}
+.att-sheet-name{font-weight:700;font-size:.92rem;color:var(--t1);margin-bottom:4px}
+.att-sheet-day{font-size:.7rem;color:var(--t3);margin-bottom:18px}
+.att-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.att-opt{padding:16px 10px;border-radius:var(--r);border:2px solid var(--border);background:var(--bg);font-size:.82rem;font-weight:700;cursor:pointer;text-align:center;transition:all .15s;font-family:var(--font);display:flex;flex-direction:column;gap:4px;align-items:center}
+.att-opt .ao-icon{font-size:1.4rem}
+.att-opt.ao-p{border-color:var(--green2);background:var(--green3);color:var(--green-txt)}
+.att-opt.ao-a{border-color:var(--neg);background:var(--neg-bg);color:var(--neg)}
+.att-opt.ao-hd{border-color:var(--green2);background:#e8f9ef;color:var(--green-txt)}
+.att-opt.ao-h{border-color:var(--warn);background:var(--warn-bg);color:var(--warn)}
+.att-opt.ao-blank{border-color:var(--border2);background:var(--bg2);color:var(--t3)}
+.att-opt.selected{box-shadow:0 0 0 3px rgba(26,122,63,.25);transform:scale(.97)}
+
 @media print{.bottom-nav,.topbar,.btn,.ic-btn,.no-print{display:none!important}.screen{display:block!important;padding:0!important}body{background:#fff}}
 </style>
 </head>
@@ -595,6 +619,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
     <div class="section-title">🚛 Trip Log</div>
     <button class="btn btn-primary btn-sm" onclick="openModal('modal-trip')">+ Add Trip</button>
   </div>
+  <div class="search-wrap">
+    <input type="text" class="search-input" id="search-trips" placeholder="Search vehicle, source, destination, driver..." oninput="renderTrips()">
+    <span class="search-icon">🔍</span>
+  </div>
   <div class="filter-panel">
     <div class="filter-group">
       <span class="filter-group-label">Vehicle</span>
@@ -643,6 +671,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
       <div class="section-title">💸 Expenses</div>
       <button class="btn btn-primary btn-sm" onclick="openModal('modal-expense')">+ Add</button>
     </div>
+    <div class="search-wrap">
+      <input type="text" class="search-input" id="search-expenses" placeholder="Search vendor, description, category..." oninput="renderExpenses()">
+      <span class="search-icon">🔍</span>
+    </div>
     <div class="filter-panel">
       <div class="filter-group">
         <span class="filter-group-label">Category</span>
@@ -655,6 +687,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
           <option value="Labour Cost">Labour Cost</option>
           <option value="Crane Operator">Crane Operator</option>
           <option value="Mechanic (External)">Mechanic</option>
+          <option value="Staff Groceries">Staff Groceries</option>
           <option value="Toll/Tax">Toll/Tax</option>
           <option value="Other">Other</option>
         </select>
@@ -749,6 +782,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
 <!-- HIRED -->
 <div class="screen" id="screen-hired">
   <div class="section-header"><div class="section-title">🚜 Hired Vehicles</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-hired')">+ Add</button></div>
+  <div class="search-wrap">
+    <input type="text" class="search-input" id="search-hired" placeholder="Search owner, vehicle no., work description..." oninput="renderHired()">
+    <span class="search-icon">🔍</span>
+  </div>
   <div class="filter-panel">
     <div class="filter-group">
       <span class="filter-group-label">Vehicle Type</span>
@@ -789,6 +826,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
 <!-- TENDERS -->
 <div class="screen" id="screen-tenders">
   <div class="section-header"><div class="section-title">📋 Tenders</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-tender')">+ New Tender</button></div>
+  <div class="search-wrap">
+    <input type="text" class="search-input" id="search-tenders" placeholder="Search tender no., department, division, species..." oninput="renderTenders()">
+    <span class="search-icon">🔍</span>
+  </div>
   <div id="tender-list"></div>
 </div>
 
@@ -802,6 +843,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
   <div id="more-vehicles">
     <div id="expiry-reminders"></div>
     <div class="section-header"><div class="section-title">🚗 Fleet Register</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-vehicle')">+ Add Vehicle</button></div>
+    <div class="search-wrap">
+      <input type="text" class="search-input" id="search-fleet" placeholder="Search reg. no., model, type..." oninput="renderVehicles()">
+      <span class="search-icon">🔍</span>
+    </div>
     <div class="filter-panel">
       <div class="filter-group">
         <span class="filter-group-label">Vehicle Type</span>
@@ -916,6 +961,22 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
 </div>
 </div><!-- /main-app -->
 
+<!-- ATTENDANCE BOTTOM SHEET -->
+<div class="att-sheet-overlay" id="att-sheet-overlay" onclick="if(event.target===this)closeAttSheet()">
+  <div class="att-sheet">
+    <div class="modal-handle"></div>
+    <div class="att-sheet-name" id="att-sheet-name">Staff Name</div>
+    <div class="att-sheet-day" id="att-sheet-day">Day</div>
+    <div class="att-options">
+      <button class="att-opt ao-p" onclick="setAttFromSheet('P')"><span class="ao-icon">✅</span>Present (P)</button>
+      <button class="att-opt ao-a" onclick="setAttFromSheet('A')"><span class="ao-icon">❌</span>Absent (A)</button>
+      <button class="att-opt ao-hd" onclick="setAttFromSheet('HD')"><span class="ao-icon">🌗</span>Half Day (HD)</button>
+      <button class="att-opt ao-h" onclick="setAttFromSheet('H')"><span class="ao-icon">🎉</span>Holiday (H)</button>
+    </div>
+    <button class="att-opt ao-blank" style="width:100%" onclick="setAttFromSheet('')"><span>— Clear / Not Marked —</span></button>
+  </div>
+</div>
+
 <!-- DATE PICKER -->
 <div class="date-picker-overlay" id="date-picker-overlay">
   <div class="date-picker-sheet">
@@ -988,7 +1049,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
       <option value="">Select...</option>
       <option>Fuel & Oil</option><option>Spare Parts</option><option>Maintenance</option>
       <option>Staff Wages</option><option>Labour Cost</option>
-      <option>Crane Operator</option><option>Mechanic (External)</option><option>Lubricants</option><option>Toll / Tax</option><option>Other</option>
+      <option>Crane Operator</option><option>Mechanic (External)</option><option>Lubricants</option>
+      <option>Staff Groceries</option><option>Toll / Tax</option><option>Other</option>
     </select>
   </div>
   <div class="form-group"><label class="form-label">Description</label><input type="text" class="form-input" id="exp-desc" placeholder="What was this for?"></div>
@@ -1036,7 +1098,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
     <div class="form-group"><label class="form-label">Daily Rate (₹)</label><input type="number" class="form-input" id="staff-rate" placeholder="0"></div>
   </div>
   <div class="form-group"><label class="form-label">Phone</label><input type="tel" class="form-input" id="staff-phone" placeholder="Contact number"></div>
-  <button class="btn btn-primary" onclick="saveStaff()">✓ Add Staff</button>
+  <button class="btn btn-primary" onclick="saveStaff()" id="staff-modal-btn">✓ Add Staff</button>
   <button class="btn btn-secondary" onclick="closeModal('modal-staff')">Cancel</button>
 </div></div>
 
@@ -1098,7 +1160,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
   </div>
   <div class="form-row">
     <div class="form-group"><label class="form-label">Insurance Expiry</label><input type="date" class="form-input" id="veh-insurance"></div>
+    <div class="form-group"><label class="form-label">Insurance Company</label><input type="text" class="form-input" id="veh-insurance-co" placeholder="e.g. New India, HDFC Ergo"></div>
+  </div>
+  <div class="form-row">
     <div class="form-group"><label class="form-label">Fitness Expiry</label><input type="date" class="form-input" id="veh-fitness"></div>
+    <div class="form-group"><label class="form-label">Fitness Issuing RTO</label><input type="text" class="form-input" id="veh-fitness-rto" placeholder="e.g. RTO Nagpur"></div>
   </div>
   <div class="form-row">
     <div class="form-group"><label class="form-label">Permit Expiry</label><input type="date" class="form-input" id="veh-permit"></div>
@@ -1640,6 +1706,7 @@ window.openModal=function(id){
 };
 window.closeModal=function(id){
   editId=null;editCol=null;
+  if(id==='modal-staff'){const b=document.getElementById('staff-modal-btn');if(b)b.textContent='✓ Add Staff';}
   const m=document.getElementById(id);m.classList.remove('open');
   m.querySelectorAll('input:not([type=date])').forEach(i=>i.value='');
   m.querySelectorAll('textarea').forEach(t=>t.value='');
@@ -1782,8 +1849,13 @@ window.saveDiesel=async function(){
 
 // SAVE: STAFF
 window.saveStaff=async function(){
-  const d={name:document.getElementById('staff-name').value.trim(),role:document.getElementById('staff-role').value,rate:Number(document.getElementById('staff-rate').value)||0,phone:document.getElementById('staff-phone').value.trim(),attendance:{}};
+  const d={name:document.getElementById('staff-name').value.trim(),role:document.getElementById('staff-role').value,rate:Number(document.getElementById('staff-rate').value)||0,phone:document.getElementById('staff-phone').value.trim()};
   if(!d.name){toast('⚠️ Name required');return;}
+  if(editId&&editCol==='staff'){
+    await updR('staff',editId,d);editId=null;editCol=null;
+    closeModal('modal-staff');toast('✅ Staff updated!');return;
+  }
+  d.attendance={};
   await addR('staff',d);closeModal('modal-staff');toast('✅ Staff added!');
 };
 
@@ -1807,7 +1879,7 @@ window.saveHired=async function(){
 
 // SAVE: VEHICLE
 window.saveVehicle=async function(){
-  const d={vno:document.getElementById('veh-no').value.trim(),type:document.getElementById('veh-type').value,model:document.getElementById('veh-model').value.trim(),year:document.getElementById('veh-year').value,insurance:document.getElementById('veh-insurance').value,fitness:document.getElementById('veh-fitness').value,permit:document.getElementById('veh-permit').value,status:document.getElementById('veh-status').value,financeStatus:document.getElementById('veh-finance-status').value,emi:document.getElementById('veh-emi').value,financeProvider:document.getElementById('veh-finance-provider').value.trim()};
+  const d={vno:document.getElementById('veh-no').value.trim(),type:document.getElementById('veh-type').value,model:document.getElementById('veh-model').value.trim(),year:document.getElementById('veh-year').value,insurance:document.getElementById('veh-insurance').value,insuranceCo:document.getElementById('veh-insurance-co').value.trim(),fitness:document.getElementById('veh-fitness').value,fitnessRto:document.getElementById('veh-fitness-rto').value.trim(),permit:document.getElementById('veh-permit').value,status:document.getElementById('veh-status').value,financeStatus:document.getElementById('veh-finance-status').value,emi:document.getElementById('veh-emi').value,financeProvider:document.getElementById('veh-finance-provider').value.trim()};
   if(!d.vno){toast('⚠️ Vehicle number required');return;}
   if(editId&&editCol==='vehicles'){await updR('vehicles',editId,d);editId=null;editCol=null;closeModal('modal-vehicle');toast('✅ Updated!');return;}
   await addR('vehicles',d);closeModal('modal-vehicle');toast('✅ Vehicle added!');
@@ -1859,8 +1931,12 @@ window.editItem=function(col,id){
     fill('hv-date',item.date);fill('hv-type',item.type);fill('hv-owner',item.owner);fill('hv-vno',item.vno);fill('hv-work',item.work);fill('hv-rate',item.rate);fill('hv-qty',item.qty);fill('hv-gross',item.gross);fill('hv-advance',item.advance);
     openModal('modal-hired');
   }else if(col==='vehicles'){
-    fill('veh-no',item.vno);fill('veh-type',item.type);fill('veh-model',item.model);fill('veh-year',item.year);fill('veh-insurance',item.insurance);fill('veh-fitness',item.fitness);fill('veh-permit',item.permit);fill('veh-status',item.status);fill('veh-finance-status',item.financeStatus||'clear');fill('veh-emi',item.emi||'');fill('veh-finance-provider',item.financeProvider||'');
+    fill('veh-no',item.vno);fill('veh-type',item.type);fill('veh-model',item.model);fill('veh-year',item.year);fill('veh-insurance',item.insurance);fill('veh-insurance-co',item.insuranceCo||'');fill('veh-fitness',item.fitness);fill('veh-fitness-rto',item.fitnessRto||'');fill('veh-permit',item.permit);fill('veh-status',item.status);fill('veh-finance-status',item.financeStatus||'clear');fill('veh-emi',item.emi||'');fill('veh-finance-provider',item.financeProvider||'');
     openModal('modal-vehicle');
+  }else if(col==='staff'){
+    fill('staff-name',item.name);fill('staff-role',item.role);fill('staff-rate',item.rate);fill('staff-phone',item.phone);
+    document.getElementById('staff-modal-btn').textContent='✓ Update Staff';
+    openModal('modal-staff');
   }else if(col==='advances'){
     fill('adv-date',item.date);fill('adv-amount',item.amount);fill('adv-recovered',item.recovered);fill('adv-recovery-date',item.recoveryDate);fill('adv-notes',item.notes);
     const s=document.getElementById('adv-staff');s.innerHTML='<option value="">Select staff...</option>';D.staff.forEach(st=>{const o=document.createElement('option');o.value=st.id;o.textContent=st.name;if(st.id==item.staffId)o.selected=true;s.appendChild(o);});
@@ -1883,14 +1959,38 @@ window.unlinkDiesel=async function(tripId){
 };
 
 // ATTENDANCE
-window.cycleAtt=async function(sid,mk,day){
+// ── ATTENDANCE BOTTOM SHEET ──
+let _attSid=null,_attMk=null,_attDay=null;
+window.openAttSheet=function(sid,mk,day,name,curState){
+  _attSid=sid;_attMk=mk;_attDay=day;
+  document.getElementById('att-sheet-name').textContent=name;
+  document.getElementById('att-sheet-day').textContent='Day '+day+' — currently: '+(curState||'Not marked');
+  // highlight current
+  document.querySelectorAll('.att-opt').forEach(b=>b.classList.remove('selected'));
+  const map={P:'.ao-p',A:'.ao-a',HD:'.ao-hd',H:'.ao-h','':'.ao-blank'};
+  const sel=document.querySelector(map[curState||'']);
+  if(sel)sel.classList.add('selected');
+  document.getElementById('att-sheet-overlay').classList.add('open');
+};
+window.closeAttSheet=function(){
+  document.getElementById('att-sheet-overlay').classList.remove('open');
+  _attSid=null;_attMk=null;_attDay=null;
+};
+window.setAttFromSheet=async function(val){
+  if(!_attSid)return;
+  const s=D.staff.find(s=>s.id==_attSid);if(!s)return;
+  if(!s.attendance)s.attendance={};if(!s.attendance[_attMk])s.attendance[_attMk]={};
+  s.attendance[_attMk][_attDay]=val;
+  if(db){try{await setDoc(doc(db,'staff',_attSid),{attendance:s.attendance},{merge:true});}catch(e){saveLocal();}}
+  else saveLocal();
+  closeAttSheet();
+  renderAttendance();
+};
+window.cycleAtt=function(sid,mk,day){
+  // legacy — now opens sheet
   const s=D.staff.find(s=>s.id==sid);if(!s)return;
   if(!s.attendance)s.attendance={};if(!s.attendance[mk])s.attendance[mk]={};
-  const states=['','P','A','H','HD'];
-  s.attendance[mk][day]=states[(states.indexOf(s.attendance[mk][day]||'')+1)%states.length];
-  if(db){try{await setDoc(doc(db,'staff',sid),{attendance:s.attendance},{merge:true});}catch(e){saveLocal();}}
-  else saveLocal();
-  renderAttendance();
+  openAttSheet(sid,mk,day,s.name,s.attendance[mk][day]||'');
 };
 
 // ── DASHBOARD ──
@@ -2063,7 +2163,9 @@ function renderTrips(){
 
   populateTripFilterDropdowns();
   const list=document.getElementById('trip-list');
+  const tripQ=(document.getElementById('search-trips')?.value||'').toLowerCase().trim();
   let filtered=D.trips;
+  if(tripQ)filtered=filtered.filter(t=>[t.vehicle,t.source,t.dest,t.driver,t.remarks].some(v=>v&&v.toLowerCase().includes(tripQ)));
   if(tripFilters.vehicle)filtered=filtered.filter(t=>t.vehicle===tripFilters.vehicle);
   if(tripFilters.pay)filtered=filtered.filter(t=>(t.payStatus||'pending')===tripFilters.pay);
   if(tripFilters.from)filtered=filtered.filter(t=>t.date>=tripFilters.from);
@@ -2105,7 +2207,9 @@ function renderTrips(){
 // ── EXPENSES ──
 function renderExpenses(){
   populateExpFilterDropdowns();
+  const expQ=(document.getElementById('search-expenses')?.value||'').toLowerCase().trim();
   let f=D.expenses;
+  if(expQ)f=f.filter(e=>[e.paidTo,e.desc,e.category].some(v=>v&&v.toLowerCase().includes(expQ)));
   if(expFilters.cat)f=f.filter(e=>e.category===expFilters.cat);
   if(expFilters.vendor)f=f.filter(e=>e.paidTo===expFilters.vendor);
   if(expFilters.from)f=f.filter(e=>e.date>=expFilters.from);
@@ -2180,7 +2284,7 @@ function renderStaffList(){
   list.innerHTML=sorted.map(s=>`<div class="list-item li-trip">
     <div class="list-icon">👤</div>
     <div class="list-content"><div class="list-main">${s.name}</div><div class="list-sub">${s.role} · ${s.phone||'No phone'}</div></div>
-    <div class="action-btns"><div class="list-amount">${fM(s.rate)}/day</div><button class="ic-btn" onclick="deleteItem('staff','${s.id}')">🗑️</button></div>
+    <div class="action-btns"><div class="list-amount">${fM(s.rate)}/day</div><button class="ic-btn" onclick="editItem('staff','${s.id}')">✏️</button><button class="ic-btn" onclick="deleteItem('staff','${s.id}')">🗑️</button></div>
   </div>`).join('');
 }
 function renderAttendance(){
@@ -2224,7 +2328,9 @@ function renderAdvances(){
 // ── HIRED ──
 function renderHired(){
   populateHiredFilterDropdowns();
+  const hiredQ=(document.getElementById('search-hired')?.value||'').toLowerCase().trim();
   let f=D.hired;
+  if(hiredQ)f=f.filter(h=>[h.owner,h.vno,h.work].some(v=>v&&v.toLowerCase().includes(hiredQ)));
   if(hiredFilters.type)f=f.filter(h=>h.type===hiredFilters.type);
   if(hiredFilters.owner)f=f.filter(h=>h.owner===hiredFilters.owner);
   if(hiredFilters.from)f=f.filter(h=>h.date>=hiredFilters.from);
@@ -2257,8 +2363,11 @@ function renderHired(){
 // ── TENDERS ──
 function renderTenders(){
   const list=document.getElementById('tender-list');
-  if(!D.tenders.length){list.innerHTML='<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">No tenders yet.</div></div>';return;}
-  list.innerHTML=D.tenders.map(t=>{
+  const tenderQ=(document.getElementById('search-tenders')?.value||'').toLowerCase().trim();
+  let tenders=D.tenders;
+  if(tenderQ)tenders=tenders.filter(t=>[t.number,t.dept,t.division,t.species,t.workorder].some(v=>v&&v.toLowerCase().includes(tenderQ)));
+  if(!tenders.length){list.innerHTML='<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">No tenders match search.</div></div>';return;}
+  list.innerHTML=tenders.map(t=>{
     const lT=D.trips.filter(tr=>tr.tenderId===t.id);
     const doneCBM=lT.reduce((s,tr)=>s+(tr.qty||0),0);
     const p=pct(doneCBM,t.quantity);
@@ -2302,7 +2411,9 @@ function renderVehicles(){
   const sc={Active:'ch-g','Under Repair':'ch-r',Idle:'ch-a'};
   // Fleet filter + sort
   populateFleetFilterDropdowns();
+  const fleetQ=(document.getElementById('search-fleet')?.value||'').toLowerCase().trim();
   let vehs=D.vehicles;
+  if(fleetQ)vehs=vehs.filter(v=>[v.vno,v.model,v.type,v.insuranceCo].some(x=>x&&x.toLowerCase().includes(fleetQ)));
   if(fleetFilters.type)vehs=vehs.filter(v=>v.type===fleetFilters.type);
   if(fleetFilters.model)vehs=vehs.filter(v=>v.model===fleetFilters.model);
   if(fleetFilters.status)vehs=vehs.filter(v=>v.status===fleetFilters.status);
