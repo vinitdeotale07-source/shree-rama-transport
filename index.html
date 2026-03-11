@@ -460,6 +460,22 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
 .vt-crane{background:var(--blue-bg);color:var(--blue)}
 .vt-tractor{background:var(--warn-bg);color:var(--warn)}
 
+
+/* ══ SORT BAR ══ */
+.sort-bar{display:flex;align-items:center;gap:6px;padding:8px 0 4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.sort-bar::-webkit-scrollbar{display:none}
+.sort-bar-label{font-size:.6rem;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.07em;white-space:nowrap;flex-shrink:0}
+.sort-chip{display:inline-flex;align-items:center;gap:4px;padding:5px 11px;border-radius:var(--r-pill);border:1.5px solid var(--border);background:var(--surface);color:var(--t2);font-size:.65rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .15s;font-family:var(--font);flex-shrink:0}
+.sort-chip.active{background:var(--green3);border-color:var(--green2);color:var(--green-txt)}
+.sort-chip .sc-arrow{font-size:.6rem;opacity:.7}
+.sort-dir{padding:5px 9px;border-radius:var(--r-pill);border:1.5px solid var(--border);background:var(--surface);color:var(--t2);font-size:.75rem;cursor:pointer;transition:all .15s;font-family:var(--font);font-weight:700;flex-shrink:0}
+.sort-dir.asc{border-color:var(--green2);color:var(--green);background:var(--green3)}
+.sort-dir.desc{border-color:var(--blue);color:var(--blue);background:var(--blue-bg)}
+
+/* ══ FINANCE BADGE ══ */
+.fin-clear{background:#f0faf4;color:#1a7a3f;border:1px solid #a7e3bc;border-radius:var(--r-pill);padding:2px 8px;font-size:.58rem;font-weight:700;display:inline-block}
+.fin-emi{background:#fff8ee;color:#e67e00;border:1px solid #f6d08a;border-radius:var(--r-pill);padding:2px 8px;font-size:.58rem;font-weight:700;display:inline-block}
+
 @media print{.bottom-nav,.topbar,.btn,.ic-btn,.no-print{display:none!important}.screen{display:block!important;padding:0!important}body{background:#fff}}
 </style>
 </head>
@@ -567,6 +583,15 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
     <div class="section-title">🚛 Trip Log</div>
     <button class="btn btn-primary btn-sm" onclick="openModal('modal-trip')">+ Add Trip</button>
   </div>
+  <div class="sort-bar">
+    <span class="sort-bar-label">Sort:</span>
+    <button class="sort-chip active" onclick="setTripSort('date',this)">📅 Date</button>
+    <button class="sort-chip" onclick="setTripSort('vehicle',this)">🚛 Vehicle</button>
+    <button class="sort-chip" onclick="setTripSort('revenue',this)">₹ Revenue</button>
+    <button class="sort-chip" onclick="setTripSort('qty',this)">📦 Load (CBM)</button>
+    <button class="sort-chip" onclick="setTripSort('payStatus',this)">💰 Payment</button>
+    <button class="sort-dir" id="trip-sort-dir" onclick="toggleTripDir()">↓ Desc</button>
+  </div>
   <!-- Payment summary strip -->
   <div id="trips-pay-summary" style="margin-bottom:12px"></div>
   <div id="trip-list"></div>
@@ -586,9 +611,18 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
     <div class="tabs" id="exp-filter-tabs">
       <button class="tab active" onclick="filterExpenses('all',this)">All</button>
       <button class="tab" onclick="filterExpenses('Fuel',this)">Fuel</button>
-      <button class="tab" onclick="filterExpenses('Parts',this)">Parts</button>
+      <button class="tab" onclick="filterExpenses('Spare',this)">Parts</button>
       <button class="tab" onclick="filterExpenses('Maintenance',this)">Repair</button>
       <button class="tab" onclick="filterExpenses('Staff',this)">Staff</button>
+      <button class="tab" onclick="filterExpenses('Labour',this)">Labour</button>
+    </div>
+    <div class="sort-bar">
+      <span class="sort-bar-label">Sort:</span>
+      <button class="sort-chip active" onclick="setExpSort('date',this)">📅 Date</button>
+      <button class="sort-chip" onclick="setExpSort('amount',this)">₹ Amount</button>
+      <button class="sort-chip" onclick="setExpSort('category',this)">🏷️ Category</button>
+      <button class="sort-chip" onclick="setExpSort('paidTo',this)">🏪 Vendor</button>
+      <button class="sort-dir" id="exp-sort-dir" onclick="toggleExpDir()">↓ Desc</button>
     </div>
     <div id="expense-list"></div>
   </div>
@@ -623,6 +657,13 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
   </div>
   <div id="staff-manage" style="display:none">
     <div class="section-header"><div class="section-title">👥 Staff List</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-staff')">+ Add Staff</button></div>
+    <div class="sort-bar">
+      <span class="sort-bar-label">Sort:</span>
+      <button class="sort-chip active" onclick="setStaffSort('name',this)">🔤 Name</button>
+      <button class="sort-chip" onclick="setStaffSort('role',this)">👷 Role</button>
+      <button class="sort-chip" onclick="setStaffSort('rate',this)">₹ Daily Rate</button>
+      <button class="sort-dir" id="staff-sort-dir" onclick="toggleStaffDir()">↑ Asc</button>
+    </div>
     <div id="staff-list"></div>
   </div>
 </div>
@@ -635,6 +676,16 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
     <button class="tab" onclick="filterHired('Truck',this)">Trucks</button>
     <button class="tab" onclick="filterHired('Crane',this)">Cranes</button>
     <button class="tab" onclick="filterHired('Tractor',this)">Tractors</button>
+    <button class="tab" onclick="filterHired('Other',this)">Other</button>
+  </div>
+  <div class="sort-bar">
+    <span class="sort-bar-label">Sort:</span>
+    <button class="sort-chip active" onclick="setHiredSort('date',this)">📅 Date</button>
+    <button class="sort-chip" onclick="setHiredSort('owner',this)">👤 Owner</button>
+    <button class="sort-chip" onclick="setHiredSort('gross',this)">₹ Amount</button>
+    <button class="sort-chip" onclick="setHiredSort('balance',this)">⏳ Balance</button>
+    <button class="sort-chip" onclick="setHiredSort('type',this)">🚛 Type</button>
+    <button class="sort-dir" id="hired-sort-dir" onclick="toggleHiredDir()">↓ Desc</button>
   </div>
   <div id="hired-list"></div>
 </div>
@@ -655,6 +706,23 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
   <div id="more-vehicles">
     <div id="expiry-reminders"></div>
     <div class="section-header"><div class="section-title">🚗 Fleet Register</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-vehicle')">+ Add Vehicle</button></div>
+    <div class="tabs">
+      <button class="tab active" onclick="filterFleet('all',this)">All</button>
+      <button class="tab" onclick="filterFleet('Truck',this)">🚛 Trucks</button>
+      <button class="tab" onclick="filterFleet('Crane',this)">🏗️ Cranes</button>
+      <button class="tab" onclick="filterFleet('Pickup/Bolero',this)">🛻 Pickup</button>
+      <button class="tab" onclick="filterFleet('Car',this)">🚗 Cars</button>
+    </div>
+    <div class="sort-bar">
+      <span class="sort-bar-label">Sort:</span>
+      <button class="sort-chip active" onclick="setFleetSort('vno',this)">🔤 Reg No.</button>
+      <button class="sort-chip" onclick="setFleetSort('type',this)">🚛 Type</button>
+      <button class="sort-chip" onclick="setFleetSort('year',this)">📅 Age</button>
+      <button class="sort-chip" onclick="setFleetSort('model',this)">🏷️ Model</button>
+      <button class="sort-chip" onclick="setFleetSort('status',this)">⚡ Status</button>
+      <button class="sort-chip" onclick="setFleetSort('financeStatus',this)">💳 Finance</button>
+      <button class="sort-dir" id="fleet-sort-dir" onclick="toggleFleetDir()">↑ Asc</button>
+    </div>
     <div id="vehicle-list"></div>
   </div>
   <div id="more-report" style="display:none">
@@ -915,6 +983,13 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
       <select class="form-select" id="veh-status"><option>Active</option><option>Under Repair</option><option>Idle</option></select>
     </div>
   </div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">Finance Status</label>
+      <select class="form-select" id="veh-finance-status"><option value="clear">✅ Finance Clear</option><option value="emi">🔄 Under Finance (EMI)</option></select>
+    </div>
+    <div class="form-group"><label class="form-label">EMI (₹/month)</label><input type="number" class="form-input" id="veh-emi" placeholder="0"></div>
+  </div>
+  <div class="form-group"><label class="form-label">Finance Provider / Bank</label><input type="text" class="form-input" id="veh-finance-provider" placeholder="e.g. SBI, HDFC, Shriram Finance"></div>
   <button class="btn btn-primary" onclick="saveVehicle()">✓ Save</button>
   <button class="btn btn-secondary" onclick="closeModal('modal-vehicle')">Cancel</button>
 </div></div>
@@ -1025,6 +1100,74 @@ let aM=now.getMonth(),aY=now.getFullYear();
 let rM=now.getMonth(),rY=now.getFullYear();
 let ytdY=now.getFullYear();
 let expFilter='all',hiredFilter='all',expTab='expenses',moreTab='vehicles',reportTab='monthly';
+let tripSort='date',tripDir='desc';
+let expSort='date',expDir='desc';
+let hiredSort='date',hiredDir='desc';
+let staffSort='name',staffDir='asc';
+let fleetFilter='all',fleetSort='vno',fleetDir='asc';
+
+// ── SORT HELPERS ──
+function sortData(arr,key,dir){
+  return [...arr].sort((a,b)=>{
+    let va=a[key]??'',vb=b[key]??'';
+    if(typeof va==='string')va=va.toLowerCase();
+    if(typeof vb==='string')vb=vb.toLowerCase();
+    if(va<vb)return dir==='asc'?-1:1;
+    if(va>vb)return dir==='asc'?1:-1;
+    return 0;
+  });
+}
+function setActiveChip(btn,groupClass){
+  btn.closest('.sort-bar').querySelectorAll('.sort-chip').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+window.setTripSort=function(key,btn){tripSort=key;setActiveChip(btn);renderTrips();};
+window.toggleTripDir=function(){
+  tripDir=tripDir==='asc'?'desc':'asc';
+  const b=document.getElementById('trip-sort-dir');
+  b.textContent=tripDir==='asc'?'↑ Asc':'↓ Desc';
+  b.className='sort-dir '+(tripDir==='asc'?'asc':'desc');
+  renderTrips();
+};
+window.setExpSort=function(key,btn){expSort=key;setActiveChip(btn);renderExpenses();};
+window.toggleExpDir=function(){
+  expDir=expDir==='asc'?'desc':'asc';
+  const b=document.getElementById('exp-sort-dir');
+  b.textContent=expDir==='asc'?'↑ Asc':'↓ Desc';
+  b.className='sort-dir '+(expDir==='asc'?'asc':'desc');
+  renderExpenses();
+};
+window.setHiredSort=function(key,btn){hiredSort=key;setActiveChip(btn);renderHired();};
+window.toggleHiredDir=function(){
+  hiredDir=hiredDir==='asc'?'desc':'asc';
+  const b=document.getElementById('hired-sort-dir');
+  b.textContent=hiredDir==='asc'?'↑ Asc':'↓ Desc';
+  b.className='sort-dir '+(hiredDir==='asc'?'asc':'desc');
+  renderHired();
+};
+window.setStaffSort=function(key,btn){staffSort=key;setActiveChip(btn);renderStaffList();};
+window.toggleStaffDir=function(){
+  staffDir=staffDir==='asc'?'desc':'asc';
+  const b=document.getElementById('staff-sort-dir');
+  b.textContent=staffDir==='asc'?'↑ Asc':'↓ Desc';
+  b.className='sort-dir '+(staffDir==='asc'?'asc':'desc');
+  renderStaffList();
+};
+window.filterFleet=function(type,btn){
+  fleetFilter=type;
+  btn.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  renderVehicles();
+};
+window.setFleetSort=function(key,btn){fleetSort=key;setActiveChip(btn);renderVehicles();};
+window.toggleFleetDir=function(){
+  fleetDir=fleetDir==='asc'?'desc':'asc';
+  const b=document.getElementById('fleet-sort-dir');
+  b.textContent=fleetDir==='asc'?'↑ Asc':'↓ Desc';
+  b.className='sort-dir '+(fleetDir==='asc'?'asc':'desc');
+  renderVehicles();
+};
 let revChart=null,pieChart=null,dslChart=null;
 let editId=null,editCol=null;
 let dpCtx=null,dpY=new Date().getFullYear();
@@ -1405,7 +1548,7 @@ window.saveHired=async function(){
 
 // SAVE: VEHICLE
 window.saveVehicle=async function(){
-  const d={vno:document.getElementById('veh-no').value.trim(),type:document.getElementById('veh-type').value,model:document.getElementById('veh-model').value.trim(),year:document.getElementById('veh-year').value,insurance:document.getElementById('veh-insurance').value,fitness:document.getElementById('veh-fitness').value,permit:document.getElementById('veh-permit').value,status:document.getElementById('veh-status').value};
+  const d={vno:document.getElementById('veh-no').value.trim(),type:document.getElementById('veh-type').value,model:document.getElementById('veh-model').value.trim(),year:document.getElementById('veh-year').value,insurance:document.getElementById('veh-insurance').value,fitness:document.getElementById('veh-fitness').value,permit:document.getElementById('veh-permit').value,status:document.getElementById('veh-status').value,financeStatus:document.getElementById('veh-finance-status').value,emi:document.getElementById('veh-emi').value,financeProvider:document.getElementById('veh-finance-provider').value.trim()};
   if(!d.vno){toast('⚠️ Vehicle number required');return;}
   if(editId&&editCol==='vehicles'){await updR('vehicles',editId,d);editId=null;editCol=null;closeModal('modal-vehicle');toast('✅ Updated!');return;}
   await addR('vehicles',d);closeModal('modal-vehicle');toast('✅ Vehicle added!');
@@ -1457,7 +1600,7 @@ window.editItem=function(col,id){
     fill('hv-date',item.date);fill('hv-type',item.type);fill('hv-owner',item.owner);fill('hv-vno',item.vno);fill('hv-work',item.work);fill('hv-rate',item.rate);fill('hv-qty',item.qty);fill('hv-gross',item.gross);fill('hv-advance',item.advance);
     openModal('modal-hired');
   }else if(col==='vehicles'){
-    fill('veh-no',item.vno);fill('veh-type',item.type);fill('veh-model',item.model);fill('veh-year',item.year);fill('veh-insurance',item.insurance);fill('veh-fitness',item.fitness);fill('veh-permit',item.permit);fill('veh-status',item.status);
+    fill('veh-no',item.vno);fill('veh-type',item.type);fill('veh-model',item.model);fill('veh-year',item.year);fill('veh-insurance',item.insurance);fill('veh-fitness',item.fitness);fill('veh-permit',item.permit);fill('veh-status',item.status);fill('veh-finance-status',item.financeStatus||'clear');fill('veh-emi',item.emi||'');fill('veh-finance-provider',item.financeProvider||'');
     openModal('modal-vehicle');
   }else if(col==='advances'){
     fill('adv-date',item.date);fill('adv-amount',item.amount);fill('adv-recovered',item.recovered);fill('adv-recovery-date',item.recoveryDate);fill('adv-notes',item.notes);
@@ -1660,8 +1803,9 @@ function renderTrips(){
   }else ps.innerHTML='';
 
   const list=document.getElementById('trip-list');
-  if(!D.trips.length){list.innerHTML='<div class="empty"><div class="empty-icon">🛣️</div><div class="empty-text">No trips yet.</div></div>';return;}
-  list.innerHTML=D.trips.map(t=>{
+  const sortedTrips=sortData(D.trips,tripSort,tripDir);
+  if(!sortedTrips.length){list.innerHTML='<div class="empty"><div class="empty-icon">🛣️</div><div class="empty-text">No trips yet.</div></div>';return;}
+  list.innerHTML=sortedTrips.map(t=>{
     const dsl=t.dieselId?D.diesel.find(d=>d.id===t.dieselId):null;
     const tender=t.tenderId?D.tenders.find(x=>x.id===t.tenderId):null;
     const photos=loadPhotosLocal(t.id);
@@ -1693,7 +1837,8 @@ function renderTrips(){
 
 // ── EXPENSES ──
 function renderExpenses(){
-  const f=expFilter==='all'?D.expenses:D.expenses.filter(e=>e.category&&e.category.includes(expFilter));
+  let f=expFilter==='all'?D.expenses:D.expenses.filter(e=>e.category&&e.category.includes(expFilter));
+  f=sortData(f,expSort,expDir);
   const total=f.reduce((s,e)=>s+e.amount,0);
   const list=document.getElementById('expense-list');
   if(!f.length){list.innerHTML='<div class="empty"><div class="empty-icon">🧾</div><div class="empty-text">No expenses.</div></div>';return;}
@@ -1752,7 +1897,8 @@ function renderStaffScreen(){renderAttendance();renderStaffList();renderAdvances
 function renderStaffList(){
   const list=document.getElementById('staff-list');
   if(!D.staff.length){list.innerHTML='<div class="empty"><div class="empty-icon">👤</div><div class="empty-text">No staff added.</div></div>';return;}
-  list.innerHTML=D.staff.map(s=>`<div class="list-item li-trip">
+  const sorted=sortData(D.staff,staffSort,staffDir);
+  list.innerHTML=sorted.map(s=>`<div class="list-item li-trip">
     <div class="list-icon">👤</div>
     <div class="list-content"><div class="list-main">${s.name}</div><div class="list-sub">${s.role} · ${s.phone||'No phone'}</div></div>
     <div class="action-btns"><div class="list-amount">${fM(s.rate)}/day</div><button class="ic-btn" onclick="deleteItem('staff','${s.id}')">🗑️</button></div>
@@ -1798,7 +1944,8 @@ function renderAdvances(){
 
 // ── HIRED ──
 function renderHired(){
-  const f=hiredFilter==='all'?D.hired:D.hired.filter(h=>h.type===hiredFilter);
+  let f=hiredFilter==='all'?D.hired:D.hired.filter(h=>h.type===hiredFilter);
+  f=sortData(f,hiredSort,hiredDir);
   const list=document.getElementById('hired-list');
   if(!f.length){list.innerHTML='<div class="empty"><div class="empty-icon">🚜</div><div class="empty-text">No entries.</div></div>';return;}
   const tot=f.reduce((s,h)=>s+(h.balance||0),0);
@@ -1867,18 +2014,32 @@ function renderVehicles(){
   const list=document.getElementById('vehicle-list');
   if(!D.vehicles.length){list.innerHTML='<div class="empty"><div class="empty-icon">🚗</div><div class="empty-text">No vehicles.</div></div>';return;}
   const sc={Active:'ch-g','Under Repair':'ch-r',Idle:'ch-a'};
-  list.innerHTML=D.vehicles.map(v=>{
+  // Fleet filter + sort
+  let vehs=fleetFilter==='all'?D.vehicles:D.vehicles.filter(v=>v.type===fleetFilter);
+  // For year sort, treat missing year as 0 for sorting
+  if(fleetSort==='year'){
+    vehs=[...vehs].sort((a,b)=>{const ya=Number(a.year)||0,yb=Number(b.year)||0;return fleetDir==='asc'?ya-yb:yb-ya;});
+  } else {
+    vehs=sortData(vehs,fleetSort,fleetDir);
+  }
+  if(!vehs.length){list.innerHTML='<div class="empty"><div class="empty-icon">🚗</div><div class="empty-text">No vehicles in this category.</div></div>';return;}
+  list.innerHTML=vehs.map(v=>{
     const ins=dUntil(v.insurance),fit=dUntil(v.fitness),per=dUntil(v.permit);
     const vT=D.trips.filter(t=>t.vehicle&&t.vehicle.toUpperCase()===v.vno.toUpperCase());
     const vDsl=D.diesel.filter(d=>d.vehicle&&d.vehicle.toUpperCase()===v.vno.toUpperCase());
     const fills=vDsl.filter(d=>d.odometer>0).sort((a,b)=>new Date(b.date)-new Date(a.date));
     let kml='-';
     if(fills.length>=2){const km=fills[0].odometer-fills[fills.length-1].odometer,l=fills.slice(0,-1).reduce((s,f)=>s+f.litres,0);if(l>0)kml=(km/l).toFixed(1)+' km/L';}
+    const finBadge=v.financeStatus==='emi'
+      ?`<span class="fin-emi">🔄 EMI ${v.financeProvider?'· '+v.financeProvider:''} ${v.emi?'· ₹'+Number(v.emi).toLocaleString('en-IN')+'/mo':''}</span>`
+      :'<span class="fin-clear">✅ Finance Clear</span>';
+    const age=v.year?new Date().getFullYear()-Number(v.year):null;
     return`<div class="list-item li-vehicle">
       <div class="list-icon">${v.type==='Truck'?'🚛':v.type==='Crane'?'🏗️':v.type==='Car'?'🚗':v.type==='Pickup/Bolero'?'🛻':'🚛'}</div>
       <div class="list-content">
         <div class="list-main">${v.vno} <span class="chip ${sc[v.status]||'ch-g'}" style="font-size:.56rem">${v.status}</span></div>
-        <div class="list-sub">${v.type} · ${v.model||''} ${v.year?'· '+v.year:''}</div>
+        <div class="list-sub">${v.type} · ${v.model||''} ${v.year?'· '+v.year+(age?` (${age}yr)`:''):''}</div>
+        <div style="margin:4px 0">${finBadge}</div>
         <div class="chip-row">
           <span class="chip ch-g">🚛 ${vT.length} trips · ${fM(vT.reduce((s,t)=>s+t.revenue,0))}</span>
           <span class="chip ch-b">⛽ ${vDsl.reduce((s,d)=>s+d.litres,0).toFixed(0)}L · ${kml}</span>
