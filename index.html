@@ -1033,17 +1033,22 @@ window.saveDiesel=async function(){
   if(!d.date||!d.litres){toast('⚠️ Date and litres required');return;}
   if(!d.total&&d.litres&&d.rate)d.total=d.litres*d.rate;
   if(editId&&editCol==='diesel'){
+    const oldDiesel=D.diesel.find(x=>x.id===editId);
+    // Find linked expense: match dieselId field, OR fallback to autoLinked+vehicle+date match
+    const linkedExp=D.expenses.find(e=>e.dieselId===editId)
+      ||(oldDiesel?D.expenses.find(e=>e.autoLinked&&e.linkedVehicle===oldDiesel.vehicle&&e.date===oldDiesel.date):null);
     await updR('diesel',editId,d);
-    // Also update the linked expense entry if it exists
-    const linkedExp=D.expenses.find(e=>e.dieselId===editId);
     if(linkedExp){
       await updR('expenses',linkedExp.id,{
         date:d.date,amount:d.total,
         desc:`Diesel: ${d.litres}L @ ₹${d.rate}/L — ${d.vehicle}`,
-        paidTo:d.station||'',linkedVehicle:d.vehicle
+        paidTo:d.station||'',linkedVehicle:d.vehicle,dieselId:editId
       });
+      toast('✅ Diesel & Fuel expense updated!');
+    }else{
+      toast('✅ Diesel updated!');
     }
-    editId=null;editCol=null;closeModal('modal-diesel');toast('✅ Diesel updated!');return;
+    editId=null;editCol=null;closeModal('modal-diesel');return;
   }
   // New entry — store with placeholder id, then link expense
   const newDieselId=Date.now().toString();
@@ -1121,7 +1126,16 @@ window.saveTender=async function(){
   await addR('tenders',d);closeModal('modal-tender');toast('✅ Tender saved!');
 };
 
-window.deleteItem=async function(col,id){if(!confirm('Delete this record?'))return;await delR(col,id);toast('🗑️ Deleted');};
+window.deleteItem=async function(col,id){
+  if(!confirm('Delete this record?'))return;
+  if(col==='diesel'){
+    const linkedExp=D.expenses.find(e=>e.dieselId===id);
+    if(linkedExp)await delR('expenses',linkedExp.id);
+  }
+  await delR(col,id);
+  toast('🗑️ Deleted');
+};
+
 
 // ─ EDIT ITEM ─
 window.editItem=function(col,id){
