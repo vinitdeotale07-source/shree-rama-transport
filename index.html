@@ -476,6 +476,18 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
 .fin-clear{background:#f0faf4;color:#1a7a3f;border:1px solid #a7e3bc;border-radius:var(--r-pill);padding:2px 8px;font-size:.58rem;font-weight:700;display:inline-block}
 .fin-emi{background:#fff8ee;color:#e67e00;border:1px solid #f6d08a;border-radius:var(--r-pill);padding:2px 8px;font-size:.58rem;font-weight:700;display:inline-block}
 
+
+/* ══ FILTER PANEL ══ */
+.filter-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;margin-bottom:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end}
+.filter-group{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1}
+.filter-group-label{font-size:.56rem;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
+.filter-select{padding:7px 10px;border:1.5px solid var(--border);border-radius:var(--rs);font-size:.75rem;font-family:var(--font);color:var(--t1);background:var(--bg);outline:none;cursor:pointer;width:100%}
+.filter-select:focus{border-color:var(--green2)}
+.filter-select.active{border-color:var(--green2);background:var(--green3);color:var(--green-txt);font-weight:600}
+.filter-clear{padding:7px 12px;border-radius:var(--rs);border:1.5px solid var(--border2);background:var(--surface);color:var(--t3);font-size:.7rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:var(--font);transition:all .15s;align-self:flex-end}
+.filter-clear:hover{border-color:var(--neg);color:var(--neg)}
+.filter-count{font-size:.62rem;color:var(--t3);padding:4px 0 2px;align-self:flex-end;white-space:nowrap}
+
 @media print{.bottom-nav,.topbar,.btn,.ic-btn,.no-print{display:none!important}.screen{display:block!important;padding:0!important}body{background:#fff}}
 </style>
 </head>
@@ -583,16 +595,39 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
     <div class="section-title">🚛 Trip Log</div>
     <button class="btn btn-primary btn-sm" onclick="openModal('modal-trip')">+ Add Trip</button>
   </div>
+  <div class="filter-panel">
+    <div class="filter-group">
+      <span class="filter-group-label">Vehicle</span>
+      <select class="filter-select" id="flt-trip-vehicle" onchange="applyTripFilter()"><option value="">All Vehicles</option></select>
+    </div>
+    <div class="filter-group">
+      <span class="filter-group-label">Payment</span>
+      <select class="filter-select" id="flt-trip-pay" onchange="applyTripFilter()">
+        <option value="">All</option>
+        <option value="pending">⏳ Pending</option>
+        <option value="partial">🔶 Partial</option>
+        <option value="received">✅ Paid</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <span class="filter-group-label">From Date</span>
+      <input type="date" class="filter-select" id="flt-trip-from" onchange="applyTripFilter()">
+    </div>
+    <div class="filter-group">
+      <span class="filter-group-label">To Date</span>
+      <input type="date" class="filter-select" id="flt-trip-to" onchange="applyTripFilter()">
+    </div>
+    <button class="filter-clear" onclick="clearTripFilter()">✕ Clear</button>
+    <span class="filter-count" id="trip-filter-count"></span>
+  </div>
   <div class="sort-bar">
     <span class="sort-bar-label">Sort:</span>
     <button class="sort-chip active" onclick="setTripSort('date',this)">📅 Date</button>
     <button class="sort-chip" onclick="setTripSort('vehicle',this)">🚛 Vehicle</button>
     <button class="sort-chip" onclick="setTripSort('revenue',this)">₹ Revenue</button>
-    <button class="sort-chip" onclick="setTripSort('qty',this)">📦 Load (CBM)</button>
-    <button class="sort-chip" onclick="setTripSort('payStatus',this)">💰 Payment</button>
+    <button class="sort-chip" onclick="setTripSort('qty',this)">📦 CBM</button>
     <button class="sort-dir" id="trip-sort-dir" onclick="toggleTripDir()">↓ Desc</button>
   </div>
-  <!-- Payment summary strip -->
   <div id="trips-pay-summary" style="margin-bottom:12px"></div>
   <div id="trip-list"></div>
 </div>
@@ -608,13 +643,36 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
       <div class="section-title">💸 Expenses</div>
       <button class="btn btn-primary btn-sm" onclick="openModal('modal-expense')">+ Add</button>
     </div>
-    <div class="tabs" id="exp-filter-tabs">
-      <button class="tab active" onclick="filterExpenses('all',this)">All</button>
-      <button class="tab" onclick="filterExpenses('Fuel',this)">Fuel</button>
-      <button class="tab" onclick="filterExpenses('Spare',this)">Parts</button>
-      <button class="tab" onclick="filterExpenses('Maintenance',this)">Repair</button>
-      <button class="tab" onclick="filterExpenses('Staff',this)">Staff</button>
-      <button class="tab" onclick="filterExpenses('Labour',this)">Labour</button>
+    <div class="filter-panel">
+      <div class="filter-group">
+        <span class="filter-group-label">Category</span>
+        <select class="filter-select" id="flt-exp-cat" onchange="applyExpFilter()">
+          <option value="">All Categories</option>
+          <option value="Fuel & Oil">Fuel & Oil</option>
+          <option value="Spare Parts">Spare Parts</option>
+          <option value="Maintenance">Maintenance</option>
+          <option value="Staff Wages">Staff Wages</option>
+          <option value="Labour Cost">Labour Cost</option>
+          <option value="Crane Operator">Crane Operator</option>
+          <option value="Mechanic (External)">Mechanic</option>
+          <option value="Toll/Tax">Toll/Tax</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <span class="filter-group-label">Vendor / Paid To</span>
+        <select class="filter-select" id="flt-exp-vendor" onchange="applyExpFilter()"><option value="">All Vendors</option></select>
+      </div>
+      <div class="filter-group">
+        <span class="filter-group-label">From</span>
+        <input type="date" class="filter-select" id="flt-exp-from" onchange="applyExpFilter()">
+      </div>
+      <div class="filter-group">
+        <span class="filter-group-label">To</span>
+        <input type="date" class="filter-select" id="flt-exp-to" onchange="applyExpFilter()">
+      </div>
+      <button class="filter-clear" onclick="clearExpFilter()">✕ Clear</button>
+      <span class="filter-count" id="exp-filter-count"></span>
     </div>
     <div class="sort-bar">
       <span class="sort-bar-label">Sort:</span>
@@ -657,11 +715,31 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
   </div>
   <div id="staff-manage" style="display:none">
     <div class="section-header"><div class="section-title">👥 Staff List</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-staff')">+ Add Staff</button></div>
+    <div class="filter-panel">
+      <div class="filter-group">
+        <span class="filter-group-label">Role</span>
+        <select class="filter-select" id="flt-staff-role" onchange="applyStaffFilter()">
+          <option value="">All Roles</option>
+          <option value="Driver">Driver</option>
+          <option value="Crane Operator">Crane Operator</option>
+          <option value="Labour">Labour</option>
+          <option value="Supervisor">Supervisor</option>
+          <option value="Helper">Helper</option>
+          <option value="Mechanic">Mechanic</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <span class="filter-group-label">Min Rate (₹/day)</span>
+        <input type="number" class="filter-select" id="flt-staff-rate-min" placeholder="0" oninput="applyStaffFilter()">
+      </div>
+      <button class="filter-clear" onclick="clearStaffFilter()">✕ Clear</button>
+      <span class="filter-count" id="staff-filter-count"></span>
+    </div>
     <div class="sort-bar">
       <span class="sort-bar-label">Sort:</span>
       <button class="sort-chip active" onclick="setStaffSort('name',this)">🔤 Name</button>
       <button class="sort-chip" onclick="setStaffSort('role',this)">👷 Role</button>
-      <button class="sort-chip" onclick="setStaffSort('rate',this)">₹ Daily Rate</button>
+      <button class="sort-chip" onclick="setStaffSort('rate',this)">₹ Rate</button>
       <button class="sort-dir" id="staff-sort-dir" onclick="toggleStaffDir()">↑ Asc</button>
     </div>
     <div id="staff-list"></div>
@@ -671,12 +749,31 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
 <!-- HIRED -->
 <div class="screen" id="screen-hired">
   <div class="section-header"><div class="section-title">🚜 Hired Vehicles</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-hired')">+ Add</button></div>
-  <div class="tabs">
-    <button class="tab active" onclick="filterHired('all',this)">All</button>
-    <button class="tab" onclick="filterHired('Truck',this)">Trucks</button>
-    <button class="tab" onclick="filterHired('Crane',this)">Cranes</button>
-    <button class="tab" onclick="filterHired('Tractor',this)">Tractors</button>
-    <button class="tab" onclick="filterHired('Other',this)">Other</button>
+  <div class="filter-panel">
+    <div class="filter-group">
+      <span class="filter-group-label">Vehicle Type</span>
+      <select class="filter-select" id="flt-hired-type" onchange="applyHiredFilter()">
+        <option value="">All Types</option>
+        <option value="Truck">🚛 Truck</option>
+        <option value="Crane">🏗️ Crane</option>
+        <option value="Tractor">🚜 Tractor</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <span class="filter-group-label">Owner</span>
+      <select class="filter-select" id="flt-hired-owner" onchange="applyHiredFilter()"><option value="">All Owners</option></select>
+    </div>
+    <div class="filter-group">
+      <span class="filter-group-label">From</span>
+      <input type="date" class="filter-select" id="flt-hired-from" onchange="applyHiredFilter()">
+    </div>
+    <div class="filter-group">
+      <span class="filter-group-label">To</span>
+      <input type="date" class="filter-select" id="flt-hired-to" onchange="applyHiredFilter()">
+    </div>
+    <button class="filter-clear" onclick="clearHiredFilter()">✕ Clear</button>
+    <span class="filter-count" id="hired-filter-count"></span>
   </div>
   <div class="sort-bar">
     <span class="sort-bar-label">Sort:</span>
@@ -684,7 +781,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
     <button class="sort-chip" onclick="setHiredSort('owner',this)">👤 Owner</button>
     <button class="sort-chip" onclick="setHiredSort('gross',this)">₹ Amount</button>
     <button class="sort-chip" onclick="setHiredSort('balance',this)">⏳ Balance</button>
-    <button class="sort-chip" onclick="setHiredSort('type',this)">🚛 Type</button>
     <button class="sort-dir" id="hired-sort-dir" onclick="toggleHiredDir()">↓ Desc</button>
   </div>
   <div id="hired-list"></div>
@@ -706,12 +802,41 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
   <div id="more-vehicles">
     <div id="expiry-reminders"></div>
     <div class="section-header"><div class="section-title">🚗 Fleet Register</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-vehicle')">+ Add Vehicle</button></div>
-    <div class="tabs">
-      <button class="tab active" onclick="filterFleet('all',this)">All</button>
-      <button class="tab" onclick="filterFleet('Truck',this)">🚛 Trucks</button>
-      <button class="tab" onclick="filterFleet('Crane',this)">🏗️ Cranes</button>
-      <button class="tab" onclick="filterFleet('Pickup/Bolero',this)">🛻 Pickup</button>
-      <button class="tab" onclick="filterFleet('Car',this)">🚗 Cars</button>
+    <div class="filter-panel">
+      <div class="filter-group">
+        <span class="filter-group-label">Vehicle Type</span>
+        <select class="filter-select" id="flt-fleet-type" onchange="applyFleetFilter()">
+          <option value="">All Types</option>
+          <option value="Truck">🚛 Trucks</option>
+          <option value="Crane">🏗️ Cranes</option>
+          <option value="Pickup/Bolero">🛻 Pickup/Bolero</option>
+          <option value="Car">🚗 Cars</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <span class="filter-group-label">Model</span>
+        <select class="filter-select" id="flt-fleet-model" onchange="applyFleetFilter()"><option value="">All Models</option></select>
+      </div>
+      <div class="filter-group">
+        <span class="filter-group-label">Status</span>
+        <select class="filter-select" id="flt-fleet-status" onchange="applyFleetFilter()">
+          <option value="">All Status</option>
+          <option value="Active">✅ Active</option>
+          <option value="Under Repair">🔧 Under Repair</option>
+          <option value="Idle">⏸️ Idle</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <span class="filter-group-label">Finance</span>
+        <select class="filter-select" id="flt-fleet-finance" onchange="applyFleetFilter()">
+          <option value="">All</option>
+          <option value="clear">✅ Finance Clear</option>
+          <option value="emi">🔄 Under EMI</option>
+        </select>
+      </div>
+      <button class="filter-clear" onclick="clearFleetFilter()">✕ Clear</button>
+      <span class="filter-count" id="fleet-filter-count"></span>
     </div>
     <div class="sort-bar">
       <span class="sort-bar-label">Sort:</span>
@@ -719,8 +844,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
       <button class="sort-chip" onclick="setFleetSort('type',this)">🚛 Type</button>
       <button class="sort-chip" onclick="setFleetSort('year',this)">📅 Age</button>
       <button class="sort-chip" onclick="setFleetSort('model',this)">🏷️ Model</button>
-      <button class="sort-chip" onclick="setFleetSort('status',this)">⚡ Status</button>
-      <button class="sort-chip" onclick="setFleetSort('financeStatus',this)">💳 Finance</button>
       <button class="sort-dir" id="fleet-sort-dir" onclick="toggleFleetDir()">↑ Asc</button>
     </div>
     <div id="vehicle-list"></div>
@@ -1101,6 +1224,142 @@ let rM=now.getMonth(),rY=now.getFullYear();
 let ytdY=now.getFullYear();
 let expFilter='all',hiredFilter='all',expTab='expenses',moreTab='vehicles',reportTab='monthly';
 let tripSort='date',tripDir='desc';
+// ── FILTER STATE ──
+let tripFilters={vehicle:'',pay:'',from:'',to:''};
+let expFilters={cat:'',vendor:'',from:'',to:''};
+let hiredFilters={type:'',owner:'',from:'',to:''};
+let fleetFilters={type:'',model:'',status:'',finance:''};
+let staffFilters={role:'',rateMin:''};
+
+// ── POPULATE DYNAMIC DROPDOWNS ──
+function populateTripFilterDropdowns(){
+  const vSel=document.getElementById('flt-trip-vehicle');
+  if(!vSel)return;
+  const cur=vSel.value;
+  const vehicles=[...new Set(D.trips.map(t=>t.vehicle).filter(Boolean))].sort();
+  vSel.innerHTML='<option value="">All Vehicles</option>'+vehicles.map(v=>`<option value="${v}"${v===cur?' selected':''}>${v}</option>`).join('');
+}
+function populateExpFilterDropdowns(){
+  const vSel=document.getElementById('flt-exp-vendor');
+  if(!vSel)return;
+  const cur=vSel.value;
+  const vendors=[...new Set(D.expenses.map(e=>e.paidTo).filter(Boolean))].sort();
+  vSel.innerHTML='<option value="">All Vendors</option>'+vendors.map(v=>`<option value="${v}"${v===cur?' selected':''}>${v}</option>`).join('');
+}
+function populateFleetFilterDropdowns(){
+  const mSel=document.getElementById('flt-fleet-model');
+  if(!mSel)return;
+  const cur=mSel.value;
+  const models=[...new Set(D.vehicles.map(v=>v.model).filter(Boolean))].sort();
+  mSel.innerHTML='<option value="">All Models</option>'+models.map(m=>`<option value="${m}"${m===cur?' selected':''}>${m}</option>`).join('');
+}
+function populateHiredFilterDropdowns(){
+  const oSel=document.getElementById('flt-hired-owner');
+  if(!oSel)return;
+  const cur=oSel.value;
+  const owners=[...new Set(D.hired.map(h=>h.owner).filter(Boolean))].sort();
+  oSel.innerHTML='<option value="">All Owners</option>'+owners.map(o=>`<option value="${o}"${o===cur?' selected':''}>${o}</option>`).join('');
+}
+
+// ── APPLY FILTERS ──
+window.applyTripFilter=function(){
+  tripFilters={
+    vehicle:document.getElementById('flt-trip-vehicle')?.value||'',
+    pay:document.getElementById('flt-trip-pay')?.value||'',
+    from:document.getElementById('flt-trip-from')?.value||'',
+    to:document.getElementById('flt-trip-to')?.value||''
+  };
+  // highlight active selects
+  ['flt-trip-vehicle','flt-trip-pay','flt-trip-from','flt-trip-to'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.classList.toggle('active',!!el.value);
+  });
+  renderTrips();
+};
+window.clearTripFilter=function(){
+  tripFilters={vehicle:'',pay:'',from:'',to:''};
+  ['flt-trip-vehicle','flt-trip-pay','flt-trip-from','flt-trip-to'].forEach(id=>{
+    const el=document.getElementById(id);if(el){el.value='';el.classList.remove('active');}
+  });
+  renderTrips();
+};
+
+window.applyExpFilter=function(){
+  expFilters={
+    cat:document.getElementById('flt-exp-cat')?.value||'',
+    vendor:document.getElementById('flt-exp-vendor')?.value||'',
+    from:document.getElementById('flt-exp-from')?.value||'',
+    to:document.getElementById('flt-exp-to')?.value||''
+  };
+  ['flt-exp-cat','flt-exp-vendor','flt-exp-from','flt-exp-to'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.classList.toggle('active',!!el.value);
+  });
+  renderExpenses();
+};
+window.clearExpFilter=function(){
+  expFilters={cat:'',vendor:'',from:'',to:''};
+  ['flt-exp-cat','flt-exp-vendor','flt-exp-from','flt-exp-to'].forEach(id=>{
+    const el=document.getElementById(id);if(el){el.value='';el.classList.remove('active');}
+  });
+  renderExpenses();
+};
+
+window.applyHiredFilter=function(){
+  hiredFilters={
+    type:document.getElementById('flt-hired-type')?.value||'',
+    owner:document.getElementById('flt-hired-owner')?.value||'',
+    from:document.getElementById('flt-hired-from')?.value||'',
+    to:document.getElementById('flt-hired-to')?.value||''
+  };
+  ['flt-hired-type','flt-hired-owner','flt-hired-from','flt-hired-to'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.classList.toggle('active',!!el.value);
+  });
+  renderHired();
+};
+window.clearHiredFilter=function(){
+  hiredFilters={type:'',owner:'',from:'',to:''};
+  ['flt-hired-type','flt-hired-owner','flt-hired-from','flt-hired-to'].forEach(id=>{
+    const el=document.getElementById(id);if(el){el.value='';el.classList.remove('active');}
+  });
+  renderHired();
+};
+
+window.applyFleetFilter=function(){
+  fleetFilters={
+    type:document.getElementById('flt-fleet-type')?.value||'',
+    model:document.getElementById('flt-fleet-model')?.value||'',
+    status:document.getElementById('flt-fleet-status')?.value||'',
+    finance:document.getElementById('flt-fleet-finance')?.value||''
+  };
+  ['flt-fleet-type','flt-fleet-model','flt-fleet-status','flt-fleet-finance'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.classList.toggle('active',!!el.value);
+  });
+  renderVehicles();
+};
+window.clearFleetFilter=function(){
+  fleetFilters={type:'',model:'',status:'',finance:''};
+  ['flt-fleet-type','flt-fleet-model','flt-fleet-status','flt-fleet-finance'].forEach(id=>{
+    const el=document.getElementById(id);if(el){el.value='';el.classList.remove('active');}
+  });
+  renderVehicles();
+};
+
+window.applyStaffFilter=function(){
+  staffFilters={
+    role:document.getElementById('flt-staff-role')?.value||'',
+    rateMin:document.getElementById('flt-staff-rate-min')?.value||''
+  };
+  ['flt-staff-role','flt-staff-rate-min'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.classList.toggle('active',!!el.value);
+  });
+  renderStaffList();
+};
+window.clearStaffFilter=function(){
+  staffFilters={role:'',rateMin:''};
+  ['flt-staff-role','flt-staff-rate-min'].forEach(id=>{
+    const el=document.getElementById(id);if(el){el.value='';el.classList.remove('active');}
+  });
+  renderStaffList();
+};
 let expSort='date',expDir='desc';
 let hiredSort='date',hiredDir='desc';
 let staffSort='name',staffDir='asc';
@@ -1802,9 +2061,17 @@ function renderTrips(){
     </div>`;
   }else ps.innerHTML='';
 
+  populateTripFilterDropdowns();
   const list=document.getElementById('trip-list');
-  const sortedTrips=sortData(D.trips,tripSort,tripDir);
-  if(!sortedTrips.length){list.innerHTML='<div class="empty"><div class="empty-icon">🛣️</div><div class="empty-text">No trips yet.</div></div>';return;}
+  let filtered=D.trips;
+  if(tripFilters.vehicle)filtered=filtered.filter(t=>t.vehicle===tripFilters.vehicle);
+  if(tripFilters.pay)filtered=filtered.filter(t=>(t.payStatus||'pending')===tripFilters.pay);
+  if(tripFilters.from)filtered=filtered.filter(t=>t.date>=tripFilters.from);
+  if(tripFilters.to)filtered=filtered.filter(t=>t.date<=tripFilters.to);
+  const sortedTrips=sortData(filtered,tripSort,tripDir);
+  const cEl=document.getElementById('trip-filter-count');
+  if(cEl){const hasFilter=Object.values(tripFilters).some(v=>v);cEl.textContent=hasFilter?`${sortedTrips.length} of ${D.trips.length} trips`:'';}
+  if(!sortedTrips.length){list.innerHTML='<div class="empty"><div class="empty-icon">🛣️</div><div class="empty-text">No trips match filters.</div></div>';return;}
   list.innerHTML=sortedTrips.map(t=>{
     const dsl=t.dieselId?D.diesel.find(d=>d.id===t.dieselId):null;
     const tender=t.tenderId?D.tenders.find(x=>x.id===t.tenderId):null;
@@ -1837,11 +2104,18 @@ function renderTrips(){
 
 // ── EXPENSES ──
 function renderExpenses(){
-  let f=expFilter==='all'?D.expenses:D.expenses.filter(e=>e.category&&e.category.includes(expFilter));
+  populateExpFilterDropdowns();
+  let f=D.expenses;
+  if(expFilters.cat)f=f.filter(e=>e.category===expFilters.cat);
+  if(expFilters.vendor)f=f.filter(e=>e.paidTo===expFilters.vendor);
+  if(expFilters.from)f=f.filter(e=>e.date>=expFilters.from);
+  if(expFilters.to)f=f.filter(e=>e.date<=expFilters.to);
   f=sortData(f,expSort,expDir);
+  const cEl=document.getElementById('exp-filter-count');
+  if(cEl){const hasFilter=Object.values(expFilters).some(v=>v);cEl.textContent=hasFilter?`${f.length} of ${D.expenses.length} entries`:'';}
   const total=f.reduce((s,e)=>s+e.amount,0);
   const list=document.getElementById('expense-list');
-  if(!f.length){list.innerHTML='<div class="empty"><div class="empty-icon">🧾</div><div class="empty-text">No expenses.</div></div>';return;}
+  if(!f.length){list.innerHTML='<div class="empty"><div class="empty-icon">🧾</div><div class="empty-text">No expenses match filters.</div></div>';return;}
   list.innerHTML=`<div class="card" style="background:var(--bg2);color:#fff;margin-bottom:12px">
     <div style="font-size:.6rem;color:var(--s);text-transform:uppercase;margin-bottom:2px">Total (filtered)</div>
     <div style="font-family:var(--font-num);font-size:1.5rem;font-weight:400">${fM(total)}</div>
@@ -1897,7 +2171,12 @@ function renderStaffScreen(){renderAttendance();renderStaffList();renderAdvances
 function renderStaffList(){
   const list=document.getElementById('staff-list');
   if(!D.staff.length){list.innerHTML='<div class="empty"><div class="empty-icon">👤</div><div class="empty-text">No staff added.</div></div>';return;}
-  const sorted=sortData(D.staff,staffSort,staffDir);
+  let staffFiltered=D.staff;
+  if(staffFilters.role)staffFiltered=staffFiltered.filter(s=>s.role===staffFilters.role);
+  if(staffFilters.rateMin)staffFiltered=staffFiltered.filter(s=>(s.rate||0)>=Number(staffFilters.rateMin));
+  const cEl=document.getElementById('staff-filter-count');
+  if(cEl){const hasFilter=Object.values(staffFilters).some(v=>v);cEl.textContent=hasFilter?`${staffFiltered.length} of ${D.staff.length} staff`:'';}
+  const sorted=sortData(staffFiltered,staffSort,staffDir);
   list.innerHTML=sorted.map(s=>`<div class="list-item li-trip">
     <div class="list-icon">👤</div>
     <div class="list-content"><div class="list-main">${s.name}</div><div class="list-sub">${s.role} · ${s.phone||'No phone'}</div></div>
@@ -1944,10 +2223,17 @@ function renderAdvances(){
 
 // ── HIRED ──
 function renderHired(){
-  let f=hiredFilter==='all'?D.hired:D.hired.filter(h=>h.type===hiredFilter);
+  populateHiredFilterDropdowns();
+  let f=D.hired;
+  if(hiredFilters.type)f=f.filter(h=>h.type===hiredFilters.type);
+  if(hiredFilters.owner)f=f.filter(h=>h.owner===hiredFilters.owner);
+  if(hiredFilters.from)f=f.filter(h=>h.date>=hiredFilters.from);
+  if(hiredFilters.to)f=f.filter(h=>h.date<=hiredFilters.to);
   f=sortData(f,hiredSort,hiredDir);
+  const cEl=document.getElementById('hired-filter-count');
+  if(cEl){const hasFilter=Object.values(hiredFilters).some(v=>v);cEl.textContent=hasFilter?`${f.length} of ${D.hired.length} entries`:'';}
   const list=document.getElementById('hired-list');
-  if(!f.length){list.innerHTML='<div class="empty"><div class="empty-icon">🚜</div><div class="empty-text">No entries.</div></div>';return;}
+  if(!f.length){list.innerHTML='<div class="empty"><div class="empty-icon">🚜</div><div class="empty-text">No entries match filters.</div></div>';return;}
   const tot=f.reduce((s,h)=>s+(h.balance||0),0);
   const tc={Truck:'vt-truck',Crane:'vt-crane',Tractor:'vt-tractor',Other:'vt-truck'};
   list.innerHTML=`<div class="card" style="background:var(--bg2);color:#fff;margin-bottom:12px">
@@ -2015,7 +2301,14 @@ function renderVehicles(){
   if(!D.vehicles.length){list.innerHTML='<div class="empty"><div class="empty-icon">🚗</div><div class="empty-text">No vehicles.</div></div>';return;}
   const sc={Active:'ch-g','Under Repair':'ch-r',Idle:'ch-a'};
   // Fleet filter + sort
-  let vehs=fleetFilter==='all'?D.vehicles:D.vehicles.filter(v=>v.type===fleetFilter);
+  populateFleetFilterDropdowns();
+  let vehs=D.vehicles;
+  if(fleetFilters.type)vehs=vehs.filter(v=>v.type===fleetFilters.type);
+  if(fleetFilters.model)vehs=vehs.filter(v=>v.model===fleetFilters.model);
+  if(fleetFilters.status)vehs=vehs.filter(v=>v.status===fleetFilters.status);
+  if(fleetFilters.finance)vehs=vehs.filter(v=>(v.financeStatus||'clear')===fleetFilters.finance);
+  const cEl=document.getElementById('fleet-filter-count');
+  if(cEl){const hasFilter=Object.values(fleetFilters).some(v=>v);cEl.textContent=hasFilter?`${vehs.length} of ${D.vehicles.length} vehicles`:'';}
   // For year sort, treat missing year as 0 for sorting
   if(fleetSort==='year'){
     vehs=[...vehs].sort((a,b)=>{const ya=Number(a.year)||0,yb=Number(b.year)||0;return fleetDir==='asc'?ya-yb:yb-ya;});
