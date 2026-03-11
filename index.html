@@ -6,346 +6,500 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Shree Rama">
-<meta name="theme-color" content="#0f2318">
+<meta name="theme-color" content="#1a7a3f">
 <title>Shree Rama Transport</title>
-<link rel="manifest" href="data:application/json,{&quot;name&quot;:&quot;Shree Rama Transport&quot;,&quot;short_name&quot;:&quot;SRT&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;#0f2318&quot;,&quot;theme_color&quot;:&quot;#0f2318&quot;}">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<link rel="manifest" href="data:application/json,{&quot;name&quot;:&quot;Shree Rama Transport&quot;,&quot;short_name&quot;:&quot;SRT&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;#ffffff&quot;,&quot;theme_color&quot;:&quot;#1a7a3f&quot;}">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Bebas+Neue&family=Rajdhani:wght@600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
+/* ── DESIGN LANGUAGE: Groww precision + Blinkit energy ── */
 :root{
-  --f:#0f2318;--p:#1b4d33;--l:#2d7a52;--s:#52b788;--m:#d8f3dc;
-  --ink:#0a1a0f;--gray:#5a7060;--light:#f2f7f4;--white:#fff;
-  --danger:#dc2626;--warn:#d97706;--gold:#b8962e;--gold-l:#f0c040;
-  --blue:#1d6fa4;--rust:#c0392b;--purple:#7c3aed;
-  --r:14px;--rs:10px;--sh:0 2px 16px rgba(15,35,24,.09);--sh2:0 6px 32px rgba(15,35,24,.14);
-}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:'Inter',sans-serif;background:var(--light);color:var(--ink);min-height:100vh;overscroll-behavior:none}
+  /* Background system — near white like Groww */
+  --bg:#f5f7f5;
+  --bg2:#eef1ee;
+  --surface:#ffffff;
+  --surface2:#f0f4f0;
+  --surface3:#e8ede8;
 
-/* LOGIN */
-.login-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;background:linear-gradient(155deg,#0f2318 0%,#071510 55%,#0a1e14 100%);position:relative;overflow:hidden}
-.login-screen::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(45,122,82,.18) 0%,transparent 70%)}
-.logo-ring{width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,#1b4d33,#0f2318);border:2px solid rgba(184,150,46,.5);display:flex;align-items:center;justify-content:center;margin-bottom:20px;box-shadow:0 0 0 6px rgba(184,150,46,.07),0 8px 32px rgba(0,0,0,.4);animation:popIn .5s cubic-bezier(.34,1.56,.64,1)}
-@keyframes popIn{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
-.login-title{font-family:'Syne',sans-serif;font-size:1.75rem;font-weight:800;color:#fff;text-align:center;letter-spacing:-.02em;line-height:1.1;margin-bottom:4px}
-.login-title span{color:var(--gold-l)}
-.role-select{display:flex;gap:8px;margin-bottom:20px;margin-top:20px;width:100%;max-width:340px}
-.role-btn{flex:1;padding:10px 6px;border-radius:10px;border:1.5px solid rgba(255,255,255,.15);background:rgba(255,255,255,.07);color:rgba(255,255,255,.6);font-size:.72rem;font-weight:600;cursor:pointer;text-align:center;transition:all .2s;font-family:'Inter',sans-serif}
-.role-btn.active{background:rgba(45,122,82,.4);border-color:var(--s);color:#fff}
-.role-btn .rb-icon{font-size:1.1rem;display:block;margin-bottom:3px}
-.login-card{background:rgba(255,255,255,.97);border-radius:20px;padding:28px 24px;width:100%;max-width:340px;box-shadow:0 24px 64px rgba(0,0,0,.35)}
-.login-label{font-size:.7rem;font-weight:600;color:var(--f);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;display:block}
-.login-input{width:100%;padding:13px 16px;border:1.5px solid #d4e4d9;border-radius:var(--rs);font-size:1rem;font-family:'Inter',sans-serif;color:var(--ink);outline:none;transition:border-color .2s,box-shadow .2s;margin-bottom:14px;background:#fafcfb}
-.login-input:focus{border-color:var(--l);box-shadow:0 0 0 3px rgba(45,122,82,.12)}
-.login-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--l),var(--f));color:#fff;border:none;border-radius:var(--rs);font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;cursor:pointer;letter-spacing:.04em;transition:opacity .2s,transform .1s}
-.login-btn:active{opacity:.88;transform:scale(.99)}
-.login-error{color:var(--danger);font-size:.78rem;text-align:center;margin-top:10px;display:none}
-.install-hint{color:rgba(255,255,255,.35);font-size:.65rem;text-align:center;margin-top:20px;line-height:1.7;z-index:1;position:relative}
+  /* Borders */
+  --border:#e2e8e2;
+  --border2:#c8d4c8;
+
+  /* Brand */
+  --green:#1a7a3f;--green2:#22a350;--green3:#dcf5e5;--green4:rgba(26,122,63,.08);
+  --green-txt:#0f5c2e;
+
+  /* Semantic colours — like Groww: colour = meaning only */
+  --pos:#1a7a3f;   /* positive / profit */
+  --neg:#d93025;   /* negative / loss */
+  --warn:#e67e00;  /* warning */
+  --warn-bg:#fff8ee;
+  --neg-bg:#fff0ef;
+  --pos-bg:#f0faf4;
+  --blue:#1a5fb4;--blue-bg:#eef3fc;
+  --purple:#7b2fa0;--purple-bg:#f5eefa;
+  --gold:#b06800;--gold-bg:#fef8ec;
+
+  /* Text — Groww style: strong hierarchy */
+  --t1:#0d1f0f;   /* primary — almost black */
+  --t2:#3d5c42;   /* secondary */
+  --t3:#7a9c80;   /* tertiary / labels */
+  --t4:#a8c4ae;   /* placeholder */
+
+  /* Fonts */
+  --font:'DM Sans',sans-serif;
+  --font-num:'Bebas Neue',cursive;
+  --font-mono:'DM Mono',monospace;
+
+  /* Geometry — Blinkit-style chunky */
+  --r:14px;--rs:10px;--r-sm:8px;--r-pill:100px;
+  --sh:0 1px 3px rgba(0,30,10,.06),0 4px 12px rgba(0,30,10,.05);
+  --sh2:0 2px 8px rgba(0,30,10,.08),0 8px 24px rgba(0,30,10,.07);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg)}
+body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100vh;overscroll-behavior:none;-webkit-font-smoothing:antialiased}
+
+/* ══ LOGIN ══ */
+.login-screen{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  background:#0c1a10;
+  overflow-y:auto;
+  overflow-x:hidden;
+}
+
+/* Top brand band */
+.login-brand{
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:64px 24px 48px;
+  background:#0c1a10;
+}
+
+/* Pure wordmark — Delhivery style */
+.login-wordmark{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:2px;
+  animation:fadeIn .6s ease;
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+
+.wm-shree{
+  font-family:'Rajdhani',sans-serif;
+  font-size:2rem;
+  font-weight:700;
+  color:#ffffff;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  line-height:1;
+}
+.wm-transport{
+  font-family:'Rajdhani',sans-serif;
+  font-size:2.9rem;
+  font-weight:700;
+  color:#4ade80;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  line-height:1;
+  margin-top:2px;
+}
+.wm-divider{
+  width:48px;
+  height:2px;
+  background:linear-gradient(90deg,transparent,#4ade80,transparent);
+  margin-top:18px;
+  border-radius:2px;
+}
+
+/* Bottom content area */
+.login-body{
+  width:100%;
+  max-width:400px;
+  padding:32px 22px 48px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+/* Role selector */
+.role-label{
+  font-size:.6rem;font-weight:700;color:rgba(255,255,255,.3);
+  text-transform:uppercase;letter-spacing:.12em;
+  margin-bottom:10px;align-self:flex-start;
+}
+.role-select{
+  display:flex;gap:8px;margin-bottom:24px;width:100%;
+}
+.role-btn{
+  flex:1;padding:12px 6px;
+  border-radius:12px;
+  border:1.5px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.04);
+  color:rgba(255,255,255,.4);
+  font-size:.66rem;font-weight:700;
+  cursor:pointer;text-align:center;
+  transition:all .2s;
+  font-family:var(--font);
+  letter-spacing:.03em;
+  text-transform:uppercase;
+}
+.role-btn.active{
+  background:rgba(74,222,128,.12);
+  border-color:rgba(74,222,128,.45);
+  color:#4ade80;
+}
+.role-btn .rb-icon{font-size:1.2rem;display:block;margin-bottom:4px}
+
+/* Login card */
+.login-card{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:18px;
+  padding:24px 20px;
+  width:100%;
+}
+.login-label{
+  font-size:.62rem;font-weight:700;
+  color:rgba(255,255,255,.35);
+  text-transform:uppercase;letter-spacing:.1em;
+  margin-bottom:8px;display:block;
+}
+.login-input{
+  width:100%;padding:13px 14px;
+  border:1.5px solid rgba(255,255,255,.1);
+  border-radius:10px;
+  font-size:.92rem;font-family:var(--font);
+  color:#fff;background:rgba(255,255,255,.06);
+  outline:none;transition:all .2s;margin-bottom:14px;
+}
+.login-input::placeholder{color:rgba(255,255,255,.2)}
+.login-input:focus{
+  border-color:rgba(74,222,128,.5);
+  box-shadow:0 0 0 3px rgba(74,222,128,.07);
+  background:rgba(255,255,255,.09);
+}
+.login-btn{
+  width:100%;padding:14px;
+  background:#1a7a3f;
+  color:#fff;border:none;border-radius:10px;
+  font-family:'Rajdhani',sans-serif;
+  font-weight:700;font-size:1rem;
+  cursor:pointer;letter-spacing:.12em;
+  text-transform:uppercase;
+  transition:all .2s;
+}
+.login-btn:hover{background:#22a350}
+.login-btn:active{opacity:.9;transform:scale(.99)}
+.login-error{color:#fca5a5;font-size:.74rem;text-align:center;margin-top:8px;display:none}
+.install-hint{color:rgba(255,255,255,.18);font-size:.59rem;text-align:center;margin-top:22px;line-height:2;letter-spacing:.03em}
 
 /* ROLE BADGE */
-.role-badge{padding:3px 10px;border-radius:20px;font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
-.rb-owner{background:rgba(240,192,64,.2);color:var(--gold-l)}
-.rb-supervisor{background:rgba(29,111,164,.2);color:#7dd3fc}
-.rb-driver{background:rgba(82,183,136,.2);color:var(--s)}
+.role-badge{padding:3px 9px;border-radius:var(--r-pill);font-size:.57rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.rb-owner{background:var(--gold-bg);color:var(--gold)}
+.rb-supervisor{background:var(--blue-bg);color:var(--blue)}
+.rb-driver{background:var(--green3);color:var(--green-txt)}
 
-/* TOPBAR */
-.topbar{background:linear-gradient(90deg,#0f2318,#1b4d33);color:#fff;padding:10px 16px 9px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,.3)}
-.topbar-left{display:flex;align-items:center;gap:11px}
-.topbar-logo{width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(240,192,64,.4);flex-shrink:0;display:flex;align-items:center;justify-content:center;background:rgba(15,35,24,.6)}
-.topbar-title{font-family:'Syne',sans-serif;font-weight:800;font-size:.97rem;line-height:1.1;letter-spacing:-.01em}
-.topbar-title span{color:var(--gold-l)}
-.topbar-sync{font-size:.56rem;color:var(--s);margin-top:2px;display:flex;align-items:center;gap:4px}
-.sync-dot{width:5px;height:5px;border-radius:50%;background:var(--s);display:inline-block;transition:background .3s;flex-shrink:0}
+/* ══ TOPBAR ══ */
+.topbar{background:var(--surface);color:var(--t1);padding:11px 16px 10px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;border-bottom:1.5px solid var(--border)}
+.topbar-left{display:flex;align-items:center;gap:10px}
+.topbar-logo{width:30px;height:30px;border-radius:50%;background:var(--green4);border:1.5px solid var(--green3);flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.topbar-title{font-weight:700;font-size:.9rem;line-height:1.1;letter-spacing:-.01em;color:var(--t1)}
+.topbar-title span{color:var(--green2)}
+.topbar-sync{font-size:.54rem;color:var(--t3);margin-top:1px;display:flex;align-items:center;gap:4px}
+.sync-dot{width:5px;height:5px;border-radius:50%;background:var(--pos);display:inline-block;transition:background .3s;flex-shrink:0}
 .sync-dot.syncing{background:var(--warn);animation:blink 1s infinite}
-.sync-dot.error{background:var(--danger)}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.logout-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;padding:5px 11px;border-radius:20px;font-size:.64rem;cursor:pointer;font-family:'Inter',sans-serif;font-weight:500;transition:background .2s}
-.topbar-right{display:flex;align-items:center;gap:6px}
+.sync-dot.error{background:var(--neg)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.logout-btn{background:var(--bg2);border:1.5px solid var(--border);color:var(--t2);padding:5px 12px;border-radius:var(--r-pill);font-size:.63rem;cursor:pointer;font-family:var(--font);font-weight:600;transition:all .15s}
+.logout-btn:hover{border-color:var(--border2);color:var(--t1)}
 
-/* BOTTOM NAV */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(0deg,#0a1b10,#0f2318);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -1px 0 rgba(255,255,255,.06),0 -4px 24px rgba(0,0,0,.3)}
-.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:9px 2px 7px;cursor:pointer;color:rgba(255,255,255,.38);font-size:.48rem;font-weight:500;letter-spacing:.03em;transition:all .2s;border:none;background:none;text-transform:uppercase;gap:3px;position:relative}
-.nav-item .ni{font-size:1.1rem;transition:transform .2s}
-.nav-item.active{color:#fff}
-.nav-item.active::after{content:'';position:absolute;bottom:0;left:20%;right:20%;height:2px;background:var(--gold-l);border-radius:2px 2px 0 0}
-.nav-item.active .ni{transform:translateY(-2px)}
+/* ══ BOTTOM NAV — Blinkit style ══ */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--surface);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom);border-top:1.5px solid var(--border)}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:9px 2px 7px;cursor:pointer;color:var(--t4);font-size:.44rem;font-weight:700;letter-spacing:.05em;transition:all .18s;border:none;background:none;text-transform:uppercase;gap:3px;position:relative}
+.nav-item .ni{font-size:1.1rem;transition:all .2s}
+.nav-item.active{color:var(--green)}
+.nav-item.active .ni{transform:scale(1.12)}
+.nav-item.active::before{content:'';position:absolute;top:0;left:25%;right:25%;height:2.5px;background:var(--green);border-radius:0 0 3px 3px}
 
-/* SCREENS */
-.screen{display:none;padding:14px 14px 100px}
+/* ══ SCREENS ══ */
+.screen{display:none;padding:14px 14px 96px;animation:fadeUp .2s ease}
 .screen.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
-/* CARDS */
-.card{background:var(--white);border-radius:var(--r);padding:16px;margin-bottom:12px;box-shadow:var(--sh);border:1px solid rgba(0,0,0,.04)}
-.card-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;color:var(--f);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+/* ══ SECTION HEADERS — Groww style ══ */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.section-title{font-weight:700;font-size:.92rem;color:var(--t1);letter-spacing:-.01em}
+.section-label{font-size:.62rem;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;padding-bottom:8px;border-bottom:1.5px solid var(--border)}
 
-/* HERO */
-.hero{background:linear-gradient(135deg,var(--f) 0%,#1b4d33 100%);border-radius:var(--r);padding:20px;margin-bottom:12px;color:#fff;position:relative;overflow:hidden;box-shadow:var(--sh2)}
-.hero::before{content:'';position:absolute;top:-30px;right:-20px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.04)}
-.hero-label{font-size:.62rem;color:var(--s);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px;font-weight:500}
-.hero-amount{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;line-height:1;margin-bottom:4px;letter-spacing:-.02em}
-.hero-sub{font-size:.72rem;color:rgba(255,255,255,.6)}
-.hero-row{display:flex;gap:0;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.1)}
-.hero-cell{flex:1;padding:0 10px;border-right:1px solid rgba(255,255,255,.08)}
+/* ══ CARDS ══ */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:10px;box-shadow:var(--sh)}
+.card-title{font-weight:700;font-size:.75rem;color:var(--t2);margin-bottom:14px;display:flex;align-items:center;gap:7px;text-transform:uppercase;letter-spacing:.07em}
+
+/* ══ HERO CARD — Groww portfolio header style ══ */
+.hero{background:var(--green);border-radius:var(--r);padding:20px 18px 18px;margin-bottom:10px;position:relative;overflow:hidden;box-shadow:0 4px 20px rgba(26,122,63,.25)}
+.hero::after{content:'';position:absolute;top:-40px;right:-30px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.06)}
+.hero-label{font-size:.58rem;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;font-weight:600}
+.hero-amount{font-family:var(--font-num);font-size:2.8rem;font-weight:400;line-height:1;letter-spacing:.02em;color:#fff;margin-bottom:2px}
+.hero-sub{font-size:.68rem;color:rgba(255,255,255,.6)}
+.hero-row{display:flex;gap:0;margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.15)}
+.hero-cell{flex:1;padding:0 10px;border-right:1px solid rgba(255,255,255,.15)}
 .hero-cell:first-child{padding-left:0}
 .hero-cell:last-child{border-right:none}
-.hero-mini-label{font-size:.56rem;color:rgba(255,255,255,.5);margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em}
-.hero-mini-val{font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem}
+.hero-mini-label{font-size:.52rem;color:rgba(255,255,255,.55);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.hero-mini-val{font-family:var(--font-num);font-size:1.05rem;letter-spacing:.02em;color:#fff}
 
-/* STAT GRID */
-.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.stat-card{background:var(--white);border-radius:var(--r);padding:14px 12px;box-shadow:var(--sh);border:1px solid rgba(0,0,0,.04);position:relative;overflow:hidden}
-.stat-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--r) var(--r) 0 0}
-.sc-green::after{background:linear-gradient(90deg,var(--l),var(--s))}
-.sc-amber::after{background:linear-gradient(90deg,var(--warn),#fbbf24)}
-.sc-rust::after{background:linear-gradient(90deg,var(--rust),#e74c3c)}
-.sc-gold::after{background:linear-gradient(90deg,var(--gold),var(--gold-l))}
-.sc-blue::after{background:linear-gradient(90deg,var(--blue),#3b9fd8)}
-.sc-purple::after{background:linear-gradient(90deg,var(--purple),#a855f7)}
-.stat-label{font-size:.59rem;color:var(--gray);font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
-.stat-value{font-family:'Syne',sans-serif;font-size:1.18rem;font-weight:800;color:var(--f);line-height:1}
-.stat-sub{font-size:.61rem;color:var(--gray);margin-top:3px}
+/* ══ STAT GRID — Groww-style metric tiles ══ */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 13px;box-shadow:var(--sh);position:relative}
+.stat-label{font-size:.57rem;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px}
+.stat-value{font-family:var(--font-num);font-size:1.45rem;color:var(--t1);line-height:1;letter-spacing:.01em}
+.stat-sub{font-size:.58rem;color:var(--t3);margin-top:3px}
+.stat-card.pos .stat-value{color:var(--pos)}
+.stat-card.neg .stat-value{color:var(--neg)}
+.stat-card.warn .stat-value{color:var(--warn)}
 
-/* INSIGHT TABLE */
-.insight-table{width:100%;border-collapse:collapse;font-size:.78rem}
-.insight-table th{font-size:.62rem;color:var(--gray);font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding:6px 8px;text-align:left;border-bottom:2px solid var(--light)}
-.insight-table td{padding:9px 8px;border-bottom:1px solid var(--light);vertical-align:middle}
-.insight-table tr:last-child td{border-bottom:none}
-.insight-table .val{font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem}
+/* ══ MONTH PICKER ══ */
+.month-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--rs);padding:10px 14px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.month-nav{background:var(--bg2);border:1px solid var(--border);font-size:.9rem;cursor:pointer;color:var(--t2);padding:5px 12px;border-radius:var(--rs);transition:all .12s;font-weight:600}
+.month-nav:active{background:var(--green3);color:var(--green)}
+.month-label-btn{font-weight:700;color:var(--t1);font-size:.86rem;background:none;border:none;cursor:pointer;padding:4px 10px;border-radius:var(--rs);transition:background .12s;display:flex;align-items:center;gap:5px;font-family:var(--font)}
+.month-label-btn:hover{background:var(--bg2)}
+.month-label-btn::after{content:'▾';font-size:.56rem;color:var(--t3)}
 
-/* MONTH PICKER */
-.month-bar{background:var(--white);border-radius:var(--r);padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--sh);border:1px solid rgba(0,0,0,.04)}
-.month-nav{background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--l);padding:2px 8px;border-radius:8px;transition:background .15s}
-.month-nav:active{background:var(--m)}
-.month-label-btn{font-family:'Syne',sans-serif;font-weight:700;color:var(--f);font-size:.9rem;background:none;border:none;cursor:pointer;padding:4px 10px;border-radius:8px;transition:background .15s;display:flex;align-items:center;gap:6px}
-.month-label-btn:hover{background:var(--m)}
-.month-label-btn::after{content:'▾';font-size:.6rem;color:var(--l)}
-.date-picker-overlay{position:fixed;inset:0;background:rgba(10,26,15,.6);z-index:300;display:none;align-items:flex-end;backdrop-filter:blur(6px)}
+.date-picker-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:300;display:none;align-items:flex-end}
 .date-picker-overlay.open{display:flex}
-.date-picker-sheet{background:var(--white);border-radius:24px 24px 0 0;padding:20px 18px 36px;width:100%;max-height:72vh;overflow-y:auto;animation:slideUp .28s ease}
-.dp-handle{width:36px;height:4px;background:#e0e0e0;border-radius:4px;margin:0 auto 16px}
-.dp-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:var(--f);margin-bottom:16px;text-align:center}
+.date-picker-sheet{background:var(--surface);border-radius:20px 20px 0 0;padding:18px 16px 36px;width:100%;max-height:72vh;overflow-y:auto;animation:slideUp .26s ease;box-shadow:0 -4px 32px rgba(0,0,0,.12)}
+.dp-handle{width:32px;height:3px;background:var(--border2);border-radius:4px;margin:0 auto 16px}
+.dp-title{font-weight:700;font-size:.84rem;color:var(--t1);margin-bottom:14px;text-align:center;text-transform:uppercase;letter-spacing:.06em}
 .dp-year-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.dp-year-nav{background:var(--m);border:none;color:var(--p);padding:8px 16px;border-radius:20px;font-size:.85rem;cursor:pointer;font-weight:600}
-.dp-year{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;color:var(--f)}
+.dp-year-nav{background:var(--bg2);border:1px solid var(--border);color:var(--t2);padding:8px 16px;border-radius:var(--rs);font-size:.8rem;cursor:pointer;font-weight:600;font-family:var(--font);transition:all .12s}
+.dp-year{font-family:var(--font-num);font-size:1.9rem;color:var(--t1)}
 .dp-month-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.dp-month-btn{background:var(--light);border:1.5px solid transparent;border-radius:var(--rs);padding:12px 6px;font-size:.82rem;font-weight:600;color:var(--ink);cursor:pointer;text-align:center;transition:all .15s}
-.dp-month-btn:hover{background:var(--m);border-color:var(--s)}
-.dp-month-btn.active{background:var(--f);color:#fff;border-color:var(--f)}
+.dp-month-btn{background:var(--bg2);border:1.5px solid transparent;border-radius:var(--rs);padding:12px 4px;font-size:.78rem;font-weight:600;color:var(--t2);cursor:pointer;text-align:center;transition:all .12s;font-family:var(--font)}
+.dp-month-btn:hover{border-color:var(--border2)}
+.dp-month-btn.active{background:var(--green);color:#fff;border-color:var(--green)}
 
-/* FORMS */
-.form-group{margin-bottom:12px}
-.form-label{font-size:.68rem;font-weight:600;color:var(--f);margin-bottom:5px;display:block;text-transform:uppercase;letter-spacing:.05em}
-.form-input,.form-select,.form-textarea{width:100%;padding:11px 13px;border:1.5px solid #d4e4d9;border-radius:var(--rs);font-family:'Inter',sans-serif;font-size:.92rem;color:var(--ink);background:var(--white);outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;appearance:none}
-.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--l);box-shadow:0 0 0 3px rgba(45,122,82,.1)}
-.form-textarea{min-height:64px;resize:none}
+/* ══ FORMS ══ */
+.form-group{margin-bottom:13px}
+.form-label{font-size:.63rem;font-weight:700;color:var(--t3);margin-bottom:6px;display:block;text-transform:uppercase;letter-spacing:.07em}
+.form-input,.form-select,.form-textarea{width:100%;padding:12px 13px;border:1.5px solid var(--border);border-radius:var(--rs);font-family:var(--font);font-size:.88rem;color:var(--t1);background:var(--bg);outline:none;transition:all .18s;-webkit-appearance:none;appearance:none}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--green2);box-shadow:0 0 0 3px var(--green4);background:var(--surface)}
+.form-textarea{min-height:60px;resize:none}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.form-hint{font-size:.65rem;color:var(--gray);margin-top:3px}
+.form-hint{font-size:.6rem;color:var(--t3);margin-top:4px}
 
 /* VEHICLE COMBO */
 .veh-combo{position:relative}
-.veh-dropdown{position:absolute;top:100%;left:0;right:0;background:var(--white);border:1.5px solid var(--l);border-radius:var(--rs);z-index:50;box-shadow:var(--sh2);max-height:180px;overflow-y:auto;display:none}
+.veh-dropdown{position:absolute;top:calc(100%+4px);left:0;right:0;background:var(--surface);border:1.5px solid var(--green3);border-radius:var(--rs);z-index:50;box-shadow:var(--sh2);max-height:200px;overflow-y:auto;display:none}
 .veh-dropdown.open{display:block}
-.veh-opt{padding:10px 13px;font-size:.86rem;cursor:pointer;border-bottom:1px solid var(--light);display:flex;align-items:center;gap:8px}
-.veh-opt:hover{background:var(--m)}
+.veh-opt{padding:11px 13px;font-size:.84rem;cursor:pointer;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;color:var(--t2);transition:background .1s}
+.veh-opt:hover{background:var(--bg2);color:var(--t1)}
 .veh-opt:last-child{border-bottom:none}
-.veh-opt-badge{font-size:.58rem;background:var(--m);color:var(--p);padding:2px 7px;border-radius:20px;font-weight:600}
+.veh-opt-badge{font-size:.56rem;background:var(--green3);color:var(--green-txt);padding:2px 7px;border-radius:var(--r-pill);font-weight:700;letter-spacing:.03em}
 
-/* BUTTONS */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:12px 20px;border-radius:var(--rs);font-family:'Syne',sans-serif;font-weight:700;font-size:.83rem;border:none;cursor:pointer;transition:all .18s;width:100%;letter-spacing:.01em}
+/* ══ BUTTONS — Blinkit chunky style ══ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:13px 18px;border-radius:var(--rs);font-family:var(--font);font-weight:700;font-size:.82rem;border:none;cursor:pointer;transition:all .15s;width:100%;letter-spacing:.01em}
 .btn:active{transform:scale(.98)}
-.btn-primary{background:linear-gradient(135deg,var(--l),var(--p));color:#fff;box-shadow:0 3px 12px rgba(27,77,51,.3)}
-.btn-secondary{background:var(--m);color:var(--p);margin-top:8px}
-.btn-gold{background:linear-gradient(135deg,var(--gold),#8a6e1a);color:#fff;box-shadow:0 3px 12px rgba(184,150,46,.3)}
+.btn-primary{background:var(--green);color:#fff;box-shadow:0 2px 10px rgba(26,122,63,.25)}
+.btn-primary:hover{background:var(--green2)}
+.btn-secondary{background:var(--bg2);color:var(--t2);border:1.5px solid var(--border);margin-top:8px}
+.btn-secondary:hover{border-color:var(--border2);color:var(--t1)}
+.btn-gold{background:var(--gold-bg);color:var(--gold);border:1.5px solid #f0d080;font-weight:700}
 .btn-sm{padding:7px 13px;font-size:.7rem;width:auto}
 
-/* SECTION HEADER */
-.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.section-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:var(--f)}
-
-/* LIST ITEMS */
-.list-item{background:var(--white);border-radius:var(--r);padding:13px 13px 12px;margin-bottom:9px;box-shadow:var(--sh);display:flex;align-items:flex-start;gap:11px;position:relative;overflow:hidden;border:1px solid rgba(0,0,0,.04)}
-.list-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px}
-.li-trip::before{background:var(--l)}
-.li-expense::before{background:var(--rust)}
-.li-advance::before{background:var(--warn)}
-.li-hired::before{background:var(--p)}
-.li-diesel::before{background:var(--blue)}
-.li-vehicle::before{background:var(--gold)}
-.li-tender::before{background:var(--purple)}
-.list-icon{font-size:1.2rem;margin-top:1px;flex-shrink:0}
+/* ══ LIST ITEMS — Blinkit card feel ══ */
+.list-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:13px 13px;margin-bottom:8px;display:flex;align-items:flex-start;gap:11px;position:relative;overflow:hidden;transition:all .15s;box-shadow:var(--sh)}
+.list-item:active{background:var(--bg2)}
+.list-icon{font-size:1rem;flex-shrink:0;width:34px;height:34px;border-radius:var(--rs);display:flex;align-items:center;justify-content:center}
+.li-trip .list-icon{background:var(--green3)}
+.li-expense .list-icon{background:var(--neg-bg)}
+.li-advance .list-icon{background:var(--warn-bg)}
+.li-hired .list-icon{background:var(--blue-bg)}
+.li-diesel .list-icon{background:#e8f4fd}
+.li-vehicle .list-icon{background:var(--gold-bg)}
+.li-tender .list-icon{background:var(--purple-bg)}
 .list-content{flex:1;min-width:0}
-.list-main{font-weight:600;font-size:.85rem;color:var(--ink);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.list-sub{font-size:.68rem;color:var(--gray)}
-.list-amount{font-family:'Syne',sans-serif;font-weight:800;font-size:.88rem;color:var(--p);white-space:nowrap}
-.list-amount.red{color:var(--rust)}
+.list-main{font-weight:600;font-size:.83rem;color:var(--t1);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.list-sub{font-size:.65rem;color:var(--t3)}
+.list-amount{font-family:var(--font-num);font-size:1rem;color:var(--pos);white-space:nowrap;letter-spacing:.02em}
+.list-amount.red{color:var(--neg)}
 .list-amount.amber{color:var(--warn)}
-.action-btns{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
-.ic-btn{background:none;border:none;font-size:.88rem;cursor:pointer;padding:3px 4px;opacity:.5;transition:opacity .15s}
-.ic-btn:hover{opacity:1}
+.action-btns{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0}
+.ic-btn{background:var(--bg2);border:1px solid var(--border);font-size:.76rem;cursor:pointer;padding:4px 7px;border-radius:var(--r-sm);transition:all .12s;color:var(--t3)}
+.ic-btn:hover{border-color:var(--border2);color:var(--t1)}
 
-/* CHIPS */
+/* ══ CHIPS ══ */
 .chip-row{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
-.chip{padding:3px 8px;border-radius:20px;font-size:.62rem;font-weight:600;white-space:nowrap}
-.ch-g{background:#edfbf1;color:#1b6035}
-.ch-r{background:#fff0f0;color:var(--danger)}
-.ch-a{background:#fffbeb;color:#92400e}
-.ch-b{background:#eff6ff;color:#1e40af}
-.ch-p{background:#f5f3ff;color:#5b21b6}
-.ch-gold{background:#fffbeb;color:#92400e}
+.chip{padding:3px 8px;border-radius:var(--r-pill);font-size:.58rem;font-weight:700;white-space:nowrap;letter-spacing:.02em}
+.ch-g{background:var(--green3);color:var(--green-txt)}
+.ch-r{background:var(--neg-bg);color:var(--neg)}
+.ch-a{background:var(--warn-bg);color:var(--warn)}
+.ch-b{background:var(--blue-bg);color:var(--blue)}
+.ch-p{background:var(--purple-bg);color:var(--purple)}
+.ch-gold{background:var(--gold-bg);color:var(--gold)}
+.pay-pending{background:var(--neg-bg);color:var(--neg)}
+.pay-partial{background:var(--warn-bg);color:var(--warn)}
+.pay-received{background:var(--green3);color:var(--green-txt)}
 
-/* PAYMENT STATUS */
-.pay-pending{background:#fff0f0;color:var(--danger)}
-.pay-partial{background:#fffbeb;color:#92400e}
-.pay-received{background:#edfbf1;color:#1b6035}
+/* ══ TABS ══ */
+.tabs{display:flex;background:var(--bg2);border:1px solid var(--border);border-radius:var(--rs);padding:3px;margin-bottom:12px;gap:2px}
+.tab{flex:1;padding:8px 4px;border:none;background:none;border-radius:var(--r-sm);font-family:var(--font);font-size:.62rem;font-weight:700;color:var(--t3);cursor:pointer;transition:all .15s;text-align:center;letter-spacing:.03em}
+.tab.active{background:var(--surface);color:var(--green);box-shadow:var(--sh)}
 
-/* TABS */
-.tabs{display:flex;background:var(--m);border-radius:var(--rs);padding:3px;margin-bottom:14px;gap:2px}
-.tab{flex:1;padding:8px 4px;border:none;background:none;border-radius:8px;font-family:'Inter',sans-serif;font-size:.64rem;font-weight:600;color:var(--p);cursor:pointer;transition:all .2s;text-align:center;letter-spacing:.02em}
-.tab.active{background:var(--white);color:var(--f);box-shadow:0 1px 6px rgba(0,0,0,.1)}
-
-/* ATTENDANCE */
-.att-staff-row{background:var(--white);border-radius:var(--r);padding:13px;margin-bottom:9px;box-shadow:var(--sh);border:1px solid rgba(0,0,0,.04)}
-.att-staff-name{font-weight:700;font-size:.86rem;margin-bottom:8px;color:var(--ink)}
-.att-staff-role{font-size:.64rem;color:var(--gray);margin-left:6px;font-weight:400}
+/* ══ ATTENDANCE ══ */
+.att-staff-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:8px;box-shadow:var(--sh)}
+.att-staff-name{font-weight:700;font-size:.84rem;margin-bottom:10px;color:var(--t1)}
+.att-staff-role{font-size:.6rem;color:var(--t3);margin-left:6px;font-weight:400}
 .att-day-grid{display:flex;flex-wrap:wrap;gap:4px}
-.att-day{width:31px;height:31px;border-radius:7px;border:1.5px solid #d4e4d9;background:var(--white);font-size:.56rem;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:all .12s;gap:1px}
-.att-day .dn{font-size:.5rem;color:var(--gray)}
-.att-day.P{background:var(--p);color:#fff;border-color:var(--p)}
-.att-day.P .dn{color:rgba(255,255,255,.6)}
-.att-day.A{background:#fff0f0;color:var(--danger);border-color:#fca5a5}
-.att-day.HD{background:var(--m);color:var(--p);border-color:var(--s)}
-.att-day.H{background:#fffbeb;color:var(--warn);border-color:#fde68a}
+.att-day{width:30px;height:30px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--bg2);font-size:.54rem;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:all .1s;gap:1px;color:var(--t3)}
+.att-day .dn{font-size:.46rem;color:var(--t4)}
+.att-day.P{background:var(--green);color:#fff;border-color:var(--green)}
+.att-day.P .dn{color:rgba(255,255,255,.65)}
+.att-day.A{background:var(--neg-bg);color:var(--neg);border-color:#f5c0bc}
+.att-day.HD{background:var(--green3);color:var(--green-txt);border-color:var(--green3)}
+.att-day.H{background:var(--warn-bg);color:var(--warn);border-color:#f5ddb0}
 
-/* ALERTS */
-.alert-banner{border-radius:var(--rs);padding:12px 14px;margin-bottom:10px;font-size:.77rem;line-height:1.5;border-left:4px solid}
-.alert-warn{background:#fffbeb;border-color:var(--warn);color:#78350f}
-.alert-danger{background:#fff0f0;border-color:var(--danger);color:#7f1d1d}
-.alert-info{background:#eff6ff;border-color:var(--blue);color:#1e3a5f}
-.alert-title{font-weight:700;font-size:.8rem;margin-bottom:2px}
+/* ══ ALERTS ══ */
+.alert-banner{border-radius:var(--rs);padding:12px 13px;margin-bottom:9px;font-size:.74rem;line-height:1.6;border-left:3px solid}
+.alert-warn{background:var(--warn-bg);border-color:var(--warn);color:#7a4400}
+.alert-danger{background:var(--neg-bg);border-color:var(--neg);color:#7a1a1a}
+.alert-info{background:var(--blue-bg);border-color:var(--blue);color:#1a3a6a}
+.alert-title{font-weight:700;font-size:.76rem;margin-bottom:2px;color:inherit}
 
-/* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(10,26,15,.65);z-index:200;display:none;align-items:flex-end;backdrop-filter:blur(4px)}
+/* ══ MODAL ══ */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none;align-items:flex-end}
 .modal-overlay.open{display:flex}
-.modal{background:var(--white);border-radius:22px 22px 0 0;padding:18px 18px 40px;width:100%;max-height:93vh;overflow-y:auto;animation:slideUp .28s ease}
+.modal{background:var(--surface);border-radius:22px 22px 0 0;padding:18px 16px 44px;width:100%;max-height:93vh;overflow-y:auto;animation:slideUp .26s cubic-bezier(.32,0,.67,0);box-shadow:0 -4px 32px rgba(0,0,0,.12)}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.modal-handle{width:36px;height:4px;background:#e0e0e0;border-radius:4px;margin:0 auto 14px}
-.modal-title{font-family:'Syne',sans-serif;font-weight:800;font-size:.97rem;color:var(--f);margin-bottom:16px}
+.modal-handle{width:32px;height:3px;background:var(--border2);border-radius:4px;margin:0 auto 14px}
+.modal-title{font-weight:700;font-size:.9rem;color:var(--t1);margin-bottom:16px;text-transform:uppercase;letter-spacing:.04em}
 
-/* TOAST */
-.toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--f);color:#fff;padding:10px 20px;border-radius:30px;font-size:.78rem;font-weight:600;z-index:999;opacity:0;transition:all .28s;white-space:nowrap;pointer-events:none;box-shadow:var(--sh2)}
+/* ══ TOAST ══ */
+.toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%) translateY(14px);background:var(--t1);color:#fff;padding:10px 20px;border-radius:var(--r-pill);font-size:.74rem;font-weight:600;z-index:999;opacity:0;transition:all .24s;white-space:nowrap;pointer-events:none;box-shadow:0 4px 20px rgba(0,0,0,.25)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* EMPTY */
-.empty{text-align:center;padding:36px 20px;color:var(--gray)}
-.empty-icon{font-size:2.2rem;margin-bottom:8px}
-.empty-text{font-size:.8rem}
+/* ══ EMPTY ══ */
+.empty{text-align:center;padding:36px 20px;color:var(--t3)}
+.empty-icon{font-size:2rem;margin-bottom:9px;opacity:.5}
+.empty-text{font-size:.76rem;font-weight:500}
 
-/* PROGRESS BAR */
-.prog-wrap{background:var(--light);border-radius:8px;overflow:hidden;height:7px;margin-top:5px}
-.prog-bar{height:100%;border-radius:8px;transition:width .4s}
-.pb-green{background:linear-gradient(90deg,var(--l),var(--s))}
-.pb-amber{background:linear-gradient(90deg,var(--warn),#fbbf24)}
-.pb-red{background:linear-gradient(90deg,var(--rust),#ef4444)}
+/* ══ PROGRESS BAR ══ */
+.prog-wrap{background:var(--bg2);border-radius:8px;overflow:hidden;height:5px;margin-top:6px}
+.prog-bar{height:100%;border-radius:8px;transition:width .5s}
+.pb-green{background:linear-gradient(90deg,var(--green),var(--green2))}
+.pb-amber{background:var(--warn)}
+.pb-red{background:var(--neg)}
 
-/* REPORT */
-.report-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f2f2f2;font-size:.82rem}
+/* ══ INSIGHT TABLE ══ */
+.insight-table{width:100%;border-collapse:collapse;font-size:.75rem}
+.insight-table th{font-size:.57rem;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:7px 10px;text-align:left;border-bottom:1.5px solid var(--border)}
+.insight-table td{padding:10px 10px;border-bottom:1px solid var(--border);vertical-align:middle;color:var(--t2)}
+.insight-table tr:last-child td{border-bottom:none}
+.insight-table tr:hover td{background:var(--bg2)}
+.insight-table .val{font-family:var(--font-num);font-size:.9rem;color:var(--t1)}
+
+/* ══ REPORT ══ */
+.report-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);font-size:.78rem;color:var(--t2)}
 .report-row:last-child{border-bottom:none}
-.report-total{font-weight:700;color:var(--f);font-size:.87rem}
-.report-section{margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--light)}
+.report-total{font-weight:700;color:var(--t1);font-size:.82rem}
+.report-section{margin-bottom:16px;padding-bottom:6px;border-bottom:1px solid var(--border)}
 .report-section:last-child{border-bottom:none}
 
-/* DOCS CHECKLIST */
-.doc-check{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--light)}
+/* ══ DOCS CHECKLIST ══ */
+.doc-check{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
 .doc-check:last-child{border-bottom:none}
-.doc-check input[type=checkbox]{width:18px;height:18px;accent-color:var(--l);cursor:pointer;flex-shrink:0}
-.doc-check label{font-size:.83rem;color:var(--ink);cursor:pointer;flex:1}
+.doc-check input[type=checkbox]{width:17px;height:17px;accent-color:var(--green);cursor:pointer;flex-shrink:0}
+.doc-check label{font-size:.8rem;color:var(--t2);cursor:pointer;flex:1}
 
-/* CHART */
-.chart-wrap{position:relative;height:190px;margin-top:8px}
-.chart-wrap-sm{position:relative;height:160px;margin-top:8px}
+/* ══ CHART ══ */
+.chart-wrap{position:relative;height:185px;margin-top:8px}
+.chart-wrap-sm{position:relative;height:155px;margin-top:8px}
 
-/* DRIVER VIEW SPECIAL */
-.driver-quick{background:linear-gradient(135deg,var(--f),var(--p));border-radius:var(--r);padding:20px;margin-bottom:12px;color:#fff;text-align:center}
-.driver-quick h2{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;margin-bottom:4px}
-.driver-quick p{font-size:.76rem;color:var(--s)}
-
-/* V-TAG */
-.v-tag{display:inline-block;padding:2px 7px;border-radius:20px;font-size:.58rem;font-weight:700}
-.vt-truck{background:#edfbf1;color:#1b6035}
-.vt-crane{background:#eff6ff;color:#1e40af}
-.vt-tractor{background:#fffbeb;color:#92400e}
-
-/* PHOTO ATTACH */
-.photo-upload-btn{display:flex;align-items:center;gap:8px;padding:11px 13px;border:1.5px dashed #a8d5b5;border-radius:var(--rs);background:#f8fcf9;color:var(--p);font-size:.84rem;font-weight:600;cursor:pointer;width:100%;transition:all .2s}
-.photo-upload-btn:hover{border-color:var(--l);background:var(--m)}
+/* ══ PHOTO ══ */
+.photo-upload-btn{display:flex;align-items:center;gap:8px;padding:12px 13px;border:1.5px dashed var(--border2);border-radius:var(--rs);background:var(--bg2);color:var(--t3);font-size:.8rem;font-weight:600;cursor:pointer;width:100%;transition:all .18s;font-family:var(--font)}
+.photo-upload-btn:hover{border-color:var(--green2);color:var(--green)}
 .photo-preview-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-.photo-thumb{width:72px;height:72px;border-radius:9px;object-fit:cover;border:2px solid var(--m);cursor:pointer}
+.photo-thumb{width:68px;height:68px;border-radius:var(--rs);object-fit:cover;border:1.5px solid var(--border);cursor:pointer;transition:border-color .12s}
+.photo-thumb:hover{border-color:var(--green2)}
 .photo-thumb-wrap{position:relative}
-.photo-del{position:absolute;top:-5px;right:-5px;background:var(--danger);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:.6rem;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700}
+.photo-del{position:absolute;top:-5px;right:-5px;background:var(--neg);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:.56rem;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700}
 
-/* LIGHTBOX */
-.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:500;display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px}
+/* ══ LIGHTBOX ══ */
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:500;display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px}
 .lightbox.open{display:flex}
-.lightbox img{max-width:92vw;max-height:80vh;border-radius:12px;object-fit:contain}
-.lightbox-close{color:#fff;font-size:1.5rem;cursor:pointer;background:rgba(255,255,255,.15);border:none;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center}
+.lightbox img{max-width:92vw;max-height:80vh;border-radius:var(--rs);object-fit:contain}
+.lightbox-close{color:#fff;font-size:1.2rem;cursor:pointer;background:rgba(255,255,255,.12);border:none;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;transition:all .15s}
 
-/* GST TABLE */
-.gst-table{width:100%;border-collapse:collapse;font-size:.78rem;margin-bottom:8px}
-.gst-table th{background:var(--f);color:#fff;padding:8px 10px;text-align:left;font-size:.65rem;text-transform:uppercase;letter-spacing:.04em}
-.gst-table td{padding:8px 10px;border-bottom:1px solid var(--light)}
+/* ══ GST TABLE ══ */
+.gst-table{width:100%;border-collapse:collapse;font-size:.75rem;margin-bottom:8px}
+.gst-table th{background:var(--bg2);color:var(--t3);padding:9px 10px;text-align:left;font-size:.6rem;text-transform:uppercase;letter-spacing:.06em;border-bottom:1.5px solid var(--border);font-weight:700}
+.gst-table td{padding:9px 10px;border-bottom:1px solid var(--border);color:var(--t2)}
 .gst-table tr:last-child td{border-bottom:none}
-.gst-table .amt{font-family:'Syne',sans-serif;font-weight:700;text-align:right}
+.gst-table tr:hover td{background:var(--bg2)}
+.gst-table .amt{font-family:var(--font-num);text-align:right;font-size:.9rem;color:var(--t1)}
 
-@media print{.bottom-nav,.topbar,.btn,.ic-btn,.no-print{display:none!important}.screen{display:block!important;padding:0!important}}
+/* ══ DRIVER ══ */
+.driver-quick{background:var(--green);border-radius:var(--r);padding:20px 18px;margin-bottom:12px;text-align:center}
+.driver-quick h2{font-size:1rem;font-weight:700;margin-bottom:3px;color:#fff}
+.driver-quick p{font-size:.74rem;color:rgba(255,255,255,.7)}
+
+/* ══ V-TAG ══ */
+.v-tag{display:inline-block;padding:2px 8px;border-radius:var(--r-pill);font-size:.56rem;font-weight:700;letter-spacing:.03em}
+.vt-truck{background:var(--green3);color:var(--green-txt)}
+.vt-crane{background:var(--blue-bg);color:var(--blue)}
+.vt-tractor{background:var(--warn-bg);color:var(--warn)}
+
+@media print{.bottom-nav,.topbar,.btn,.ic-btn,.no-print{display:none!important}.screen{display:block!important;padding:0!important}body{background:#fff}}
 </style>
 </head>
 <body>
 
 <!-- LOGIN -->
 <div id="login-screen" class="login-screen">
-  <div class="logo-ring">
-    <svg width="52" height="52" viewBox="0 0 90 90" fill="none">
-      <rect x="10" y="38" width="48" height="22" rx="3" fill="#2d7a52"/>
-      <rect x="52" y="30" width="26" height="30" rx="3" fill="#1b4d33"/>
-      <rect x="54" y="32" width="22" height="14" rx="2" fill="#52b788" opacity=".7"/>
-      <circle cx="22" cy="62" r="7" fill="#0a1a0f"/><circle cx="22" cy="62" r="4" fill="#2d7a52"/>
-      <circle cx="62" cy="62" r="7" fill="#0a1a0f"/><circle cx="62" cy="62" r="4" fill="#2d7a52"/>
-      <rect x="18" y="32" width="34" height="6" rx="3" fill="#b8962e"/>
-      <rect x="20" y="39" width="30" height="5" rx="2.5" fill="#9a7c28"/>
-    </svg>
+  <!-- Brand top section — pure wordmark -->
+  <div class="login-brand">
+    <div class="login-wordmark">
+      <span class="wm-shree">SHREE RAMA</span>
+      <span class="wm-transport">TRANSPORT</span>
+    </div>
+    <div class="wm-divider"></div>
   </div>
-  <div class="login-title">Shree Rama <span>Transport</span></div>
-  <div class="role-select">
-    <button class="role-btn active" onclick="selectRole('owner',this)"><span class="rb-icon">👑</span>Owner</button>
-    <button class="role-btn" onclick="selectRole('supervisor',this)"><span class="rb-icon">📋</span>Supervisor</button>
-    <button class="role-btn" onclick="selectRole('driver',this)"><span class="rb-icon">🚛</span>Driver</button>
+
+  <!-- Login form section -->
+  <div class="login-body">
+    <div class="role-label">Select your role</div>
+    <div class="role-select">
+      <button class="role-btn active" onclick="selectRole('owner',this)"><span class="rb-icon">👑</span>Owner</button>
+      <button class="role-btn" onclick="selectRole('supervisor',this)"><span class="rb-icon">📋</span>Supervisor</button>
+      <button class="role-btn" onclick="selectRole('driver',this)"><span class="rb-icon">🚛</span>Driver</button>
+    </div>
+    <div class="login-card">
+      <label class="login-label" id="login-role-label">🔒 Owner Password</label>
+      <input type="password" class="login-input" id="login-password" placeholder="Enter password..." onkeydown="if(event.key==='Enter')window._doLogin()">
+      <button class="login-btn" onclick="window._doLogin()">Sign In →</button>
+      <div class="login-error" id="login-error">❌ Incorrect password. Try again.</div>
+    </div>
+    <div class="install-hint">📱 Chrome → Menu → "Add to Home Screen"<br>to use as a full-screen app</div>
   </div>
-  <div class="login-card">
-    <label class="login-label" id="login-role-label">🔒 Owner Password</label>
-    <input type="password" class="login-input" id="login-password" placeholder="Enter password..." onkeydown="if(event.key==='Enter')window._doLogin()">
-    <button class="login-btn" onclick="window._doLogin()">Sign In →</button>
-    <div class="login-error" id="login-error">❌ Incorrect password. Try again.</div>
-  </div>
-  <div class="install-hint">📱 Chrome → Menu → "Add to Home Screen" for best experience</div>
 </div>
 
 <!-- MAIN APP -->
 <div id="main-app" style="display:none">
 <div class="topbar">
   <div class="topbar-left">
-    <div class="topbar-logo">
-      <svg width="20" height="20" viewBox="0 0 90 90" fill="none">
-        <rect x="10" y="38" width="48" height="22" rx="3" fill="#52b788"/>
-        <rect x="52" y="30" width="26" height="30" rx="3" fill="#2d7a52"/>
-        <rect x="54" y="32" width="22" height="14" rx="2" fill="#52b788" opacity=".7"/>
-        <circle cx="22" cy="62" r="7" fill="#0a1a0f"/><circle cx="22" cy="62" r="4" fill="#3a8060"/>
-        <circle cx="62" cy="62" r="7" fill="#0a1a0f"/><circle cx="62" cy="62" r="4" fill="#3a8060"/>
-        <rect x="18" y="32" width="34" height="6" rx="3" fill="#f0c040"/>
-      </svg>
-    </div>
     <div>
-      <div class="topbar-title">Shree Rama <span>Transport</span></div>
+      <div class="topbar-title" style="font-family:'Rajdhani',sans-serif;letter-spacing:.06em;text-transform:uppercase;font-size:.95rem">Shree Rama <span>Transport</span></div>
       <div class="topbar-sync"><span class="sync-dot" id="sync-dot"></span><span id="sync-status">Connecting...</span></div>
     </div>
   </div>
@@ -369,7 +523,7 @@ body{font-family:'Inter',sans-serif;background:var(--light);color:var(--ink);min
     <div class="hero-amount" id="dash-revenue">₹0</div>
     <div class="hero-sub" id="dash-trips">0 trips</div>
     <div class="hero-row">
-      <div class="hero-cell"><div class="hero-mini-label">Expenses</div><div class="hero-mini-val" id="dash-expenses" style="color:#f87171">₹0</div></div>
+      <div class="hero-cell"><div class="hero-mini-label">Expenses</div><div class="hero-mini-val" id="dash-expenses" style="color:var(--neg)">₹0</div></div>
       <div class="hero-cell"><div class="hero-mini-label">Net Profit</div><div class="hero-mini-val" id="dash-profit">₹0</div></div>
       <div class="hero-cell"><div class="hero-mini-label">Receivable</div><div class="hero-mini-val" id="dash-receivable" style="color:#fbbf24">₹0</div></div>
     </div>
@@ -382,7 +536,7 @@ body{font-family:'Inter',sans-serif;background:var(--light);color:var(--ink);min
   </div>
   <!-- YTD strip -->
   <div class="card" id="ytd-card">
-    <div class="card-title">📅 Year-to-Date <span id="ytd-year" style="font-size:.75rem;color:var(--gray);font-weight:500"></span></div>
+    <div class="card-title">📅 Year-to-Date <span id="ytd-year" style="font-size:.75rem;color:var(--t3);font-weight:500"></span></div>
     <div class="stat-grid" style="margin-bottom:0" id="ytd-stats"></div>
   </div>
   <div class="card">
@@ -1026,7 +1180,7 @@ window.showVehDropdown=function(inputId,dropId){
   const all=[...fleet,...hired].filter((v,i,a)=>a.findIndex(x=>x.no===v.no)===i);
   const filtered=val?all.filter(v=>v.no.includes(val)||v.label.toUpperCase().includes(val)):all;
   if(!filtered.length){drop.classList.remove('open');return;}
-  drop.innerHTML=filtered.map(v=>`<div class="veh-opt" onclick="selectVeh('${inputId}','${dropId}','${v.no}')"><span>${v.no}</span><span class="veh-opt-badge">${v.badge}</span><span style="font-size:.68rem;color:var(--gray)">${(v.label.split('—')[1]||'').trim()}</span></div>`).join('');
+  drop.innerHTML=filtered.map(v=>`<div class="veh-opt" onclick="selectVeh('${inputId}','${dropId}','${v.no}')"><span>${v.no}</span><span class="veh-opt-badge">${v.badge}</span><span style="font-size:.68rem;color:var(--t3)">${(v.label.split('—')[1]||'').trim()}</span></div>`).join('');
   drop.classList.add('open');
 };
 window.selectVeh=function(iId,dId,vno){
@@ -1099,13 +1253,13 @@ window.changePassword=function(){
   if(currentRole!=='owner'){toast('⛔ Only owner can change passwords');return;}
   const cur=document.getElementById('pw-cur-owner')?.value;
   const msg=document.getElementById('pw-msg');
-  if(cur!==getPw('owner')){msg.style.color='var(--danger)';msg.textContent='❌ Current owner password wrong';return;}
+  if(cur!==getPw('owner')){msg.style.color='var(--neg)';msg.textContent='❌ Current owner password wrong';return;}
   const nw=document.getElementById('pw-new-owner')?.value;
-  if(nw&&nw.length<4){msg.style.color='var(--danger)';msg.textContent='❌ Password min 4 characters';return;}
+  if(nw&&nw.length<4){msg.style.color='var(--neg)';msg.textContent='❌ Password min 4 characters';return;}
   if(nw)localStorage.setItem('srt_pw_owner',nw);
   const ns=document.getElementById('pw-new-sup')?.value;if(ns&&ns.length>=4)localStorage.setItem('srt_pw_supervisor',ns);
   const nd=document.getElementById('pw-new-drv')?.value;if(nd&&nd.length>=4)localStorage.setItem('srt_pw_driver',nd);
-  msg.style.color='var(--l)';msg.textContent='✅ Passwords updated!';
+  msg.style.color='var(--green)';msg.textContent='✅ Passwords updated!';
 };
 
 // ── PHOTO HANDLING ──
@@ -1365,7 +1519,7 @@ function renderDashboard(){
   document.getElementById('ytd-stats').innerHTML=`
     <div class="stat-card sc-green"><div class="stat-label">YTD Revenue</div><div class="stat-value">${fM(ytRev)}</div><div class="stat-sub">${ytT.length} trips</div></div>
     <div class="stat-card sc-rust"><div class="stat-label">YTD Expenses</div><div class="stat-value">${fM(ytExp)}</div><div class="stat-sub">${ytT.reduce((s,t)=>s+(t.qty||0),0).toFixed(0)} CBM</div></div>
-    <div class="stat-card sc-gold"><div class="stat-label">YTD Profit</div><div class="stat-value" style="color:${ytRev-ytExp>=0?'var(--l)':'var(--rust)'}">${fM(ytRev-ytExp)}</div><div class="stat-sub">${ytRev>0?((ytRev-ytExp)/ytRev*100).toFixed(1)+'% margin':'-'}</div></div>
+    <div class="stat-card sc-gold"><div class="stat-label">YTD Profit</div><div class="stat-value" style="color:${ytRev-ytExp>=0?'var(--green)':'var(--neg)'}">${fM(ytRev-ytExp)}</div><div class="stat-sub">${ytRev>0?((ytRev-ytExp)/ytRev*100).toFixed(1)+'% margin':'-'}</div></div>
     <div class="stat-card sc-blue"><div class="stat-label">YTD Diesel</div><div class="stat-value">${filterByYear(D.diesel,cY).reduce((s,d)=>s+d.litres,0).toFixed(0)} L</div><div class="stat-sub">${fM(filterByYear(D.diesel,cY).reduce((s,d)=>s+d.total,0))}</div></div>`;
 
   renderExpiryAlerts();renderSmartAlerts();renderCharts();renderVehicleInsights();
@@ -1449,12 +1603,12 @@ function renderVehicleInsights(){
   el.innerHTML=`<table class="insight-table">
     <thead><tr><th>Vehicle</th><th>Trips</th><th>Revenue</th><th>Fuel</th><th>km/L</th><th>Profit</th></tr></thead>
     <tbody>${rows.map(r=>`<tr>
-      <td><strong>${r.vno}</strong><br><span style="font-size:.62rem;color:var(--gray)">${r.type}</span></td>
+      <td><strong>${r.vno}</strong><br><span style="font-size:.62rem;color:var(--t3)">${r.type}</span></td>
       <td class="val">${r.trips}</td>
-      <td class="val" style="color:var(--l)">${fM(r.rev)}</td>
-      <td class="val" style="color:var(--rust)">${fM(r.exp)}</td>
+      <td class="val" style="color:var(--green)">${fM(r.rev)}</td>
+      <td class="val" style="color:var(--neg)">${fM(r.exp)}</td>
       <td class="val">${r.kml}</td>
-      <td class="val" style="color:${r.profit>=0?'var(--l)':'var(--rust)'}">${fM(r.profit)}</td>
+      <td class="val" style="color:${r.profit>=0?'var(--green)':'var(--neg)'}">${fM(r.profit)}</td>
     </tr>`).join('')}</tbody>
   </table>`;
 }
@@ -1466,20 +1620,26 @@ function renderCharts(){
     exps.push(filterByMonth(D.expenses,m,y).reduce((s,e)=>s+e.amount,0));
     dslD.push(filterByMonth(D.diesel,m,y).reduce((s,d)=>s+d.litres,0));
   }
+  const gridCol='rgba(0,30,10,.06)',tickCol='#7a9c80',legendCol='#3d5c42';
+  const baseOpts={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:legendCol,font:{size:10,family:'DM Sans'},boxWidth:10,padding:12}}},scales:{x:{grid:{display:false},ticks:{color:tickCol,font:{size:9}}},y:{grid:{color:gridCol},border:{dash:[4,4]},ticks:{color:tickCol,font:{size:9}}}}};
   const c1=document.getElementById('rev-exp-chart').getContext('2d');
   if(revChart)revChart.destroy();
-  revChart=new Chart(c1,{type:'bar',data:{labels:months,datasets:[{label:'Revenue',data:revs,backgroundColor:'rgba(45,122,82,.85)',borderRadius:6},{label:'Expenses',data:exps,backgroundColor:'rgba(192,57,43,.7)',borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:11},boxWidth:10}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{grid:{color:'#f0f0f0'},ticks:{font:{size:10},callback:v=>'₹'+(v>=1000?Math.round(v/1000)+'k':v)}}}}});
+  revChart=new Chart(c1,{type:'bar',data:{labels:months,datasets:[
+    {label:'Revenue',data:revs,backgroundColor:'rgba(21,128,61,.8)',borderRadius:5,borderSkipped:false},
+    {label:'Expenses',data:exps,backgroundColor:'rgba(239,68,68,.6)',borderRadius:5,borderSkipped:false}
+  ]},options:{...baseOpts,plugins:{...baseOpts.plugins},scales:{...baseOpts.scales,y:{...baseOpts.scales.y,ticks:{...baseOpts.scales.y.ticks,callback:v=>'₹'+(v>=1000?Math.round(v/1000)+'k':v)}}}}});
   const mE=filterByMonth(D.expenses,cM,cY);
   const byCat={};mE.forEach(e=>{byCat[e.category]=(byCat[e.category]||0)+e.amount;});
   const cats=Object.keys(byCat),vals=Object.values(byCat);
-  const pc=['#2d7a52','#c0392b','#d97706','#1d6fa4','#7c3aed','#059669','#dc2626','#b45309','#1e40af'];
+  const pc=['#22c55e','#ef4444','#f59e0b','#3b82f6','#a855f7','#06b6d4','#f97316','#84cc16','#e11d48'];
   const c2=document.getElementById('pie-chart').getContext('2d');
   if(pieChart)pieChart.destroy();
-  if(cats.length){pieChart=new Chart(c2,{type:'doughnut',data:{labels:cats,datasets:[{data:vals,backgroundColor:pc.slice(0,cats.length),borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:10},boxWidth:10,padding:8}}}}});}
-  else{pieChart=new Chart(c2,{type:'doughnut',data:{labels:['No Data'],datasets:[{data:[1],backgroundColor:['#e0e0e0'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});}
+  if(cats.length){pieChart=new Chart(c2,{type:'doughnut',data:{labels:cats,datasets:[{data:vals,backgroundColor:pc.slice(0,cats.length),borderWidth:2,borderColor:'#ffffff',hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{position:'right',labels:{color:legendCol,font:{size:9,family:'DM Sans'},boxWidth:9,padding:7}}}}});}
+  else{pieChart=new Chart(c2,{type:'doughnut',data:{labels:['No Data'],datasets:[{data:[1],backgroundColor:['#1c2a1f'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});}
   const c3=document.getElementById('diesel-chart').getContext('2d');
   if(dslChart)dslChart.destroy();
-  dslChart=new Chart(c3,{type:'line',data:{labels:months,datasets:[{label:'Litres',data:dslD,borderColor:'#1d6fa4',backgroundColor:'rgba(29,111,164,.1)',borderWidth:2.5,pointBackgroundColor:'#1d6fa4',tension:.4,fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:11},boxWidth:10}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{grid:{color:'#f0f0f0'},ticks:{font:{size:10},callback:v=>v+'L'}}}}});
+  const grad=c3.createLinearGradient(0,0,0,160);grad.addColorStop(0,'rgba(26,95,180,.15)');grad.addColorStop(1,'rgba(26,95,180,0)');
+  dslChart=new Chart(c3,{type:'line',data:{labels:months,datasets:[{label:'Litres',data:dslD,borderColor:'#3b82f6',backgroundColor:grad,borderWidth:2,pointBackgroundColor:'#3b82f6',pointRadius:4,pointHoverRadius:6,tension:.4,fill:true}]},options:{...baseOpts,scales:{...baseOpts.scales,y:{...baseOpts.scales.y,ticks:{...baseOpts.scales.y.ticks,callback:v=>v+'L'}}}}});
 }
 
 // ── TRIPS ──
@@ -1489,9 +1649,9 @@ function renderTrips(){
   const pendAmt=pending.reduce((s,t)=>s+(t.revenue||0),0),partAmt=partial.reduce((s,t)=>s+(t.payPending||0),0);
   const ps=document.getElementById('trips-pay-summary');
   if(pendAmt+partAmt>0){
-    ps.innerHTML=`<div class="card" style="background:var(--f);color:#fff;padding:14px 16px">
+    ps.innerHTML=`<div class="card" style="background:var(--bg2);color:#fff;padding:14px 16px">
       <div style="font-size:.62rem;color:var(--s);text-transform:uppercase;margin-bottom:6px;font-weight:500">💰 Total Receivable</div>
-      <div style="font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800">${fM(pendAmt+partAmt)}</div>
+      <div style="font-family:var(--font-num);font-size:1.5rem;font-weight:400">${fM(pendAmt+partAmt)}</div>
       <div style="display:flex;gap:16px;margin-top:8px;font-size:.7rem;color:rgba(255,255,255,.6)">
         <span>⏳ ${pending.length} pending · ${fM(pendAmt)}</span>
         <span>🔶 ${partial.length} partial · ${fM(partAmt)}</span>
@@ -1537,15 +1697,15 @@ function renderExpenses(){
   const total=f.reduce((s,e)=>s+e.amount,0);
   const list=document.getElementById('expense-list');
   if(!f.length){list.innerHTML='<div class="empty"><div class="empty-icon">🧾</div><div class="empty-text">No expenses.</div></div>';return;}
-  list.innerHTML=`<div class="card" style="background:var(--f);color:#fff;margin-bottom:12px">
+  list.innerHTML=`<div class="card" style="background:var(--bg2);color:#fff;margin-bottom:12px">
     <div style="font-size:.6rem;color:var(--s);text-transform:uppercase;margin-bottom:2px">Total (filtered)</div>
-    <div style="font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800">${fM(total)}</div>
+    <div style="font-family:var(--font-num);font-size:1.5rem;font-weight:400">${fM(total)}</div>
   </div>`+f.map(e=>`<div class="list-item li-expense">
     <div class="list-icon">💸</div>
     <div class="list-content">
       <div class="list-main">${e.category}</div>
       <div class="list-sub">${fD(e.date)} · ${e.paidTo||''}</div>
-      ${e.desc?`<div class="list-sub" style="color:var(--ink)">${e.desc}</div>`:''}
+      ${e.desc?`<div class="list-sub" style="color:var(--t1)">${e.desc}</div>`:''}
       ${e.autoLinked?`<span class="chip ch-b" style="display:inline-block;margin-top:5px;font-size:.58rem">⛽ Auto-linked</span>`:''}
     </div>
     <div class="action-btns">
@@ -1618,9 +1778,9 @@ function renderAdvances(){
   const list=document.getElementById('advance-list');
   if(!D.advances.length){list.innerHTML='<div class="empty"><div class="empty-icon">💵</div><div class="empty-text">No advances.</div></div>';return;}
   const tot=D.advances.reduce((s,a)=>s+(a.balance||0),0);
-  list.innerHTML=`<div class="card" style="background:var(--f);color:#fff;margin-bottom:12px">
+  list.innerHTML=`<div class="card" style="background:var(--bg2);color:#fff;margin-bottom:12px">
     <div style="font-size:.6rem;color:var(--s);text-transform:uppercase;margin-bottom:2px">Outstanding</div>
-    <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800">${fM(tot)}</div>
+    <div style="font-family:var(--font-num);font-size:1.4rem;font-weight:400">${fM(tot)}</div>
   </div>`+D.advances.map(a=>`<div class="list-item li-advance">
     <div class="list-icon">💵</div>
     <div class="list-content">
@@ -1643,9 +1803,9 @@ function renderHired(){
   if(!f.length){list.innerHTML='<div class="empty"><div class="empty-icon">🚜</div><div class="empty-text">No entries.</div></div>';return;}
   const tot=f.reduce((s,h)=>s+(h.balance||0),0);
   const tc={Truck:'vt-truck',Crane:'vt-crane',Tractor:'vt-tractor',Other:'vt-truck'};
-  list.innerHTML=`<div class="card" style="background:var(--f);color:#fff;margin-bottom:12px">
+  list.innerHTML=`<div class="card" style="background:var(--bg2);color:#fff;margin-bottom:12px">
     <div style="font-size:.6rem;color:var(--s);text-transform:uppercase;margin-bottom:2px">Total Balance Due</div>
-    <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800">${fM(tot)}</div>
+    <div style="font-family:var(--font-num);font-size:1.4rem;font-weight:400">${fM(tot)}</div>
   </div>`+f.map(h=>`<div class="list-item li-hired">
     <div class="list-icon">${h.type==='Truck'?'🚛':h.type==='Crane'?'🏗️':'🚜'}</div>
     <div class="list-content">
@@ -1688,7 +1848,7 @@ function renderTenders(){
           <span class="chip ch-p">📎 ${docsDone}/${docsTotal}</span>
         </div>
         <div class="prog-wrap"><div class="prog-bar ${p>=100?'pb-green':p>=50?'pb-amber':'pb-red'}" style="width:${p}%"></div></div>
-        ${t.quantity>0?`<div style="font-size:.62rem;color:var(--gray);margin-top:4px">${p}% complete · ${lT.length} trips</div>`:''}
+        ${t.quantity>0?`<div style="font-size:.62rem;color:var(--t3);margin-top:4px">${p}% complete · ${lT.length} trips</div>`:''}
       </div>
       <div class="action-btns">
         <button class="ic-btn" onclick="editItem('tenders','${t.id}')">✏️</button>
@@ -1749,15 +1909,15 @@ function renderReport(){
   const byOwner={};mH.forEach(h=>{if(!byOwner[h.owner])byOwner[h.owner]={gross:0,advance:0,balance:0,count:0};byOwner[h.owner].gross+=h.gross;byOwner[h.owner].advance+=h.advance;byOwner[h.owner].balance+=h.balance;byOwner[h.owner].count++;});
   const pendRev=mT.filter(t=>t.payStatus!=='received').reduce((s,t)=>s+(t.payPending||t.revenue),0);
   document.getElementById('report-content').innerHTML=`<div class="card">
-    <div style="text-align:center;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid var(--light)">
-      <div style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:var(--f)">🚛 Shree Rama Transport</div>
-      <div style="font-size:.78rem;color:var(--gray);margin-top:3px">Monthly Report — ${MO[rM]} ${rY}</div>
+    <div style="text-align:center;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)">
+      <div style="font-family:var(--font-num);font-size:1.1rem;font-weight:400;color:var(--bg2)">🚛 Shree Rama Transport</div>
+      <div style="font-size:.78rem;color:var(--t3);margin-top:3px">Monthly Report — ${MO[rM]} ${rY}</div>
     </div>
     <div class="report-section">
       <div class="card-title" style="margin-bottom:8px">💰 Revenue</div>
       <div class="report-row"><span>Total Trips</span><span class="report-total">${mT.length}</span></div>
       <div class="report-row"><span>Total CBM Hauled</span><span class="report-total">${cbm.toFixed(1)} CBM</span></div>
-      <div class="report-row"><span>Total Revenue</span><span class="report-total" style="color:var(--l)">${fM(totalRev)}</span></div>
+      <div class="report-row"><span>Total Revenue</span><span class="report-total" style="color:var(--green)">${fM(totalRev)}</span></div>
       <div class="report-row"><span>Payment Received</span><span class="report-total">${fM(totalRev-pendRev)}</span></div>
       <div class="report-row"><span>Outstanding Receivable</span><span class="report-total" style="color:var(--warn)">${fM(pendRev)}</span></div>
       ${cbm>0?`<div class="report-row"><span>Cost per CBM</span><span class="report-total">${fM(Math.round(totalExp/cbm))}</span></div>`:''}
@@ -1765,11 +1925,11 @@ function renderReport(){
     <div class="report-section">
       <div class="card-title" style="margin-bottom:8px">💸 Expenses by Category</div>
       ${Object.entries(byCat).sort((a,b)=>b[1]-a[1]).map(([cat,amt])=>`<div class="report-row"><span>${cat}</span><span>${fM(amt)}</span></div>`).join('')}
-      <div class="report-row" style="border-top:2px solid var(--m);margin-top:4px;padding-top:8px"><span><strong>Total Expenses</strong></span><span class="report-total" style="color:var(--rust)">${fM(totalExp)}</span></div>
+      <div class="report-row" style="border-top:2px solid var(--m);margin-top:4px;padding-top:8px"><span><strong>Total Expenses</strong></span><span class="report-total" style="color:var(--neg)">${fM(totalExp)}</span></div>
     </div>
     <div class="report-section">
       <div class="card-title" style="margin-bottom:8px">🏪 Expenses by Vendor</div>
-      ${Object.entries(byVendor).sort((a,b)=>b[1]-a[1]).map(([v,amt])=>`<div class="report-row"><span>${v}</span><span>${fM(amt)}</span></div>`).join('')||'<div class="report-row"><span style="color:var(--gray)">No vendor data</span></div>'}
+      ${Object.entries(byVendor).sort((a,b)=>b[1]-a[1]).map(([v,amt])=>`<div class="report-row"><span>${v}</span><span>${fM(amt)}</span></div>`).join('')||'<div class="report-row"><span style="color:var(--t3)">No vendor data</span></div>'}
     </div>
     <div class="report-section">
       <div class="card-title" style="margin-bottom:8px">⛽ Diesel</div>
@@ -1779,12 +1939,12 @@ function renderReport(){
     </div>
     <div class="report-section">
       <div class="card-title" style="margin-bottom:8px">🚜 Hired Vehicles by Owner</div>
-      ${Object.entries(byOwner).map(([o,v])=>`<div class="report-row"><span>${o} (${v.count})</span><span><span style="color:var(--l)">${fM(v.gross)}</span> <span style="font-size:.7rem;color:var(--gray)">bal ${fM(v.balance)}</span></span></div>`).join('')||'<div class="report-row"><span style="color:var(--gray)">None</span></div>'}
+      ${Object.entries(byOwner).map(([o,v])=>`<div class="report-row"><span>${o} (${v.count})</span><span><span style="color:var(--green)">${fM(v.gross)}</span> <span style="font-size:.7rem;color:var(--t3)">bal ${fM(v.balance)}</span></span></div>`).join('')||'<div class="report-row"><span style="color:var(--t3)">None</span></div>'}
       <div class="report-row" style="border-top:2px solid var(--m);margin-top:4px;padding-top:8px"><span><strong>Total Hired</strong></span><span class="report-total">${fM(totalH)}</span></div>
     </div>
-    <div style="background:var(--f);border-radius:var(--rs);padding:16px;margin-top:4px">
-      <div style="color:var(--s);font-size:.62rem;text-transform:uppercase;margin-bottom:4px">Net Profit / Loss</div>
-      <div style="font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:${totalRev-totalExp>=0?'#52b788':'#f87171'}">${fM(totalRev-totalExp)}</div>
+    <div style="background:var(--bg2);border-radius:var(--rs);padding:16px;margin-top:4px">
+      <div style="color:rgba(255,255,255,.7);font-size:.62rem;text-transform:uppercase;margin-bottom:4px">Net Profit / Loss</div>
+      <div style="font-family:var(--font-num);font-size:1.8rem;font-weight:400;color:${totalRev-totalExp>=0?'var(--pos)':'var(--neg)'}">${fM(totalRev-totalExp)}</div>
       <div style="color:rgba(255,255,255,.5);font-size:.7rem;margin-top:4px">${fM(totalRev)} revenue − ${fM(totalExp)} expenses${totalRev>0?' · '+(((totalRev-totalExp)/totalRev)*100).toFixed(1)+'% margin':''}</div>
     </div>
   </div>`;
@@ -1798,17 +1958,17 @@ function renderYtdReport(){
   const byCat={};yE.forEach(e=>{byCat[e.category]=(byCat[e.category]||0)+e.amount;});
   const byMo=[];for(let m=0;m<12;m++){const mT=filterByMonth(D.trips,m,ytdY),mE=filterByMonth(D.expenses,m,ytdY);byMo.push({m:SH[m],rev:mT.reduce((s,t)=>s+t.revenue,0),exp:mE.reduce((s,e)=>s+e.amount,0),trips:mT.length});}
   document.getElementById('ytd-report-content').innerHTML=`<div class="card">
-    <div style="text-align:center;margin-bottom:14px;padding-bottom:12px;border-bottom:2px solid var(--light)">
-      <div style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:var(--f)">🚛 Shree Rama Transport</div>
-      <div style="font-size:.78rem;color:var(--gray);margin-top:3px">Year-to-Date Report — ${ytdY}</div>
+    <div style="text-align:center;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border)">
+      <div style="font-family:var(--font-num);font-size:1.1rem;font-weight:400;color:var(--bg2)">🚛 Shree Rama Transport</div>
+      <div style="font-size:.78rem;color:var(--t3);margin-top:3px">Year-to-Date Report — ${ytdY}</div>
     </div>
     <div class="report-section">
       <div class="card-title" style="margin-bottom:8px">📊 Annual Summary</div>
       <div class="report-row"><span>Total Trips</span><span class="report-total">${yT.length}</span></div>
       <div class="report-row"><span>Total CBM Hauled</span><span class="report-total">${yCbm.toFixed(1)} CBM</span></div>
-      <div class="report-row"><span>Total Revenue</span><span class="report-total" style="color:var(--l)">${fM(yRev)}</span></div>
-      <div class="report-row"><span>Total Expenses</span><span class="report-total" style="color:var(--rust)">${fM(yExp)}</span></div>
-      <div class="report-row"><span>Net Profit</span><span class="report-total" style="color:${yRev-yExp>=0?'var(--l)':'var(--rust)'}">${fM(yRev-yExp)}</span></div>
+      <div class="report-row"><span>Total Revenue</span><span class="report-total" style="color:var(--green)">${fM(yRev)}</span></div>
+      <div class="report-row"><span>Total Expenses</span><span class="report-total" style="color:var(--neg)">${fM(yExp)}</span></div>
+      <div class="report-row"><span>Net Profit</span><span class="report-total" style="color:${yRev-yExp>=0?'var(--green)':'var(--neg)'}">${fM(yRev-yExp)}</span></div>
       <div class="report-row"><span>Profit Margin</span><span class="report-total">${yRev>0?(((yRev-yExp)/yRev)*100).toFixed(1)+'%':'-'}</span></div>
       ${yCbm>0?`<div class="report-row"><span>Avg Cost / CBM</span><span class="report-total">${fM(Math.round(yExp/yCbm))}</span></div>`:''}
       <div class="report-row"><span>Diesel</span><span class="report-total">${yDsl.reduce((s,d)=>s+d.litres,0).toFixed(0)} L · ${fM(yDsl.reduce((s,d)=>s+d.total,0))}</span></div>
@@ -1816,11 +1976,11 @@ function renderYtdReport(){
     <div class="report-section">
       <div class="card-title" style="margin-bottom:8px">📅 Month-by-Month</div>
       <table class="insight-table"><thead><tr><th>Month</th><th>Trips</th><th>Revenue</th><th>Expenses</th><th>Profit</th></tr></thead>
-      <tbody>${byMo.filter(m=>m.rev>0||m.exp>0).map(m=>`<tr><td><strong>${m.m}</strong></td><td class="val">${m.trips}</td><td class="val" style="color:var(--l)">${fM(m.rev)}</td><td class="val" style="color:var(--rust)">${fM(m.exp)}</td><td class="val" style="color:${m.rev-m.exp>=0?'var(--l)':'var(--rust)'}">${fM(m.rev-m.exp)}</td></tr>`).join('')||'<tr><td colspan="5" style="text-align:center;color:var(--gray);padding:12px">No data for this year</td></tr>'}</tbody></table>
+      <tbody>${byMo.filter(m=>m.rev>0||m.exp>0).map(m=>`<tr><td><strong>${m.m}</strong></td><td class="val">${m.trips}</td><td class="val" style="color:var(--green)">${fM(m.rev)}</td><td class="val" style="color:var(--neg)">${fM(m.exp)}</td><td class="val" style="color:${m.rev-m.exp>=0?'var(--green)':'var(--neg)'}">${fM(m.rev-m.exp)}</td></tr>`).join('')||'<tr><td colspan="5" style="text-align:center;color:var(--t3);padding:12px">No data for this year</td></tr>'}</tbody></table>
     </div>
     <div class="report-section">
       <div class="card-title" style="margin-bottom:8px">💸 Expenses by Category</div>
-      ${Object.entries(byCat).sort((a,b)=>b[1]-a[1]).map(([cat,amt])=>`<div class="report-row"><span>${cat}</span><span>${fM(amt)} <span style="font-size:.7rem;color:var(--gray)">(${yExp>0?(amt/yExp*100).toFixed(0)+'%':''})</span></span></div>`).join('')||'<div style="color:var(--gray);font-size:.8rem">No expense data</div>'}
+      ${Object.entries(byCat).sort((a,b)=>b[1]-a[1]).map(([cat,amt])=>`<div class="report-row"><span>${cat}</span><span>${fM(amt)} <span style="font-size:.7rem;color:var(--t3)">(${yExp>0?(amt/yExp*100).toFixed(0)+'%':''})</span></span></div>`).join('')||'<div style="color:var(--t3);font-size:.8rem">No expense data</div>'}
     </div>
   </div>`;
 }
@@ -1852,9 +2012,9 @@ function renderGstReport(){
   const totalGstEst=Object.entries(byCat).reduce((s,[cat,v])=>{const g=gstMap[cat];return s+(g?Math.round(v.total*g.gst/(100+g.gst)):0);},0);
 
   document.getElementById('gst-report-content').innerHTML=`<div class="card">
-    <div style="text-align:center;margin-bottom:14px;padding-bottom:12px;border-bottom:2px solid var(--light)">
-      <div style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:var(--f)">🚛 Shree Rama Transport</div>
-      <div style="font-size:.78rem;color:var(--gray);margin-top:3px">GST Expense Summary — FY ${gstY}–${gstY+1}</div>
+    <div style="text-align:center;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border)">
+      <div style="font-family:var(--font-num);font-size:1.1rem;font-weight:400;color:var(--bg2)">🚛 Shree Rama Transport</div>
+      <div style="font-size:.78rem;color:var(--t3);margin-top:3px">GST Expense Summary — FY ${gstY}–${gstY+1}</div>
       <div style="font-size:.7rem;color:var(--warn);margin-top:6px;background:#fffbeb;padding:6px 10px;border-radius:8px">⚠️ This is an internal categorisation for reference. Consult your CA for actual GST filing.</div>
     </div>
     <table class="gst-table">
@@ -1865,19 +2025,19 @@ function renderGstReport(){
         const base=Math.round(v.total*100/(100+g.gst));
         const gstAmt=g.gst>0?Math.round(v.total*g.gst/(100+g.gst)):0;
         return`<tr>
-          <td><strong>${cat}</strong><br><span style="font-size:.64rem;color:var(--gray)">${g.desc}</span></td>
-          <td style="font-size:.72rem;color:var(--gray)">${g.hsn}</td>
-          <td style="font-weight:700;color:${g.gst>0?'var(--blue)':'var(--gray)'}">${g.gst>0?g.gst+'%':'Exempt'}</td>
+          <td><strong>${cat}</strong><br><span style="font-size:.64rem;color:var(--t3)">${g.desc}</span></td>
+          <td style="font-size:.72rem;color:var(--t3)">${g.hsn}</td>
+          <td style="font-weight:700;color:${g.gst>0?'var(--blue)':'var(--t3)'}">${g.gst>0?g.gst+'%':'Exempt'}</td>
           <td class="amt">${fM(v.total)}</td>
-          <td class="amt" style="color:${gstAmt>0?'var(--rust)':'var(--gray)'}">${gstAmt>0?fM(gstAmt):'–'}</td>
+          <td class="amt" style="color:${gstAmt>0?'var(--neg)':'var(--t3)'}">${gstAmt>0?fM(gstAmt):'–'}</td>
         </tr>`;
       }).join('')}
       </tbody>
       <tfoot>
-        <tr style="background:var(--light)">
+        <tr style="background:var(--border)">
           <td colspan="3"><strong>Total</strong></td>
           <td class="amt"><strong>${fM(totalExp)}</strong></td>
-          <td class="amt" style="color:var(--rust)"><strong>${fM(totalGstEst)}</strong></td>
+          <td class="amt" style="color:var(--neg)"><strong>${fM(totalGstEst)}</strong></td>
         </tr>
       </tfoot>
     </table>
@@ -1886,7 +2046,7 @@ function renderGstReport(){
       <table class="gst-table">
         <thead><tr><th>Vendor / Paid To</th><th>Category</th><th style="text-align:right">Total Paid</th><th>Mode</th></tr></thead>
         <tbody>
-        ${Object.entries(yE.filter(e=>e.paidTo).reduce((acc,e)=>{const k=e.paidTo+'|||'+e.category+'|||'+e.mode;if(!acc[k])acc[k]={vendor:e.paidTo,cat:e.category,mode:e.mode,total:0};acc[k].total+=e.amount;return acc;},{})).sort((a,b)=>b[1].total-a[1].total).map(([,v])=>`<tr><td>${v.vendor}</td><td style="font-size:.72rem;color:var(--gray)">${v.cat}</td><td class="amt">${fM(v.total)}</td><td style="font-size:.72rem">${v.mode||'Cash'}</td></tr>`).join('')||'<tr><td colspan="4" style="text-align:center;color:var(--gray);padding:12px">No vendor data for this year</td></tr>'}
+        ${Object.entries(yE.filter(e=>e.paidTo).reduce((acc,e)=>{const k=e.paidTo+'|||'+e.category+'|||'+e.mode;if(!acc[k])acc[k]={vendor:e.paidTo,cat:e.category,mode:e.mode,total:0};acc[k].total+=e.amount;return acc;},{})).sort((a,b)=>b[1].total-a[1].total).map(([,v])=>`<tr><td>${v.vendor}</td><td style="font-size:.72rem;color:var(--t3)">${v.cat}</td><td class="amt">${fM(v.total)}</td><td style="font-size:.72rem">${v.mode||'Cash'}</td></tr>`).join('')||'<tr><td colspan="4" style="text-align:center;color:var(--t3);padding:12px">No vendor data for this year</td></tr>'}
         </tbody>
       </table>
     </div>
@@ -1926,23 +2086,23 @@ function renderVehicleReport(){
 
     return`<div class="card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <div><div style="font-family:'Syne',sans-serif;font-weight:800;font-size:.95rem;color:var(--f)">${v.vno}</div><div style="font-size:.7rem;color:var(--gray)">${v.type} · ${v.model||''} ${v.year?'('+v.year+')':''}</div></div>
+        <div><div style="font-family:var(--font-num);font-weight:400;font-size:.95rem;color:var(--bg2)">${v.vno}</div><div style="font-size:.7rem;color:var(--t3)">${v.type} · ${v.model||''} ${v.year?'('+v.year+')':''}</div></div>
         <span class="chip ${v.status==='Active'?'ch-g':v.status==='Under Repair'?'ch-r':'ch-a'}">${v.status}</span>
       </div>
       <div class="report-row"><span>Total Trips (All Time)</span><span class="report-total">${vT.length}</span></div>
       <div class="report-row"><span>Total CBM Hauled</span><span class="report-total">${vCbm.toFixed(1)} CBM</span></div>
-      <div class="report-row"><span>Total Revenue</span><span class="report-total" style="color:var(--l)">${fM(vRev)}</span></div>
-      <div class="report-row"><span>Total Diesel Cost</span><span class="report-total" style="color:var(--rust)">${fM(vDslCost)}</span></div>
+      <div class="report-row"><span>Total Revenue</span><span class="report-total" style="color:var(--green)">${fM(vRev)}</span></div>
+      <div class="report-row"><span>Total Diesel Cost</span><span class="report-total" style="color:var(--neg)">${fM(vDslCost)}</span></div>
       <div class="report-row"><span>Total Litres Filled</span><span class="report-total">${vDsl.reduce((s,d)=>s+d.litres,0).toFixed(0)} L</span></div>
       <div class="report-row"><span>Diesel Efficiency</span><span class="report-total">${kml} km/L</span></div>
       <div style="background:${vRev-vDslCost>=0?'#edfbf1':'#fff0f0'};border-radius:var(--rs);padding:12px;margin-top:8px;margin-bottom:12px">
-        <div style="font-size:.6rem;text-transform:uppercase;color:${vRev-vDslCost>=0?'#1b6035':'var(--rust)'};margin-bottom:3px">Revenue vs Fuel Cost</div>
-        <div style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:${vRev-vDslCost>=0?'var(--l)':'var(--rust)'}">${fM(vRev-vDslCost)}</div>
+        <div style="font-size:.6rem;text-transform:uppercase;color:${vRev-vDslCost>=0?'#1b6035':'var(--neg)'};margin-bottom:3px">Revenue vs Fuel Cost</div>
+        <div style="font-family:var(--font-num);font-size:1.3rem;font-weight:400;color:${vRev-vDslCost>=0?'var(--green)':'var(--neg)'}">${fM(vRev-vDslCost)}</div>
       </div>
       <div style="border-top:1px solid var(--light);padding-top:10px">
-        <div style="font-weight:700;font-size:.8rem;color:var(--f);margin-bottom:8px">🔧 Maintenance Expense Trend (last 6 months)</div>
-        ${maintRows||'<div style="color:var(--gray);font-size:.78rem">No maintenance data logged</div>'}
-        ${maintTotal>0?`<div class="report-row" style="border-top:2px solid var(--m);margin-top:4px;padding-top:8px"><span><strong>6-Month Total</strong></span><span class="report-total" style="color:var(--rust)">${fM(maintTotal)}</span></div>`:''}
+        <div style="font-weight:700;font-size:.8rem;color:var(--t1);margin-bottom:8px">🔧 Maintenance Expense Trend (last 6 months)</div>
+        ${maintRows||'<div style="color:var(--t3);font-size:.78rem">No maintenance data logged</div>'}
+        ${maintTotal>0?`<div class="report-row" style="border-top:2px solid var(--m);margin-top:4px;padding-top:8px"><span><strong>6-Month Total</strong></span><span class="report-total" style="color:var(--neg)">${fM(maintTotal)}</span></div>`:''}
         ${trendSignal}
       </div>
     </div>`;
