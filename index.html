@@ -902,21 +902,12 @@ function boot(){
   document.getElementById('login-screen').style.display='none';
   document.getElementById('main-app').style.display='block';
   applyRoleUI();
-  loadQueue();
-  // Load local data FIRST — app is fully usable immediately
-  loadLocal();
-  updateLabels();renderDashboard();
-  // Then try Firebase in background
   try{
     const app=initializeApp(FB);db=getFirestore(app);
     setSS('syncing','Connecting...');
     subAll();
-    // Flush any queued offline operations once Firebase is ready
-    setTimeout(()=>flushQueue(),2000);
-  }catch(e){setSS('error','Offline — data saved locally');}
-  // Listen for online/offline changes
-  window.addEventListener('online',()=>{isOnline=true;if(db){setSS('syncing','Back online, syncing...');setTimeout(()=>flushQueue(),1000);}});
-  window.addEventListener('offline',()=>{isOnline=false;setSS('error','Offline — saved locally');});
+  }catch(e){setSS('error','Offline');loadLocal();}
+  updateLabels();renderDashboard();
 }
 
 function applyRoleUI(){
@@ -947,19 +938,8 @@ function applyRoleUI(){
   }
 }
 
-// ── OFFLINE-FIRST SYNC QUEUE ──
-// All writes go to localStorage immediately (never lost).
-// A queue of pending Firebase operations is flushed whenever online.
-// Firebase snapshots act as a reconciliation layer when connection returns.
-
-let isOnline=navigator.onLine;
-let syncQueue=[];
-let flushLock=false;
-
-function loadQueue(){try{const q=localStorage.getItem('srt_queue');if(q)syncQueue=JSON.parse(q);}catch(e){syncQueue=[];}}
-function saveQueue(){try{localStorage.setItem('srt_queue',JSON.stringify(syncQueue));}catch(e){}}
 function saveLocal(){try{localStorage.setItem('srt_d',JSON.stringify(D));}catch(e){}}
-function loadLocal(){try{const d=localStorage.getItem('srt_d');if(d)D=JSON.parse(d);}catch(e){}}
+function loadLocal(){try{const d=localStorage.getItem('srt_d');if(d)D=JSON.parse(d);}catch(e){}refresh();}
 
 function setSS(s,m){
   const dot=document.getElementById('sync-dot');
@@ -967,101 +947,33 @@ function setSS(s,m){
   document.getElementById('sync-status').textContent=m;
 }
 
-async function flushQueue(){
-  if(flushLock||!db||!isOnline||!syncQueue.length)return;
-  flushLock=true;
-  setSS('syncing','Syncing '+syncQueue.length+' item(s)...');
-  const toProcess=[...syncQueue];
-  for(const op of toProcess){
-    try{
-      if(op.op==='add'){
-        // Use setDoc with the local ID so Firebase doc ID matches our local ID
-        await setDoc(doc(db,op.col,op.id),{...op.data,createdAt:Number(op.id)});
-      }else if(op.op==='upd'){
-        await updateDoc(doc(db,op.col,op.id),op.data);
-      }else if(op.op==='del'){
-        await deleteDoc(doc(db,op.col,op.id));
-      }
-      // Remove from queue on success
-      syncQueue=syncQueue.filter(q=>!(q.op===op.op&&q.col===op.col&&q.id===op.id));
-      saveQueue();
-    }catch(e){
-      // Leave in queue — will retry next time online
-      console.warn('Queue flush failed for',op,e);
-    }
-  }
-  flushLock=false;
-  if(syncQueue.length===0){setSS('ok','Synced ✓');}
-  else{setSS('error',syncQueue.length+' item(s) pending sync');}
-}
-
-function queueOp(op){
-  // Deduplicate: if same col+id already queued with same op type, merge/replace
-  if(op.op==='upd'){
-    const existing=syncQueue.findIndex(q=>q.op==='upd'&&q.col===op.col&&q.id===op.id);
-    if(existing>=0){syncQueue[existing].data={...syncQueue[existing].data,...op.data};saveQueue();return;}
-  }
-  if(op.op==='del'){
-    // Remove any pending add/upd for this id — delete supersedes everything
-    syncQueue=syncQueue.filter(q=>!(q.col===op.col&&q.id===op.id));
-  }
-  syncQueue.push(op);
-  saveQueue();
-}
-
-let collectionsLoaded=0;
-const TOTAL_COLS=Object.keys(D).length;
-
 function subAll(){
-  collectionsLoaded=0;
   [...Object.keys(D)].forEach(col=>{
     const u=onSnapshot(collection(db,col),snap=>{
-      // Reconcile: Firebase is truth, but locally-queued items override
-      const queuedIds=new Set(syncQueue.filter(q=>q.col===col&&q.op!=='del').map(q=>q.id));
-      const deletedIds=new Set(syncQueue.filter(q=>q.col===col&&q.op==='del').map(q=>q.id));
-      const fbData=snap.docs.map(d=>({id:d.id,...d.data()})).filter(d=>!deletedIds.has(d.id));
-      D[col]=[
-        ...D[col].filter(item=>queuedIds.has(item.id)),
-        ...fbData.filter(d=>!queuedIds.has(d.id))
-      ];
+      D[col]=snap.docs.map(d=>({id:d.id,...d.data()}));
       D[col].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
-      saveLocal();refresh();
-      collectionsLoaded++;
-      if(collectionsLoaded>=TOTAL_COLS){
-        setSS('ok',syncQueue.length?syncQueue.length+' item(s) pending':'Synced ✓');
-        if(syncQueue.length)flushQueue();
-      }
-    },e=>{
-      // Individual collection error — don't block the whole app
-      console.warn('Snapshot error for',col,e);
-      collectionsLoaded++;
-      if(collectionsLoaded>=TOTAL_COLS&&!syncQueue.length)setSS('ok','Synced ✓');
-    });
+      setSS('ok','Synced ✓');saveLocal();refresh();
+    },()=>setSS('error','Sync error'));
     uns.push(u);
   });
 }
 
 async function addR(col,data){
   const nid=Date.now().toString();
-  const entry={...data,id:nid,createdAt:Number(nid)};
-  D[col].unshift(entry);
+  D[col].unshift({...data,id:nid,createdAt:Number(nid)});
   saveLocal();refresh();
-  queueOp({op:'add',col,id:nid,data:{...data,createdAt:Number(nid)}});
-  if(isOnline&&db)flushQueue();
+  if(db){try{await addDoc(collection(db,col),{...data,createdAt:Number(nid)});}catch(e){setSS('error','Sync error');}}
   return nid;
 }
 async function delR(col,id){
-  D[col]=D[col].filter(i=>i.id!=id);
-  saveLocal();refresh();
-  queueOp({op:'del',col,id});
-  if(isOnline&&db)flushQueue();
+  D[col]=D[col].filter(i=>i.id!=id);saveLocal();refresh();
+  if(db){try{await deleteDoc(doc(db,col,id));}catch(e){setSS('error','Sync error');}}
 }
 async function updR(col,id,data){
   const i=D[col].findIndex(x=>x.id==id);
   if(i>=0)D[col][i]={...D[col][i],...data};
   saveLocal();refresh();
-  queueOp({op:'upd',col,id,data});
-  if(isOnline&&db)flushQueue();
+  if(db){try{await updateDoc(doc(db,col,id),data);}catch(e){setSS('error','Sync error');}}
 }
 
 // HELPERS
