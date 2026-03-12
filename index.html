@@ -493,8 +493,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
 .search-wrap{position:relative;margin-bottom:10px}
 .search-input{width:100%;padding:10px 36px 10px 14px;border:1.5px solid var(--border);border-radius:var(--r-pill);font-size:.82rem;font-family:var(--font);color:var(--t1);background:var(--surface);outline:none;transition:all .18s}
 .search-input:focus{border-color:var(--green2);box-shadow:0 0 0 3px var(--green4)}
-.search-icon{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:.9rem;pointer-events:none;color:var(--t3)}
-.search-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:.7rem;cursor:pointer;background:var(--border2);border:none;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;color:var(--t2);font-weight:700}
+.search-icon{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:.82rem;pointer-events:none;color:var(--t3);transition:opacity .15s}
+.search-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:.65rem;cursor:pointer;background:var(--border2);border:none;border-radius:50%;width:20px;height:20px;align-items:center;justify-content:center;color:var(--t2);font-weight:700;line-height:1}
+.search-input{padding-right:38px!important}
 
 /* ══ ATTENDANCE SHEET ══ */
 .att-sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:300;display:none;align-items:flex-end}
@@ -512,7 +513,62 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
 .att-opt.ao-blank{border-color:var(--border2);background:var(--bg2);color:var(--t3)}
 .att-opt.selected{box-shadow:0 0 0 3px rgba(26,122,63,.25);transform:scale(.97)}
 
-@media print{.bottom-nav,.topbar,.btn,.ic-btn,.no-print{display:none!important}.screen{display:block!important;padding:0!important}body{background:#fff}}
+
+/* ══ INSIGHT CARDS ══ */
+.insight-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px;box-shadow:var(--sh)}
+.insight-card-title{font-weight:700;font-size:.8rem;color:var(--t1);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.kpi-box{background:var(--bg);border-radius:var(--rs);padding:10px 12px;border:1px solid var(--border)}
+.kpi-label{font-size:.58rem;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.kpi-value{font-family:var(--font-num);font-size:1.05rem;color:var(--t1);line-height:1;word-break:break-all}
+.kpi-value.pos{color:var(--pos)}.kpi-value.neg{color:var(--neg)}.kpi-value.warn{color:var(--warn)}
+.kpi-sub{font-size:.6rem;color:var(--t3);margin-top:2px}
+.route-row{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border);font-size:.76rem;gap:8px}
+.route-row:last-child{border-bottom:none}
+.route-label{color:var(--t2);flex:1}
+.route-val{font-family:var(--font-num);font-size:.88rem}
+/* Activity log */
+.act-row{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+.act-row:last-child{border-bottom:none}
+.act-icon{font-size:.9rem;flex-shrink:0;margin-top:1px}
+.act-body{flex:1;min-width:0}
+.act-label{font-size:.74rem;color:var(--t1);font-weight:500}
+.act-meta{font-size:.6rem;color:var(--t3);margin-top:1px}
+.act-role{display:inline-block;padding:1px 6px;border-radius:4px;font-size:.56rem;font-weight:700;background:var(--green3);color:var(--green-txt)}
+
+/* ══ DOC CALENDAR ══ */
+.doc-month{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:8px;overflow:hidden;box-shadow:var(--sh)}
+.doc-month-hdr{padding:10px 14px;font-weight:700;font-size:.78rem;display:flex;justify-content:space-between;align-items:center}
+.doc-month-hdr.urgent{background:var(--neg-bg);color:var(--neg)}
+.doc-month-hdr.soon{background:var(--warn-bg);color:var(--warn)}
+.doc-month-hdr.ok{background:var(--green3);color:var(--green-txt)}
+.doc-item{padding:9px 14px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);font-size:.76rem}
+.doc-vno{font-weight:700;color:var(--t1)}
+.doc-type{font-size:.64rem;color:var(--t3);margin-top:1px}
+/* ══ SEASONAL CHART ══ */
+.seasonal-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px;box-shadow:var(--sh)}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.bar-label{width:28px;font-size:.64rem;color:var(--t3);text-align:right;flex-shrink:0}
+.bar-track{flex:1;background:var(--bg2);border-radius:4px;height:18px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:4px;transition:width .4s;background:linear-gradient(90deg,var(--green),var(--green2))}
+.bar-fill.peak{background:linear-gradient(90deg,#d97706,#f59e0b)}
+.bar-val{font-size:.66rem;color:var(--t2);width:52px;text-align:right;flex-shrink:0;font-family:var(--font-num)}
+/* ══ SERVICE ALERT CHIP ══ */
+.svc-alert{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:var(--r-pill);font-size:.6rem;font-weight:700;background:var(--warn-bg);color:var(--warn);border:1px solid #f5ddb0;margin-top:4px}
+.svc-alert.overdue{background:var(--neg-bg);color:var(--neg);border-color:#f5c0bc}
+
+@media print{
+  .bottom-nav,.topbar,.btn,.ic-btn,.no-print,.search-wrap,.filter-panel,.sort-bar,.tabs{display:none!important}
+  .screen{display:block!important;padding:8px 0!important}
+  .screens-wrap,.screen.active{display:block!important}
+  #more-report{display:block!important}
+  #report-tab-monthly,#report-tab-ytd,#report-tab-vehicle,#report-tab-gst,#report-tab-tripl,#report-tab-insights,#report-tab-staff-intel,#report-tab-seasonal,#report-tab-doccal{display:block!important}
+  body{background:#fff}
+  .card,.insight-card,.seasonal-wrap,.doc-month{box-shadow:none!important;border:1px solid #ddd!important;break-inside:avoid}
+  .kpi-grid{grid-template-columns:repeat(4,1fr)!important}
+  .stat-grid{grid-template-columns:repeat(4,1fr)!important}
+  @page{margin:15mm}
+}
 </style>
 </head>
 <body>
@@ -620,7 +676,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
     <button class="btn btn-primary btn-sm" onclick="openModal('modal-trip')">+ Add Trip</button>
   </div>
   <div class="search-wrap">
-    <input type="text" class="search-input" id="search-trips" placeholder="Search vehicle, source, destination, driver..." oninput="renderTrips()">
+    <input type="text" class="search-input" id="search-trips" placeholder="Search vehicle, source, destination, driver..." oninput="renderTrips()" autocomplete="off"><button class="search-clear" id="search-trips-clear" onclick="clearSearch('search-trips',renderTrips)" style="display:none">✕</button>
     <span class="search-icon">🔍</span>
   </div>
   <div class="filter-panel">
@@ -672,7 +728,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
       <button class="btn btn-primary btn-sm" onclick="openModal('modal-expense')">+ Add</button>
     </div>
     <div class="search-wrap">
-      <input type="text" class="search-input" id="search-expenses" placeholder="Search vendor, description, category..." oninput="renderExpenses()">
+      <input type="text" class="search-input" id="search-expenses" placeholder="Search vendor, description, category..." oninput="renderExpenses()" autocomplete="off"><button class="search-clear" id="search-expenses-clear" onclick="clearSearch('search-expenses',renderExpenses)" style="display:none">✕</button>
       <span class="search-icon">🔍</span>
     </div>
     <div class="filter-panel">
@@ -783,7 +839,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
 <div class="screen" id="screen-hired">
   <div class="section-header"><div class="section-title">🚜 Hired Vehicles</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-hired')">+ Add</button></div>
   <div class="search-wrap">
-    <input type="text" class="search-input" id="search-hired" placeholder="Search owner, vehicle no., work description..." oninput="renderHired()">
+    <input type="text" class="search-input" id="search-hired" placeholder="Search owner, vehicle no., work description..." oninput="renderHired()" autocomplete="off"><button class="search-clear" id="search-hired-clear" onclick="clearSearch('search-hired',renderHired)" style="display:none">✕</button>
     <span class="search-icon">🔍</span>
   </div>
   <div class="filter-panel">
@@ -827,7 +883,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
 <div class="screen" id="screen-tenders">
   <div class="section-header"><div class="section-title">📋 Tenders</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-tender')">+ New Tender</button></div>
   <div class="search-wrap">
-    <input type="text" class="search-input" id="search-tenders" placeholder="Search tender no., department, division, species..." oninput="renderTenders()">
+    <input type="text" class="search-input" id="search-tenders" placeholder="Search tender no., department, division, species..." oninput="renderTenders()" autocomplete="off"><button class="search-clear" id="search-tenders-clear" onclick="clearSearch('search-tenders',renderTenders)" style="display:none">✕</button>
     <span class="search-icon">🔍</span>
   </div>
   <div id="tender-list"></div>
@@ -844,7 +900,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
     <div id="expiry-reminders"></div>
     <div class="section-header"><div class="section-title">🚗 Fleet Register</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-vehicle')">+ Add Vehicle</button></div>
     <div class="search-wrap">
-      <input type="text" class="search-input" id="search-fleet" placeholder="Search reg. no., model, type..." oninput="renderVehicles()">
+      <input type="text" class="search-input" id="search-fleet" placeholder="Search reg. no., model, type..." oninput="renderVehicles()" autocomplete="off"><button class="search-clear" id="search-fleet-clear" onclick="clearSearch('search-fleet',renderVehicles)" style="display:none">✕</button>
       <span class="search-icon">🔍</span>
     </div>
     <div class="filter-panel">
@@ -894,11 +950,16 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
     <div id="vehicle-list"></div>
   </div>
   <div id="more-report" style="display:none">
-    <div class="tabs">
+    <div class="tabs" style="flex-wrap:wrap;gap:2px">
       <button class="tab active" onclick="switchReportTab('monthly',this)">Monthly</button>
-      <button class="tab" onclick="switchReportTab('ytd',this)">Year-to-Date</button>
-      <button class="tab" onclick="switchReportTab('vehicle',this)">By Vehicle</button>
+      <button class="tab" onclick="switchReportTab('ytd',this)">YTD</button>
+      <button class="tab" onclick="switchReportTab('vehicle',this)">Fleet</button>
       <button class="tab" onclick="switchReportTab('gst',this)">GST</button>
+      <button class="tab" onclick="switchReportTab('tripl',this)">Trip P&L</button>
+      <button class="tab" onclick="switchReportTab('insights',this)">Insights</button>
+      <button class="tab" onclick="switchReportTab('staff-intel',this)">👷 Staff</button>
+      <button class="tab" onclick="switchReportTab('seasonal',this)">📅 Seasonal</button>
+      <button class="tab" onclick="switchReportTab('doccal',this)">📋 Docs</button>
     </div>
     <div id="report-tab-monthly">
       <div class="month-bar">
@@ -906,7 +967,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
         <button class="month-label-btn" onclick="openDatePicker('report')" id="report-month-label">Loading...</button>
         <button class="month-nav" onclick="changeReportMonth(1)">›</button>
       </div>
-      <button class="btn btn-gold no-print" onclick="printReport()" style="margin-bottom:12px">🖨️ Print / Export</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+        <button class="btn btn-gold no-print" onclick="printReport()">🖨️ Print PDF</button>
+        <button class="btn btn-secondary no-print" onclick="exportCSV('trips')">📊 Trips CSV</button>
+        <button class="btn btn-secondary no-print" onclick="exportCSV('expenses')">📊 Expenses CSV</button>
+        <button class="btn btn-secondary no-print" onclick="exportCSV('staff')">📊 Staff CSV</button>
+      </div>
       <div id="report-content"></div>
     </div>
     <div id="report-tab-ytd" style="display:none">
@@ -930,13 +996,46 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
       <button class="btn btn-gold no-print" onclick="printGst()" style="margin-bottom:12px">🖨️ Print GST Summary</button>
       <div id="gst-report-content"></div>
     </div>
-  </div>
+    <div id="report-tab-tripl" style="display:none">
+      <div id="tripl-report-content"></div>
+    </div>
+    <div id="report-tab-insights" style="display:none">
+      <div id="insights-report-content"></div>
+    </div>
+    <div id="report-tab-staff-intel" style="display:none">
+      <div id="staff-intel-content"></div>
+    </div>
+    <div id="report-tab-seasonal" style="display:none">
+      <div id="seasonal-content"></div>
+    </div>
+    <div id="report-tab-doccal" style="display:none">
+      <div id="doccal-content"></div>
+    </div>
+  </div><!-- /more-report -->
+
   <div id="more-settings" style="display:none">
     <div class="card">
       <div class="card-title">🔑 Change Passwords</div>
       <div id="pw-fields"></div>
       <button class="btn btn-primary" onclick="changePassword()">🔑 Update Passwords</button>
       <div id="pw-msg" style="margin-top:10px;font-size:.8rem;text-align:center"></div>
+    </div>
+    <div class="card" style="margin-top:14px" id="demo-card">
+      <div class="card-title">🎯 Demo / Presentation Data</div>
+      <p style="font-size:.74rem;color:var(--t3);margin-bottom:14px;line-height:1.6">Load realistic sample data to demonstrate the app. Use only on a fresh / test account.</p>
+      <button class="btn btn-secondary" onclick="seedDemoData()">🎯 Load Demo Data</button>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <div class="card-title">💾 Backup & Restore</div>
+      <p style="font-size:.74rem;color:var(--t3);margin-bottom:14px;line-height:1.6">Export all your data as a JSON file. Keep it safe — you can restore it anytime if data is lost.</p>
+      <button class="btn btn-secondary" onclick="exportBackup()" style="margin-bottom:10px">⬇️ Export Backup (JSON)</button>
+      <button class="btn btn-secondary" onclick="document.getElementById('restore-input').click()">⬆️ Restore from Backup</button>
+      <input type="file" id="restore-input" accept=".json" style="display:none" onchange="importBackup(this)">
+      <div id="backup-msg" style="margin-top:10px;font-size:.76rem;text-align:center"></div>
+    </div>
+    <div class="card" style="margin-top:14px" id="activity-log-card">
+      <div class="card-title">📋 Activity Log <span style="font-size:.65rem;color:var(--t3);font-weight:400">(last 50 actions)</span></div>
+      <div id="activity-log-list"><div style="font-size:.76rem;color:var(--t3);text-align:center;padding:16px">Loading...</div></div>
     </div>
   </div>
 </div>
@@ -1104,17 +1203,20 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
 
 <!-- ADVANCE -->
 <div class="modal-overlay" id="modal-advance"><div class="modal">
-  <div class="modal-handle"></div><div class="modal-title">💵 Record Advance</div>
+  <div class="modal-handle"></div><div class="modal-title">💵 Staff Advance</div>
   <div class="form-row">
     <div class="form-group"><label class="form-label">Date</label><input type="date" class="form-input" id="adv-date"></div>
     <div class="form-group"><label class="form-label">Amount (₹)</label><input type="number" class="form-input" id="adv-amount" placeholder="0"></div>
   </div>
   <div class="form-group"><label class="form-label">Staff Member</label><select class="form-select" id="adv-staff"><option value="">Select staff...</option></select></div>
-  <div class="form-row">
-    <div class="form-group"><label class="form-label">Recovered (₹)</label><input type="number" class="form-input" id="adv-recovered" placeholder="0"></div>
-    <div class="form-group"><label class="form-label">Recovery Date</label><input type="date" class="form-input" id="adv-recovery-date"></div>
+  <div class="form-group" style="background:var(--warn-bg);border-radius:var(--rs);padding:10px 12px;font-size:.72rem;color:#7a4400;line-height:1.6">
+    💡 Advance stays with staff till <strong>end of season</strong>. Use "Season Settlement" below only when deducting from final wages.
   </div>
-  <div class="form-group"><label class="form-label">Notes</label><input type="text" class="form-input" id="adv-notes" placeholder="Reason..."></div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">Season Settlement (₹)</label><input type="number" class="form-input" id="adv-recovered" placeholder="0 — deducted at season end"></div>
+    <div class="form-group"><label class="form-label">Settlement Date</label><input type="date" class="form-input" id="adv-recovery-date"></div>
+  </div>
+  <div class="form-group"><label class="form-label">Reason / Notes</label><input type="text" class="form-input" id="adv-notes" placeholder="e.g. Medical, Festival, Personal need..."></div>
   <button class="btn btn-primary" onclick="saveAdvance()">✓ Save</button>
   <button class="btn btn-secondary" onclick="closeModal('modal-advance')">Cancel</button>
 </div></div>
@@ -1179,6 +1281,18 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
     <div class="form-group"><label class="form-label">EMI (₹/month)</label><input type="number" class="form-input" id="veh-emi" placeholder="0"></div>
   </div>
   <div class="form-group"><label class="form-label">Finance Provider / Bank</label><input type="text" class="form-input" id="veh-finance-provider" placeholder="e.g. SBI, HDFC, Shriram Finance"></div>
+  <div style="border-top:1px solid var(--border);margin:14px 0 12px;padding-top:12px">
+    <div style="font-size:.7rem;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">🔧 Service Intervals</div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Current Odometer (km)</label><input type="number" class="form-input" id="veh-odometer" placeholder="e.g. 84500"></div>
+      <div class="form-group"><label class="form-label">Last Oil Change (km)</label><input type="number" class="form-input" id="veh-oil-km" placeholder="e.g. 82000"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Oil Change Every (km)</label><input type="number" class="form-input" id="veh-oil-interval" placeholder="e.g. 5000"></div>
+      <div class="form-group"><label class="form-label">Last Tyre Change (km)</label><input type="number" class="form-input" id="veh-tyre-km" placeholder="e.g. 60000"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Tyre Life (km)</label><input type="number" class="form-input" id="veh-tyre-interval" placeholder="e.g. 40000"></div>
+  </div>
   <button class="btn btn-primary" onclick="saveVehicle()">✓ Save</button>
   <button class="btn btn-secondary" onclick="closeModal('modal-vehicle')">Cancel</button>
 </div></div>
@@ -1232,6 +1346,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
   <img id="lightbox-img" src="" alt="Photo">
 </div>
 
+</div><!-- /screens-wrap -->
 <div class="toast" id="toast"></div>
 
 <!-- LOGIN BRIDGE -->
@@ -1282,7 +1397,7 @@ import{getFirestore,collection,addDoc,onSnapshot,deleteDoc,doc,setDoc,updateDoc}
 const FB={apiKey:"AIzaSyAOKspUBIsh97nwtxs5Nb_LVwM9FVk4fgk",authDomain:"shree-rama-transport-b6b15.firebaseapp.com",projectId:"shree-rama-transport-b6b15",storageBucket:"shree-rama-transport-b6b15.firebasestorage.app",messagingSenderId:"603261489225",appId:"1:603261489225:web:7bcd320edbed905dc9ef98"};
 
 let db=null,uns=[];
-let D={trips:[],expenses:[],staff:[],advances:[],hired:[],diesel:[],vehicles:[],tenders:[]};
+let D={trips:[],expenses:[],staff:[],advances:[],hired:[],diesel:[],vehicles:[],tenders:[],activityLog:[]};
 const now=new Date();
 let cM=now.getMonth(),cY=now.getFullYear();
 let aM=now.getMonth(),aY=now.getFullYear();
@@ -1431,6 +1546,22 @@ let hiredSort='date',hiredDir='desc';
 let staffSort='name',staffDir='asc';
 let fleetFilter='all',fleetSort='vno',fleetDir='asc';
 
+// ── SEARCH HELPERS ──
+window.clearSearch=function(id, renderFn){
+  const el=document.getElementById(id);
+  if(el){el.value='';el.dispatchEvent(new Event('input'));}
+  renderFn();
+};
+function syncSearchClear(id){
+  const el=document.getElementById(id);
+  if(!el)return;
+  const clr=document.getElementById(id+'-clear');
+  const ico=el.parentElement?.querySelector('.search-icon');
+  const hasVal=el.value.length>0;
+  if(clr)clr.style.display=hasVal?'flex':'none';
+  if(ico)ico.style.opacity=hasVal?'0':'1';
+}
+
 // ── SORT HELPERS ──
 function sortData(arr,key,dir){
   return [...arr].sort((a,b)=>{
@@ -1570,7 +1701,8 @@ function setSS(s,m){
 }
 
 function subAll(){
-  [...Object.keys(D)].forEach(col=>{
+  const liveColls=Object.keys(D).filter(col=>col!=='activityLog');
+  liveColls.forEach(col=>{
     const u=onSnapshot(collection(db,col),snap=>{
       D[col]=snap.docs.map(d=>({id:d.id,...d.data()}));
       D[col].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
@@ -1580,22 +1712,28 @@ function subAll(){
   });
 }
 
+function logAct(action,col,item){
+  if(!db||col==='activityLog')return;
+  const label=item?.vno||item?.name||item?.number||item?.category||item?.owner||col;
+  try{addDoc(collection(db,'activityLog'),{action,col,label,role:currentRole||'?',ts:Date.now()});}catch(e){}
+}
 async function addR(col,data){
   const nid=Date.now().toString();
   D[col].unshift({...data,id:nid,createdAt:Number(nid)});
   saveLocal();refresh();
-  if(db){try{await addDoc(collection(db,col),{...data,createdAt:Number(nid)});}catch(e){setSS('error','Sync error');}}
+  if(db){try{await addDoc(collection(db,col),{...data,createdAt:Number(nid)});logAct('ADD',col,data);}catch(e){setSS('error','Sync error');}}
   return nid;
 }
 async function delR(col,id){
+  const item=D[col].find(i=>i.id==id);
   D[col]=D[col].filter(i=>i.id!=id);saveLocal();refresh();
-  if(db){try{await deleteDoc(doc(db,col,id));}catch(e){setSS('error','Sync error');}}
+  if(db){try{await deleteDoc(doc(db,col,id));logAct('DELETE',col,item);}catch(e){setSS('error','Sync error');}}
 }
 async function updR(col,id,data){
   const i=D[col].findIndex(x=>x.id==id);
   if(i>=0)D[col][i]={...D[col][i],...data};
   saveLocal();refresh();
-  if(db){try{await updateDoc(doc(db,col,id),data);}catch(e){setSS('error','Sync error');}}
+  if(db){try{await updateDoc(doc(db,col,id),data);logAct('EDIT',col,D[col][i]);}catch(e){setSS('error','Sync error');}}
 }
 
 // HELPERS
@@ -1774,8 +1912,8 @@ window.calcHired=function(){const r=Number(document.getElementById('hv-rate').va
 // TAB SWITCHES
 window.switchExpTab=function(tab,btn){expTab=tab;document.querySelectorAll('#screen-expenses>.tabs .tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');document.getElementById('exp-tab-expenses').style.display=tab==='expenses'?'':'none';document.getElementById('exp-tab-diesel').style.display=tab==='diesel'?'':'none';renderExpenses();renderDiesel();};
 window.switchStaffTab=function(tab,btn){document.querySelectorAll('#screen-staff>.tabs .tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');document.getElementById('staff-attendance').style.display=tab==='attendance'?'':'none';document.getElementById('staff-advances').style.display=tab==='advances'?'':'none';document.getElementById('staff-manage').style.display=tab==='manage'?'':'none';if(tab==='attendance')renderAttendance();if(tab==='advances')renderAdvances();if(tab==='manage')renderStaffList();};
-window.switchMoreTab=function(tab,btn){moreTab=tab;document.querySelectorAll('#screen-more>.tabs .tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');document.getElementById('more-vehicles').style.display=tab==='vehicles'?'':'none';document.getElementById('more-report').style.display=tab==='report'?'':'none';document.getElementById('more-settings').style.display=tab==='settings'?'':'none';if(tab==='report')renderReport();if(tab==='vehicles')renderVehicles();};
-window.switchReportTab=function(tab,btn){reportTab=tab;document.querySelectorAll('#more-report>.tabs .tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');document.getElementById('report-tab-monthly').style.display=tab==='monthly'?'':'none';document.getElementById('report-tab-ytd').style.display=tab==='ytd'?'':'none';document.getElementById('report-tab-vehicle').style.display=tab==='vehicle'?'':'none';document.getElementById('report-tab-gst').style.display=tab==='gst'?'':'none';if(tab==='monthly')renderReport();if(tab==='ytd')renderYtdReport();if(tab==='vehicle')renderVehicleReport();if(tab==='gst')renderGstReport();};
+window.switchMoreTab=function(tab,btn){moreTab=tab;document.querySelectorAll('#screen-more>.tabs .tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');document.getElementById('more-vehicles').style.display=tab==='vehicles'?'':'none';document.getElementById('more-report').style.display=tab==='report'?'':'none';document.getElementById('more-settings').style.display=tab==='settings'?'':'none';if(tab==='report')renderReport();if(tab==='vehicles')renderVehicles();if(tab==='settings')renderActivityLog();};
+window.switchReportTab=function(tab,btn){reportTab=tab;document.querySelectorAll('#more-report>.tabs .tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');['monthly','ytd','vehicle','gst','tripl','insights','staff-intel','seasonal','doccal'].forEach(t=>{const el=document.getElementById('report-tab-'+t);if(el)el.style.display=t===tab?'':'none';});if(tab==='monthly')renderReport();if(tab==='ytd')renderYtdReport();if(tab==='vehicle')renderVehicleReport();if(tab==='gst')renderGstReport();if(tab==='tripl')renderTripPlReport();if(tab==='insights')renderInsightsReport();if(tab==='staff-intel')renderStaffIntelReport();if(tab==='seasonal')renderSeasonalReport();if(tab==='doccal')renderDocCalReport();};
 window.filterExpenses=function(cat,btn){expFilter=cat;document.querySelectorAll('#exp-filter-tabs .tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');renderExpenses();};
 window.filterHired=function(type,btn){hiredFilter=type;document.querySelectorAll('#screen-hired>.tabs .tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');renderHired();};
 
@@ -1879,7 +2017,7 @@ window.saveHired=async function(){
 
 // SAVE: VEHICLE
 window.saveVehicle=async function(){
-  const d={vno:document.getElementById('veh-no').value.trim(),type:document.getElementById('veh-type').value,model:document.getElementById('veh-model').value.trim(),year:document.getElementById('veh-year').value,insurance:document.getElementById('veh-insurance').value,insuranceCo:document.getElementById('veh-insurance-co').value.trim(),fitness:document.getElementById('veh-fitness').value,fitnessRto:document.getElementById('veh-fitness-rto').value.trim(),permit:document.getElementById('veh-permit').value,status:document.getElementById('veh-status').value,financeStatus:document.getElementById('veh-finance-status').value,emi:document.getElementById('veh-emi').value,financeProvider:document.getElementById('veh-finance-provider').value.trim()};
+  const d={vno:document.getElementById('veh-no').value.trim(),type:document.getElementById('veh-type').value,model:document.getElementById('veh-model').value.trim(),year:document.getElementById('veh-year').value,insurance:document.getElementById('veh-insurance').value,insuranceCo:document.getElementById('veh-insurance-co').value.trim(),fitness:document.getElementById('veh-fitness').value,fitnessRto:document.getElementById('veh-fitness-rto').value.trim(),permit:document.getElementById('veh-permit').value,status:document.getElementById('veh-status').value,financeStatus:document.getElementById('veh-finance-status').value,emi:document.getElementById('veh-emi').value,financeProvider:document.getElementById('veh-finance-provider').value.trim(),odometer:Number(document.getElementById('veh-odometer').value)||0,oilKm:Number(document.getElementById('veh-oil-km').value)||0,oilInterval:Number(document.getElementById('veh-oil-interval').value)||5000,tyreKm:Number(document.getElementById('veh-tyre-km').value)||0,tyreInterval:Number(document.getElementById('veh-tyre-interval').value)||40000};
   if(!d.vno){toast('⚠️ Vehicle number required');return;}
   if(editId&&editCol==='vehicles'){await updR('vehicles',editId,d);editId=null;editCol=null;closeModal('modal-vehicle');toast('✅ Updated!');return;}
   await addR('vehicles',d);closeModal('modal-vehicle');toast('✅ Vehicle added!');
@@ -1931,7 +2069,7 @@ window.editItem=function(col,id){
     fill('hv-date',item.date);fill('hv-type',item.type);fill('hv-owner',item.owner);fill('hv-vno',item.vno);fill('hv-work',item.work);fill('hv-rate',item.rate);fill('hv-qty',item.qty);fill('hv-gross',item.gross);fill('hv-advance',item.advance);
     openModal('modal-hired');
   }else if(col==='vehicles'){
-    fill('veh-no',item.vno);fill('veh-type',item.type);fill('veh-model',item.model);fill('veh-year',item.year);fill('veh-insurance',item.insurance);fill('veh-insurance-co',item.insuranceCo||'');fill('veh-fitness',item.fitness);fill('veh-fitness-rto',item.fitnessRto||'');fill('veh-permit',item.permit);fill('veh-status',item.status);fill('veh-finance-status',item.financeStatus||'clear');fill('veh-emi',item.emi||'');fill('veh-finance-provider',item.financeProvider||'');
+    fill('veh-no',item.vno);fill('veh-type',item.type);fill('veh-model',item.model);fill('veh-year',item.year);fill('veh-insurance',item.insurance);fill('veh-insurance-co',item.insuranceCo||'');fill('veh-fitness',item.fitness);fill('veh-fitness-rto',item.fitnessRto||'');fill('veh-permit',item.permit);fill('veh-status',item.status);fill('veh-finance-status',item.financeStatus||'clear');fill('veh-emi',item.emi||'');fill('veh-finance-provider',item.financeProvider||'');fill('veh-odometer',item.odometer||'');fill('veh-oil-km',item.oilKm||'');fill('veh-oil-interval',item.oilInterval||5000);fill('veh-tyre-km',item.tyreKm||'');fill('veh-tyre-interval',item.tyreInterval||40000);
     openModal('modal-vehicle');
   }else if(col==='staff'){
     fill('staff-name',item.name);fill('staff-role',item.role);fill('staff-rate',item.rate);fill('staff-phone',item.phone);
@@ -2065,8 +2203,10 @@ function renderSmartAlerts(){
     }
   });
   // Stale advances
-  const staleAdvances=D.advances.filter(a=>a.balance>0&&a.date&&Math.ceil((new Date()-new Date(a.date))/(864e5))>30);
-  if(staleAdvances.length)alerts.push({type:'alert-warn',title:`💵 ${staleAdvances.length} advance(s) not recovered in 30+ days`,body:`Outstanding: ${fM(staleAdvances.reduce((s,a)=>s+(a.balance||0),0))}`});
+  // Advances are intentional season-long — only flag if total outstanding is very large (>50% of last month wages)
+  const totalAdvBalance=D.advances.reduce((s,a)=>s+(a.balance||0),0);
+  const lastMWages=filterByMonth(D.expenses,new Date().getMonth()>0?new Date().getMonth()-1:11,new Date().getMonth()>0?new Date().getFullYear():new Date().getFullYear()-1).filter(e=>['Staff Wages','Labour Cost'].includes(e.category)).reduce((s,e)=>s+e.amount,0);
+  if(totalAdvBalance>0&&lastMWages>0&&totalAdvBalance>lastMWages*0.5)alerts.push({type:'alert-warn',title:`💵 High advance balance: ${fM(totalAdvBalance)}`,body:`Outstanding advances exceed 50% of last month's wage bill. Plan season settlement.`});
   // Diesel efficiency drop
   const vehsWithOdo=D.vehicles.filter(v=>{
     const fills=D.diesel.filter(d=>d.vehicle&&d.vehicle.toUpperCase()===v.vno.toUpperCase()&&d.odometer>0).sort((a,b)=>b.odometer-a.odometer);
@@ -2152,7 +2292,7 @@ function renderTrips(){
   const ps=document.getElementById('trips-pay-summary');
   if(pendAmt+partAmt>0){
     ps.innerHTML=`<div class="card" style="background:var(--bg2);color:#fff;padding:14px 16px">
-      <div style="font-size:.62rem;color:var(--s);text-transform:uppercase;margin-bottom:6px;font-weight:500">💰 Total Receivable</div>
+      <div style="font-size:.62rem;color:rgba(255,255,255,.65);text-transform:uppercase;margin-bottom:6px;font-weight:500">💰 Total Receivable</div>
       <div style="font-family:var(--font-num);font-size:1.5rem;font-weight:400">${fM(pendAmt+partAmt)}</div>
       <div style="display:flex;gap:16px;margin-top:8px;font-size:.7rem;color:rgba(255,255,255,.6)">
         <span>⏳ ${pending.length} pending · ${fM(pendAmt)}</span>
@@ -2163,6 +2303,7 @@ function renderTrips(){
 
   populateTripFilterDropdowns();
   const list=document.getElementById('trip-list');
+  syncSearchClear('search-trips');
   const tripQ=(document.getElementById('search-trips')?.value||'').toLowerCase().trim();
   let filtered=D.trips;
   if(tripQ)filtered=filtered.filter(t=>[t.vehicle,t.source,t.dest,t.driver,t.remarks].some(v=>v&&v.toLowerCase().includes(tripQ)));
@@ -2197,6 +2338,7 @@ function renderTrips(){
         <div class="list-amount">${fM(t.revenue)}</div>
         ${t.payStatus==='partial'?`<div style="font-size:.62rem;color:var(--warn)">Recd: ${fM(t.payReceived)}</div>`:''}
         ${dsl?`<button class="ic-btn" onclick="unlinkDiesel('${t.id}')" title="Unlink diesel">🔓</button>`:''}
+        <button class="ic-btn" title="${t.payStatus!=='received'?'Send payment reminder':'Share trip'}" onclick="${t.payStatus!=='received'?`waPaymentReminder('${t.id}')`:`waShareTrip('${t.id}')`}">📲</button>
         <button class="ic-btn" onclick="editItem('trips','${t.id}')">✏️</button>
         <button class="ic-btn" onclick="deleteItem('trips','${t.id}')">🗑️</button>
       </div>
@@ -2207,6 +2349,7 @@ function renderTrips(){
 // ── EXPENSES ──
 function renderExpenses(){
   populateExpFilterDropdowns();
+  syncSearchClear('search-expenses');
   const expQ=(document.getElementById('search-expenses')?.value||'').toLowerCase().trim();
   let f=D.expenses;
   if(expQ)f=f.filter(e=>[e.paidTo,e.desc,e.category].some(v=>v&&v.toLowerCase().includes(expQ)));
@@ -2221,7 +2364,7 @@ function renderExpenses(){
   const list=document.getElementById('expense-list');
   if(!f.length){list.innerHTML='<div class="empty"><div class="empty-icon">🧾</div><div class="empty-text">No expenses match filters.</div></div>';return;}
   list.innerHTML=`<div class="card" style="background:var(--bg2);color:#fff;margin-bottom:12px">
-    <div style="font-size:.6rem;color:var(--s);text-transform:uppercase;margin-bottom:2px">Total (filtered)</div>
+    <div style="font-size:.6rem;color:rgba(255,255,255,.65);text-transform:uppercase;margin-bottom:2px">Total (filtered)</div>
     <div style="font-family:var(--font-num);font-size:1.5rem;font-weight:400">${fM(total)}</div>
   </div>`+f.map(e=>`<div class="list-item li-expense">
     <div class="list-icon">💸</div>
@@ -2308,14 +2451,14 @@ function renderAdvances(){
   if(!D.advances.length){list.innerHTML='<div class="empty"><div class="empty-icon">💵</div><div class="empty-text">No advances.</div></div>';return;}
   const tot=D.advances.reduce((s,a)=>s+(a.balance||0),0);
   list.innerHTML=`<div class="card" style="background:var(--bg2);color:#fff;margin-bottom:12px">
-    <div style="font-size:.6rem;color:var(--s);text-transform:uppercase;margin-bottom:2px">Outstanding</div>
+    <div style="font-size:.6rem;color:rgba(255,255,255,.65);text-transform:uppercase;margin-bottom:2px">Outstanding</div>
     <div style="font-family:var(--font-num);font-size:1.4rem;font-weight:400">${fM(tot)}</div>
   </div>`+D.advances.map(a=>`<div class="list-item li-advance">
     <div class="list-icon">💵</div>
     <div class="list-content">
       <div class="list-main">${a.staffName||'–'}</div>
       <div class="list-sub">${fD(a.date)} ${a.notes?'· '+a.notes:''}</div>
-      <div class="chip-row"><span class="chip ch-a">Given: ${fM(a.amount)}</span><span class="chip ch-g">Rec: ${fM(a.recovered)}</span></div>
+      <div class="chip-row"><span class="chip ch-a">Given: ${fM(a.amount)}</span>${(a.recovered)>0?`<span class="chip ch-g">Settled: ${fM(a.recovered)}</span>`:'<span class="chip ch-b">Pending season-end</span>'}</div>
     </div>
     <div class="action-btns">
       <div class="list-amount amber">${fM(a.balance)}</div>
@@ -2328,6 +2471,7 @@ function renderAdvances(){
 // ── HIRED ──
 function renderHired(){
   populateHiredFilterDropdowns();
+  syncSearchClear('search-hired');
   const hiredQ=(document.getElementById('search-hired')?.value||'').toLowerCase().trim();
   let f=D.hired;
   if(hiredQ)f=f.filter(h=>[h.owner,h.vno,h.work].some(v=>v&&v.toLowerCase().includes(hiredQ)));
@@ -2343,7 +2487,7 @@ function renderHired(){
   const tot=f.reduce((s,h)=>s+(h.balance||0),0);
   const tc={Truck:'vt-truck',Crane:'vt-crane',Tractor:'vt-tractor',Other:'vt-truck'};
   list.innerHTML=`<div class="card" style="background:var(--bg2);color:#fff;margin-bottom:12px">
-    <div style="font-size:.6rem;color:var(--s);text-transform:uppercase;margin-bottom:2px">Total Balance Due</div>
+    <div style="font-size:.6rem;color:rgba(255,255,255,.65);text-transform:uppercase;margin-bottom:2px">Total Balance Due</div>
     <div style="font-family:var(--font-num);font-size:1.4rem;font-weight:400">${fM(tot)}</div>
   </div>`+f.map(h=>`<div class="list-item li-hired">
     <div class="list-icon">${h.type==='Truck'?'🚛':h.type==='Crane'?'🏗️':'🚜'}</div>
@@ -2363,6 +2507,7 @@ function renderHired(){
 // ── TENDERS ──
 function renderTenders(){
   const list=document.getElementById('tender-list');
+  syncSearchClear('search-tenders');
   const tenderQ=(document.getElementById('search-tenders')?.value||'').toLowerCase().trim();
   let tenders=D.tenders;
   if(tenderQ)tenders=tenders.filter(t=>[t.number,t.dept,t.division,t.species,t.workorder].some(v=>v&&v.toLowerCase().includes(tenderQ)));
@@ -2411,6 +2556,7 @@ function renderVehicles(){
   const sc={Active:'ch-g','Under Repair':'ch-r',Idle:'ch-a'};
   // Fleet filter + sort
   populateFleetFilterDropdowns();
+  syncSearchClear('search-fleet');
   const fleetQ=(document.getElementById('search-fleet')?.value||'').toLowerCase().trim();
   let vehs=D.vehicles;
   if(fleetQ)vehs=vehs.filter(v=>[v.vno,v.model,v.type,v.insuranceCo].some(x=>x&&x.toLowerCase().includes(fleetQ)));
@@ -2673,6 +2819,704 @@ function renderVehicleReport(){
     </div>`;
   }).join('');
 }
+
+
+// ════════════════════════════════════════════════
+// ── TRIP P&L REPORT ──
+// ════════════════════════════════════════════════
+function renderTripPlReport(){
+  const el=document.getElementById('tripl-report-content');
+  if(!D.trips.length){el.innerHTML='<div class="empty"><div class="empty-icon">📊</div><div class="empty-text">No trips yet.</div></div>';return;}
+  const now3=new Date();
+  const sixMonthsAgo=new Date(now3);sixMonthsAgo.setMonth(sixMonthsAgo.getMonth()-6);
+  const filterWindow=el.dataset.window||'6m';
+  const tripSource=filterWindow==='6m'?D.trips.filter(t=>new Date(t.date)>=sixMonthsAgo):D.trips;
+
+  // Build per-trip P&L
+  const rows=tripSource.map(t=>{
+    const dsl=t.dieselId?D.diesel.find(d=>d.id===t.dieselId):null;
+    const dslCost=dsl?dsl.total:0;
+    // hired cost: any hired entry on same date + vehicle match (best effort)
+    const hiredCost=D.hired.filter(h=>h.date===t.date).reduce((s,h)=>s+(h.gross||0),0);
+    const toll=D.expenses.filter(e=>e.date===t.date&&e.category==='Toll / Tax').reduce((s,e)=>s+e.amount,0);
+    const directCost=dslCost; // diesel is most reliable direct cost per trip
+    const profit=t.revenue-directCost;
+    const margin=t.revenue>0?Math.round(profit/t.revenue*100):0;
+    const route=(t.source||'?')+' → '+(t.dest||'?');
+    return{t,dslCost,profit,margin,route,directCost};
+  }).sort((a,b)=>b.profit-a.profit);
+
+  // Route profitability summary
+  const routeMap={};
+  rows.forEach(({t,profit,route,dslCost})=>{
+    if(!routeMap[route])routeMap[route]={revenue:0,cost:0,trips:0,cbm:0};
+    routeMap[route].revenue+=t.revenue;
+    routeMap[route].cost+=dslCost;
+    routeMap[route].trips++;
+    routeMap[route].cbm+=(t.qty||0);
+  });
+  const routeRows=Object.entries(routeMap)
+    .map(([r,v])=>({route:r,...v,profit:v.revenue-v.cost,perCbm:v.cbm>0?(v.revenue-v.cost)/v.cbm:0}))
+    .sort((a,b)=>b.profit-a.profit);
+
+  const totalRev=rows.reduce((s,r)=>s+r.t.revenue,0);
+  const totalCost=rows.reduce((s,r)=>s+r.dslCost,0);
+  const totalProfit=totalRev-totalCost;
+
+  el.innerHTML=`
+  <div style="display:flex;gap:6px;margin-bottom:12px">
+    <button class="btn ${filterWindow==='6m'?'btn-primary':'btn-secondary'} btn-sm" onclick="document.getElementById('tripl-report-content').dataset.window='6m';renderTripPlReport()">Last 6 Months</button>
+    <button class="btn ${filterWindow==='all'?'btn-primary':'btn-secondary'} btn-sm" onclick="document.getElementById('tripl-report-content').dataset.window='all';renderTripPlReport()">All Time</button>
+  </div>
+  <div class="insight-card">
+    <div class="insight-card-title">📊 Trip P&L — ${filterWindow==='6m'?'Last 6 Months':'All Time'}</div>
+    <div class="kpi-grid">
+      <div class="kpi-box"><div class="kpi-label">Total Revenue</div><div class="kpi-value pos">${fM(totalRev)}</div></div>
+      <div class="kpi-box"><div class="kpi-label">Total Diesel Cost</div><div class="kpi-value neg">${fM(totalCost)}</div></div>
+      <div class="kpi-box"><div class="kpi-label">Net (after diesel)</div><div class="kpi-value ${totalProfit>=0?'pos':'neg'}">${fM(totalProfit)}</div></div>
+      <div class="kpi-box"><div class="kpi-label">Avg Margin</div><div class="kpi-value">${totalRev>0?Math.round(totalProfit/totalRev*100):0}%</div></div>
+    </div>
+  </div>
+
+  <div class="insight-card">
+    <div class="insight-card-title">🛣️ Route Profitability</div>
+    ${routeRows.map(r=>`
+    <div class="route-row">
+      <div class="route-label">
+        <div style="font-weight:600;font-size:.78rem;color:var(--t1)">${r.route}</div>
+        <div style="font-size:.62rem;color:var(--t3)">${r.trips} trips · ${r.cbm.toFixed(1)} CBM · ₹${r.perCbm.toFixed(0)}/CBM net</div>
+      </div>
+      <div class="route-val" style="color:${r.profit>=0?'var(--pos)':'var(--neg)'}">${fM(r.profit)}</div>
+    </div>`).join('')}
+  </div>
+
+  <div class="insight-card">
+    <div class="insight-card-title">🚛 Per Trip P&L (Best → Worst)</div>
+    <div style="font-size:.62rem;color:var(--t3);margin-bottom:10px">Profit = Revenue − Diesel Cost</div>
+    ${rows.map(({t,dslCost,profit,margin})=>`
+    <div class="route-row">
+      <div class="route-label">
+        <div style="font-weight:600;font-size:.76rem">${t.source||'?'} → ${t.dest||'?'}</div>
+        <div style="font-size:.6rem;color:var(--t3)">${fD(t.date)} · ${t.vehicle||''} · ${t.qty||0} CBM · Diesel ${fM(dslCost)}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="route-val" style="color:${profit>=0?'var(--pos)':'var(--neg)'}">${fM(profit)}</div>
+        <div style="font-size:.6rem;color:var(--t3)">${margin}% margin</div>
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
+
+// ════════════════════════════════════════════════
+// ── INSIGHTS REPORT (Break-even, Cash flow, Vehicle ROI, Idle, Tender P&L) ──
+// ════════════════════════════════════════════════
+function renderInsightsReport(){
+  const el=document.getElementById('insights-report-content');
+  const now2=new Date();
+
+  // ── Break-even ──
+  const monthlyFixed=D.vehicles.filter(v=>v.financeStatus==='emi').reduce((s,v)=>s+Number(v.emi||0),0);
+  const thisMonthStaff=filterByMonth(D.expenses,now2.getMonth(),now2.getFullYear())
+    .filter(e=>['Staff Wages','Labour Cost','Crane Operator'].includes(e.category))
+    .reduce((s,e)=>s+e.amount,0);
+  const avgMonthlyExp=D.expenses.length>0?(()=>{
+    const byMonth={};D.expenses.forEach(e=>{const d=new Date(e.date),k=d.getFullYear()+'-'+d.getMonth();byMonth[k]=(byMonth[k]||0)+e.amount;});
+    const vals=Object.values(byMonth);return vals.reduce((s,v)=>s+v,0)/vals.length;
+  })():0;
+  const mtTrips=filterByMonth(D.trips,now2.getMonth(),now2.getFullYear());
+  const mtRev=mtTrips.reduce((s,t)=>s+t.revenue,0);
+  const mtCbm=mtTrips.reduce((s,t)=>s+(t.qty||0),0);
+  const avgRevenuePerTrip=D.trips.length>0?D.trips.reduce((s,t)=>s+t.revenue,0)/D.trips.length:0;
+  const breakEvenTrips=avgRevenuePerTrip>0?Math.ceil((monthlyFixed+thisMonthStaff)/avgRevenuePerTrip):0;
+
+  // ── Cash flow forecast ──
+  const pendingReceivable=D.trips.filter(t=>t.payStatus!=='received').reduce((s,t)=>s+(t.payPending||t.revenue||0),0);
+  const nextEmiTotal=monthlyFixed;
+  const avgExpNext=avgMonthlyExp;
+  const forecastBalance=pendingReceivable-nextEmiTotal-avgExpNext;
+
+  // ── Vehicle ROI + maint per km ──
+  const vRoiRows=D.vehicles.map(v=>{
+    const vno=v.vno.toUpperCase();
+    const trips=D.trips.filter(t=>t.vehicle&&t.vehicle.toUpperCase()===vno);
+    const revenue=trips.reduce((s,t)=>s+t.revenue,0);
+    const maintCost=D.expenses.filter(e=>['Spare Parts','Maintenance','Mechanic (External)'].includes(e.category)).reduce((s,e)=>s+e.amount,0)/Math.max(D.vehicles.length,1);
+    const dslCost=D.diesel.filter(d=>d.vehicle&&d.vehicle.toUpperCase()===vno).reduce((s,d)=>s+d.total,0);
+    const emi=v.financeStatus==='emi'?Number(v.emi||0)*12:0;
+    const totalCost=maintCost+dslCost+emi;
+    const roi=totalCost>0?Math.round((revenue-totalCost)/totalCost*100):null;
+    // Maint cost per km
+    const fills=D.diesel.filter(d=>d.vehicle&&d.vehicle.toUpperCase()===vno&&d.odometer>0).sort((a,b)=>b.odometer-a.odometer);
+    const totalKm=fills.length>=2?fills[0].odometer-fills[fills.length-1].odometer:0;
+    const maintPerKm=totalKm>0?Math.round(maintCost/totalKm*100)/100:null;
+    // Idle days
+    const lastTrip=[...trips].sort((a,b)=>new Date(b.date)-new Date(a.date))[0];
+    const idleDays=lastTrip?Math.floor((now2-new Date(lastTrip.date))/(864e5)):null;
+    // Service alerts
+    const svcAlerts=getServiceAlerts(v);
+    return{v,revenue,totalCost,roi,idleDays,trips:trips.length,maintPerKm,totalKm,svcAlerts};
+  }).sort((a,b)=>(b.roi||0)-(a.roi||0));
+
+  // ── Tender actual P&L ──
+  const tenderPl=D.tenders.map(td=>{
+    const tdTrips=D.trips.filter(t=>t.tenderId===td.id);
+    const revenue=tdTrips.reduce((s,t)=>s+t.revenue,0);
+    const dslCost=tdTrips.map(t=>t.dieselId?D.diesel.find(d=>d.id===t.dieselId):null).filter(Boolean).reduce((s,d)=>s+d.total,0);
+    const expCost=D.expenses.filter(e=>tdTrips.find(t=>t.id===e.linkedTripId)).reduce((s,e)=>s+e.amount,0);
+    const hiredCost=D.hired.filter(h=>tdTrips.find(t=>t.date===h.date)).reduce((s,h)=>s+(h.gross||0),0);
+    const totalCost=dslCost+expCost;
+    const profit=revenue-totalCost;
+    const cbm=tdTrips.reduce((s,t)=>s+(t.qty||0),0);
+    return{td,revenue,totalCost,profit,cbm,trips:tdTrips.length};
+  });
+
+  el.innerHTML=`
+  <!-- BREAK-EVEN -->
+  <div class="insight-card">
+    <div class="insight-card-title">⚖️ Break-Even Tracker</div>
+    <div class="kpi-grid">
+      <div class="kpi-box"><div class="kpi-label">Monthly EMIs</div><div class="kpi-value warn">${fM(monthlyFixed)}</div><div class="kpi-sub">${D.vehicles.filter(v=>v.financeStatus==='emi').length} vehicles under finance</div></div>
+      <div class="kpi-box"><div class="kpi-label">Staff Cost This Month</div><div class="kpi-value warn">${fM(thisMonthStaff)}</div></div>
+      <div class="kpi-box"><div class="kpi-label">Break-Even Trips Needed</div><div class="kpi-value">${breakEvenTrips||'—'}</div><div class="kpi-sub">to cover EMI + staff</div></div>
+      <div class="kpi-box"><div class="kpi-label">This Month Done</div><div class="kpi-value ${mtTrips.length>=(breakEvenTrips||999)?'pos':'neg'}">${mtTrips.length} trips</div><div class="kpi-sub">${fM(mtRev)} revenue</div></div>
+    </div>
+    ${breakEvenTrips&&mtTrips.length<breakEvenTrips?`<div class="alert-banner alert-warn"><div class="alert-title">⚠️ ${breakEvenTrips-mtTrips.length} more trips needed to break even this month</div></div>`:'<div class="alert-banner" style="background:var(--pos-bg);border-color:var(--pos);border-left:3px solid var(--pos);border-radius:var(--rs);padding:10px 12px;font-size:.74rem;color:var(--pos)"><strong>✅ Break-even achieved this month</strong></div>'}
+  </div>
+
+  <!-- CASH FLOW FORECAST -->
+  <div class="insight-card">
+    <div class="insight-card-title">💸 Cash Flow Forecast (Next 30 Days)</div>
+    <div class="kpi-grid">
+      <div class="kpi-box"><div class="kpi-label">Pending Receivable</div><div class="kpi-value pos">${fM(pendingReceivable)}</div><div class="kpi-sub">Money owed to you</div></div>
+      <div class="kpi-box"><div class="kpi-label">Expected Outflow</div><div class="kpi-value neg">${fM(nextEmiTotal+avgExpNext)}</div><div class="kpi-sub">EMI + avg expenses</div></div>
+      <div class="kpi-box"><div class="kpi-label">Forecast Balance</div><div class="kpi-value ${forecastBalance>=0?'pos':'neg'}">${fM(forecastBalance)}</div><div class="kpi-sub">If all payments received</div></div>
+      <div class="kpi-box"><div class="kpi-label">Avg Monthly Expense</div><div class="kpi-value warn">${fM(Math.round(avgMonthlyExp))}</div><div class="kpi-sub">Based on history</div></div>
+    </div>
+  </div>
+
+  <!-- VEHICLE ROI -->
+  <div class="insight-card">
+    <div class="insight-card-title">🚛 Vehicle ROI & Idle Alerts</div>
+    <div style="font-size:.62rem;color:var(--t3);margin-bottom:10px">ROI = (Revenue − Diesel − Maint − Annual EMI) ÷ Total Cost</div>
+    ${vRoiRows.map(({v,revenue,totalCost,roi,idleDays,trips,maintPerKm,totalKm,svcAlerts})=>`
+    <div class="route-row" style="flex-direction:column;align-items:flex-start;gap:6px">
+      <div style="display:flex;justify-content:space-between;width:100%;align-items:flex-start">
+        <div>
+          <div style="font-weight:700;font-size:.8rem">${v.vno} <span style="font-size:.62rem;color:var(--t3);font-weight:400">${v.type} · ${v.model||''}</span></div>
+          <div style="font-size:.62rem;color:var(--t3)">${trips} trips · Rev ${fM(revenue)} · Cost ${fM(totalCost)}</div>
+          ${maintPerKm!==null?`<div style="font-size:.62rem;color:var(--t3)">Maint ₹${maintPerKm}/km over ${totalKm} km tracked</div>`:''}
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div class="route-val" style="color:${roi===null?'var(--t3)':roi>=0?'var(--pos)':'var(--neg)'}">${roi!==null?roi+'% ROI':'No data'}</div>
+          ${idleDays!==null&&idleDays>7?`<span class="chip ch-r">⏸️ Idle ${idleDays}d</span>`:idleDays!==null?`<span class="chip ch-g">✅ ${idleDays}d ago</span>`:''}
+        </div>
+      </div>
+      ${svcAlerts.map(a=>`<span class="svc-alert ${a.overdue?'overdue':''}">🔧 ${a.text}</span>`).join('')}
+    </div>`).join('')}
+  </div>
+
+  <!-- TENDER P&L -->
+  <div class="insight-card">
+    <div class="insight-card-title">📋 Tender Actual P&L</div>
+    ${!tenderPl.length?'<div class="empty"><div class="empty-text">No tenders logged.</div></div>':tenderPl.map(({td,revenue,totalCost,profit,cbm,trips})=>`
+    <div class="route-row">
+      <div class="route-label">
+        <div style="font-weight:700;font-size:.78rem">${td.number||'Unnamed'} <span class="chip ${td.status==='Active'?'ch-g':td.status==='Completed'?'ch-b':'ch-a'}" style="font-size:.52rem">${td.status}</span></div>
+        <div style="font-size:.62rem;color:var(--t3)">${td.dept||''} · ${trips} trips · ${cbm.toFixed(1)} CBM</div>
+        <div style="font-size:.62rem;color:var(--t3)">Revenue ${fM(revenue)} · Cost ${fM(totalCost)}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="route-val" style="color:${profit>=0?'var(--pos)':'var(--neg)'}">${fM(profit)}</div>
+        <div style="font-size:.6rem;color:var(--t3)">${revenue>0?Math.round(profit/revenue*100):0}% margin</div>
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
+
+// ════════════════════════════════════════════════
+// ── ACTIVITY LOG ──
+// ════════════════════════════════════════════════
+async function renderActivityLog(){
+  if(currentRole!=='owner')return;
+  const el=document.getElementById('activity-log-list');
+  if(!el)return;
+  if(!db){el.innerHTML='<div style="font-size:.74rem;color:var(--t3);text-align:center;padding:12px">Connect to Firebase to see activity log.</div>';return;}
+  try{
+    const {getDocs,query,orderBy,limit}=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    const snap=await getDocs(query(collection(db,'activityLog'),orderBy('ts','desc'),limit(50)));
+    if(snap.empty){el.innerHTML='<div style="font-size:.74rem;color:var(--t3);text-align:center;padding:12px">No activity recorded yet.</div>';return;}
+    const colEmoji={trips:'🚛',expenses:'💸',diesel:'⛽',staff:'👤',advances:'💵',hired:'🚜',vehicles:'🚗',tenders:'📋'};
+    const actEmoji={ADD:'➕',DELETE:'🗑️',EDIT:'✏️'};
+    el.innerHTML=snap.docs.map(d=>{
+      const a=d.data();
+      const dt=new Date(a.ts);
+      const timeStr=dt.toLocaleDateString('en-IN',{day:'numeric',month:'short'})+' '+dt.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+      return`<div class="act-row">
+        <div class="act-icon">${actEmoji[a.action]||'•'}</div>
+        <div class="act-body">
+          <div class="act-label">${a.action} ${colEmoji[a.col]||''} ${a.col} — <strong>${a.label||'–'}</strong></div>
+          <div class="act-meta">${timeStr} · <span class="act-role">${a.role}</span></div>
+        </div>
+      </div>`;
+    }).join('');
+  }catch(e){el.innerHTML='<div style="font-size:.74rem;color:var(--neg);text-align:center;padding:12px">Could not load log.</div>';}
+}
+
+// ════════════════════════════════════════════════
+// ── BACKUP & RESTORE ──
+// ════════════════════════════════════════════════
+window.exportBackup=function(){
+  if(currentRole!=='owner'){toast('⛔ Owner only');return;}
+  const data={exportedAt:new Date().toISOString(),version:1,data:D};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='SRT_Backup_'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();URL.revokeObjectURL(url);
+  toast('✅ Backup downloaded!');
+};
+window.importBackup=async function(input){
+  if(currentRole!=='owner'){toast('⛔ Owner only');return;}
+  const file=input.files[0];if(!file)return;
+  const msg=document.getElementById('backup-msg');
+  try{
+    const text=await file.text();
+    const backup=JSON.parse(text);
+    if(!backup.data){msg.style.color='var(--neg)';msg.textContent='❌ Invalid backup file';return;}
+    if(!confirm('This will REPLACE all current data with the backup. Are you sure?'))return;
+    const cols=Object.keys(backup.data);
+    msg.style.color='var(--warn)';msg.textContent='⏳ Restoring...';
+    for(const col of cols){
+      if(!D[col])continue;
+      for(const item of backup.data[col]){
+        if(!item.id)continue;
+        if(db){try{await setDoc(doc(db,col,item.id),item);}catch(e){}}
+      }
+    }
+    msg.style.color='var(--pos)';msg.textContent='✅ Restore complete! Refresh to see data.';
+  }catch(e){msg.style.color='var(--neg)';msg.textContent='❌ Failed to parse backup file';}
+};
+
+
+// ════════════════════════════════════════════════════════
+// ── WHATSAPP SHARE ──
+// ════════════════════════════════════════════════════════
+window.waShareTrip=function(tid){
+  const t=D.trips.find(x=>x.id===tid);if(!t)return;
+  const dsl=t.dieselId?D.diesel.find(d=>d.id===t.dieselId):null;
+  const dslCost=dsl?dsl.total:0;
+  const profit=t.revenue-dslCost;
+  const payLine=t.payStatus==='received'?'✅ Payment received in full'
+    :t.payStatus==='partial'?`⚠️ Partial payment received: ${fM(t.payReceived||0)} — Balance: ${fM(t.payPending||0)}`
+    :`🔴 Payment PENDING: ${fM(t.revenue)}`;
+  const msg=`🚛 *Shree Rama Transport*\n`
+    +`━━━━━━━━━━━━━━━━━━\n`
+    +`📦 Trip Summary\n`
+    +`📅 Date: ${fD(t.date)}\n`
+    +`🛣️ Route: ${t.source||'—'} → ${t.dest||'—'}\n`
+    +`🚛 Vehicle: ${t.vehicle||'—'}\n`
+    +`📏 Qty: ${t.qty||0} CBM\n`
+    +`💰 Revenue: ${fM(t.revenue)}\n`
+    +(dslCost?`⛽ Diesel: ${fM(dslCost)}\n📊 Net: ${fM(profit)}\n`:'')+`\n`
+    +payLine+`\n`
+    +(t.remarks?`\n📝 Note: ${t.remarks}\n`:'')+`\n`
+    +`_Shree Rama Transport_`;
+  window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
+};
+
+window.waPaymentReminder=function(tid){
+  const t=D.trips.find(x=>x.id===tid);if(!t)return;
+  const pending=t.payPending||t.revenue||0;
+  const msg=`🔔 *Payment Reminder — Shree Rama Transport*\n`
+    +`━━━━━━━━━━━━━━━━━━\n`
+    +`Date: ${fD(t.date)}\n`
+    +`Route: ${t.source||'—'} → ${t.dest||'—'}\n`
+    +`Vehicle: ${t.vehicle||'—'} · ${t.qty||0} CBM\n\n`
+    +`*Amount Due: ${fM(pending)}*\n\n`
+    +`Kindly arrange payment at your earliest convenience.\n\n`
+    +`_Shree Rama Transport_`;
+  window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
+};
+
+// ════════════════════════════════════════════════════════
+// ── CSV / PDF EXPORT ──
+// ════════════════════════════════════════════════════════
+window.exportCSV=function(type){
+  let rows=[],headers=[];
+  if(type==='trips'){
+    headers=['Date','Vehicle','Source','Destination','Driver','Qty(CBM)','Revenue','Diesel Cost','Net','Pay Status','Tender'];
+    rows=D.trips.map(t=>{
+      const dsl=t.dieselId?D.diesel.find(d=>d.id===t.dieselId):null;
+      const td=t.tenderId?D.tenders.find(x=>x.id===t.tenderId):null;
+      return[t.date,t.vehicle||'',t.source||'',t.dest||'',t.driver||'',t.qty||0,t.revenue,dsl?dsl.total:0,t.revenue-(dsl?dsl.total:0),t.payStatus||'pending',td?td.number||'':'' ];
+    });
+  }else if(type==='expenses'){
+    headers=['Date','Category','Description','Paid To','Amount','Payment Mode'];
+    rows=D.expenses.filter(e=>!e.autoLinked).map(e=>[e.date,e.category,e.desc||'',e.paidTo||'',e.amount,e.mode||'']);
+  }else if(type==='staff'){
+    headers=['Name','Role','Daily Rate','Phone'];
+    rows=D.staff.map(s=>[s.name,s.role,s.rate,s.phone||'']);
+  }
+  const csv=[headers,...rows].map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='SRT_'+type+'_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();URL.revokeObjectURL(url);
+  toast('✅ CSV downloaded!');
+};
+
+// ════════════════════════════════════════════════════════
+// ── STAFF INTELLIGENCE REPORT ──
+// ════════════════════════════════════════════════════════
+function renderStaffIntelReport(){
+  const el=document.getElementById('staff-intel-content');
+  const now2=new Date();
+  const m=now2.getMonth(),y=now2.getFullYear();
+  const daysInMonth=new Date(y,m+1,0).getDate();
+  const todayDate=now2.getDate();
+  const mk=y+'-'+String(m+1).padStart(2,'0');
+
+  // ── Wage bill forecaster ──
+  const wageRows=D.staff.map(s=>{
+    const att=s.attendance&&s.attendance[mk]?s.attendance[mk]:{};
+    const daysWorked=Object.values(att).filter(v=>v==='P').length+Object.values(att).filter(v=>v==='HD').length*0.5;
+    const earnedSoFar=daysWorked*(s.rate||0);
+    // project: avg daily rate so far × remaining days
+    const avgDailyEarning=todayDate>0?earnedSoFar/todayDate:0;
+    const projected=Math.round(avgDailyEarning*daysInMonth);
+    return{s,daysWorked,earnedSoFar,projected};
+  });
+  const totalProjected=wageRows.reduce((sum,r)=>sum+r.projected,0);
+  const totalEarned=wageRows.reduce((sum,r)=>sum+r.earnedSoFar,0);
+
+  // ── Advance recovery risk ──
+  const riskAdv=D.advances.filter(a=>(a.balance||0)>0).map(a=>{
+    const staff=D.staff.find(s=>s.id===a.staffId);
+    const daysSince=a.date?Math.floor((now2-new Date(a.date))/(864e5)):0;
+    return{a,staff,daysSince,risk:daysSince>180?'high':daysSince>90?'med':'low'};
+  }).sort((a,b)=>b.daysSince-a.daysSince);
+
+  // ── Contractor vs own staff ──
+  const ownCraneStaff=D.staff.filter(s=>s.role==='Crane Operator');
+  const ownCraneCost=ownCraneStaff.reduce((sum,s)=>{
+    const att=s.attendance&&s.attendance[mk]?s.attendance[mk]:{};
+    const days=Object.values(att).filter(v=>v==='P').length+Object.values(att).filter(v=>v==='HD').length*0.5;
+    return sum+days*(s.rate||0);
+  },0);
+  const hiredCraneCost=filterByMonth(D.hired,m,y).filter(h=>h.type==='Crane').reduce((s,h)=>s+(h.gross||0),0);
+  const hiredLaborCost=filterByMonth(D.expenses,m,y).filter(e=>e.category==='Labour Cost').reduce((s,e)=>s+e.amount,0);
+  const ownLaborStaff=D.staff.filter(s=>s.role==='Labour');
+  const ownLaborCost=ownLaborStaff.reduce((sum,s)=>{
+    const att=s.attendance&&s.attendance[mk]?s.attendance[mk]:{};
+    const days=Object.values(att).filter(v=>v==='P').length+Object.values(att).filter(v=>v==='HD').length*0.5;
+    return sum+days*(s.rate||0);
+  },0);
+
+  el.innerHTML=`
+  <!-- WAGE FORECASTER -->
+  <div class="insight-card">
+    <div class="insight-card-title">💰 Wage Bill Forecast — ${SH[m]} ${y}</div>
+    <div class="kpi-grid">
+      <div class="kpi-box"><div class="kpi-label">Earned So Far</div><div class="kpi-value warn">${fM(Math.round(totalEarned))}</div><div class="kpi-sub">Based on attendance logged</div></div>
+      <div class="kpi-box"><div class="kpi-label">Projected Month-End</div><div class="kpi-value neg">${fM(totalProjected)}</div><div class="kpi-sub">At current attendance rate</div></div>
+      <div class="kpi-box"><div class="kpi-label">Staff Count</div><div class="kpi-value">${D.staff.length}</div><div class="kpi-sub">On payroll</div></div>
+      <div class="kpi-box"><div class="kpi-label">Days Remaining</div><div class="kpi-value">${daysInMonth-todayDate}</div><div class="kpi-sub">In this month</div></div>
+    </div>
+    <div style="margin-top:4px">
+      ${wageRows.filter(r=>r.projected>0).sort((a,b)=>b.projected-a.projected).map(({s,daysWorked,earnedSoFar,projected})=>`
+      <div class="route-row">
+        <div class="route-label">
+          <div style="font-weight:600;font-size:.76rem">${s.name} <span style="font-size:.6rem;color:var(--t3)">${s.role}</span></div>
+          <div style="font-size:.6rem;color:var(--t3)">${daysWorked}d worked · ${fM(earnedSoFar)} earned</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-family:var(--font-num);font-size:.88rem;color:var(--warn)">${fM(projected)}</div>
+          <div style="font-size:.58rem;color:var(--t3)">projected</div>
+        </div>
+      </div>`).join('')}
+    </div>
+  </div>
+
+  <!-- ADVANCE RISK -->
+  <div class="insight-card">
+    <div class="insight-card-title">⚠️ Advance Recovery Risk</div>
+    ${!riskAdv.length?'<div style="color:var(--pos);font-size:.78rem;text-align:center;padding:10px">✅ No outstanding advances</div>':riskAdv.map(({a,staff,daysSince,risk})=>`
+    <div class="route-row">
+      <div class="route-label">
+        <div style="font-weight:600;font-size:.78rem">${staff?staff.name:a.staffName||'Unknown'}</div>
+        <div style="font-size:.6rem;color:var(--t3)">Given ${fD(a.date)} · ${daysSince} days ago</div>
+        <span class="chip ${risk==='high'?'ch-r':risk==='med'?'ch-a':'ch-g'}" style="margin-top:3px">${risk==='high'?'🔴 High risk':risk==='med'?'🟡 Review':'🟢 Recent'}</span>
+      </div>
+      <div style="text-align:right">
+        <div style="font-family:var(--font-num);font-size:.9rem;color:var(--neg)">${fM(a.balance)}</div>
+        <div style="font-size:.58rem;color:var(--t3)">outstanding</div>
+      </div>
+    </div>`).join('')}
+  </div>
+
+  <!-- CONTRACTOR VS OWN STAFF -->
+  <div class="insight-card">
+    <div class="insight-card-title">🏗️ Contractor vs Own Staff — ${SH[m]} ${y}</div>
+    <div style="font-size:.68rem;font-weight:700;color:var(--t2);margin-bottom:8px;text-transform:uppercase">Crane Operators</div>
+    <div class="kpi-grid" style="margin-bottom:12px">
+      <div class="kpi-box"><div class="kpi-label">Own Crane Staff (${ownCraneStaff.length})</div><div class="kpi-value">${fM(ownCraneCost)}</div><div class="kpi-sub">This month wages</div></div>
+      <div class="kpi-box"><div class="kpi-label">Hired Crane</div><div class="kpi-value">${fM(hiredCraneCost)}</div><div class="kpi-sub">This month hired cost</div></div>
+    </div>
+    ${ownCraneCost>0&&hiredCraneCost>0?`<div class="alert-banner ${ownCraneCost<hiredCraneCost?'alert-info':'alert-warn'}"><div class="alert-title">${ownCraneCost<hiredCraneCost?'✅ Own crane staff is cheaper':'⚠️ Hired crane is cheaper this month'}</div>Own: ${fM(ownCraneCost)} vs Hired: ${fM(hiredCraneCost)} — Diff: ${fM(Math.abs(ownCraneCost-hiredCraneCost))}</div>`:''}
+    <div style="font-size:.68rem;font-weight:700;color:var(--t2);margin:12px 0 8px;text-transform:uppercase">Labour</div>
+    <div class="kpi-grid">
+      <div class="kpi-box"><div class="kpi-label">Own Labour (${ownLaborStaff.length})</div><div class="kpi-value">${fM(ownLaborCost)}</div><div class="kpi-sub">This month wages</div></div>
+      <div class="kpi-box"><div class="kpi-label">Hired Labour Cost</div><div class="kpi-value">${fM(hiredLaborCost)}</div><div class="kpi-sub">Labour Cost expenses</div></div>
+    </div>
+  </div>`;
+}
+
+// ════════════════════════════════════════════════════════
+// ── SEASONAL PATTERN REPORT ──
+// ════════════════════════════════════════════════════════
+function renderSeasonalReport(){
+  const el=document.getElementById('seasonal-content');
+  const now2=new Date();
+  const curY=now2.getFullYear();
+
+  // Build last 24 months of data
+  const months=[];
+  for(let i=23;i>=0;i--){
+    let m=now2.getMonth()-i, y=curY;
+    while(m<0){m+=12;y--;}
+    const mTrips=filterByMonth(D.trips,m,y);
+    const mExp=filterByMonth(D.expenses,m,y);
+    const rev=mTrips.reduce((s,t)=>s+t.revenue,0);
+    const exp=mExp.reduce((s,e)=>s+e.amount,0);
+    const cbm=mTrips.reduce((s,t)=>s+(t.qty||0),0);
+    months.push({m,y,label:SH[m]+(y!==curY?`'${String(y).slice(2)}`:''),rev,exp,cbm,trips:mTrips.length});
+  }
+
+  // Monthly averages by calendar month (across years)
+  const byCalMonth=Array.from({length:12},(_,i)=>{
+    const ms=months.filter(x=>x.m===i&&x.rev>0);
+    const avgRev=ms.length?ms.reduce((s,x)=>s+x.rev,0)/ms.length:0;
+    const avgCbm=ms.length?ms.reduce((s,x)=>s+x.cbm,0)/ms.length:0;
+    return{month:SH[i],avgRev,avgCbm,count:ms.length};
+  });
+  const maxRev=Math.max(...months.map(x=>x.rev),1);
+  const peakMonths=byCalMonth.map((x,i)=>({...x,i})).sort((a,b)=>b.avgRev-a.avgRev).slice(0,3).map(x=>x.i);
+
+  // Maintenance windows — bottom 3 revenue months = best time for servicing
+  const maintenanceWindows=byCalMonth.map((x,i)=>({...x,i})).filter(x=>x.count>0).sort((a,b)=>a.avgRev-b.avgRev).slice(0,3);
+
+  el.innerHTML=`
+  <div class="seasonal-wrap">
+    <div class="insight-card-title" style="margin-bottom:14px">📈 Monthly Revenue (Last 24 Months)</div>
+    ${months.map(x=>`
+    <div class="bar-row">
+      <div class="bar-label">${x.label}</div>
+      <div class="bar-track">
+        <div class="bar-fill ${peakMonths.includes(x.m)?'peak':''}" style="width:${Math.round(x.rev/maxRev*100)}%"></div>
+      </div>
+      <div class="bar-val">${x.rev>0?'₹'+(x.rev/1000).toFixed(0)+'K':'—'}</div>
+    </div>`).join('')}
+  </div>
+
+  <div class="insight-card">
+    <div class="insight-card-title">🏆 Peak Months (Avg Revenue)</div>
+    ${byCalMonth.filter(x=>x.count>0).sort((a,b)=>b.avgRev-a.avgRev).slice(0,6).map((x,i)=>`
+    <div class="route-row">
+      <div class="route-label">
+        <div style="font-weight:${i<3?700:500};font-size:.78rem">${x.month} ${i===0?'🏆':i===1?'🥈':i===2?'🥉':''}</div>
+        <div style="font-size:.6rem;color:var(--t3)">Avg ${x.avgCbm.toFixed(0)} CBM · ${x.count} data points</div>
+      </div>
+      <div class="route-val" style="color:${i<3?'var(--pos)':'var(--t2)'}">${fM(Math.round(x.avgRev))}</div>
+    </div>`).join('')}
+  </div>
+
+  <div class="insight-card">
+    <div class="insight-card-title">🔧 Recommended Maintenance Windows</div>
+    <div style="font-size:.72rem;color:var(--t3);margin-bottom:10px;line-height:1.6">These months historically have lowest revenue — plan major vehicle servicing here to minimise business disruption.</div>
+    ${maintenanceWindows.map(x=>`
+    <div class="route-row">
+      <div class="route-label">
+        <div style="font-weight:600;font-size:.78rem">🔧 ${x.month}</div>
+        <div style="font-size:.6rem;color:var(--t3)">Avg revenue: ${fM(Math.round(x.avgRev))}</div>
+      </div>
+      <span class="chip ch-a">Low season</span>
+    </div>`).join('')}
+  </div>`;
+}
+
+// ════════════════════════════════════════════════════════
+// ── DOCUMENT EXPIRY CALENDAR ──
+// ════════════════════════════════════════════════════════
+function renderDocCalReport(){
+  const el=document.getElementById('doccal-content');
+  if(!D.vehicles.length){el.innerHTML='<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">No vehicles in fleet.</div></div>';return;}
+
+  // Collect all docs with expiry
+  const docs=[];
+  D.vehicles.forEach(v=>{
+    if(v.insurance)docs.push({vno:v.vno,type:'Insurance',co:v.insuranceCo||'',date:v.insurance,days:dUntil(v.insurance)});
+    if(v.fitness)docs.push({vno:v.vno,type:'Fitness',co:v.fitnessRto||'',date:v.fitness,days:dUntil(v.fitness)});
+    if(v.permit)docs.push({vno:v.vno,type:'Permit',co:'',date:v.permit,days:dUntil(v.permit)});
+  });
+  docs.sort((a,b)=>a.days-b.days);
+
+  // Group by month
+  const byMonth={};
+  docs.forEach(d=>{
+    const dt=new Date(d.date);
+    const key=dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0');
+    const label=SH[dt.getMonth()]+' '+dt.getFullYear();
+    if(!byMonth[key])byMonth[key]={label,docs:[],minDays:999};
+    byMonth[key].docs.push(d);
+    byMonth[key].minDays=Math.min(byMonth[key].minDays,d.days);
+  });
+
+  // Overdue docs first
+  const overdue=docs.filter(d=>d.days<0);
+  const urgent=docs.filter(d=>d.days>=0&&d.days<=30);
+
+  el.innerHTML=`
+  ${overdue.length?`<div class="alert-banner alert-danger" style="margin-bottom:12px">
+    <div class="alert-title">🚨 ${overdue.length} Document${overdue.length>1?'s':''} EXPIRED</div>
+    ${overdue.map(d=>`${d.vno} — ${d.type} expired ${Math.abs(d.days)} days ago`).join('<br>')}
+  </div>`:''}
+  ${urgent.length&&!overdue.length?`<div class="alert-banner alert-warn" style="margin-bottom:12px">
+    <div class="alert-title">⚠️ ${urgent.length} Document${urgent.length>1?'s':''} expiring within 30 days</div>
+    ${urgent.map(d=>`${d.vno} — ${d.type} in ${d.days} days`).join('<br>')}
+  </div>`:''}
+
+  <div style="font-size:.72rem;color:var(--t3);margin-bottom:12px">All vehicle documents grouped by expiry month. Tap a month to see details.</div>
+
+  ${Object.entries(byMonth).map(([key,{label,docs:ds,minDays}])=>{
+    const cls=minDays<0?'urgent':minDays<=30?'soon':'ok';
+    const badge=minDays<0?`🚨 ${Math.abs(minDays)}d overdue`:minDays<=30?`⚠️ ${minDays}d away`:`✅ ${minDays}d away`;
+    return`<div class="doc-month">
+      <div class="doc-month-hdr ${cls}"><span>${label}</span><span style="font-size:.66rem">${badge}</span></div>
+      ${ds.map(d=>`<div class="doc-item">
+        <div><div class="doc-vno">${d.vno}</div><div class="doc-type">${d.type}${d.co?' · '+d.co:''}</div></div>
+        <div style="text-align:right">
+          <div style="font-size:.72rem;color:${d.days<0?'var(--neg)':d.days<=30?'var(--warn)':'var(--t2)'};font-weight:600">${fD(d.date)}</div>
+          <div style="font-size:.6rem;color:var(--t3)">${d.days<0?'Expired':d.days+' days'}</div>
+        </div>
+      </div>`).join('')}
+    </div>`;
+  }).join('')}`;
+}
+
+// ════════════════════════════════════════════════════════
+// ── ENHANCED VEHICLE REPORT — Maint per km + Service Alerts ──
+// ════════════════════════════════════════════════════════
+function getServiceAlerts(v){
+  const alerts=[];
+  if(!v.odometer||!v.oilInterval)return alerts;
+  const oilDue=(v.oilKm||0)+v.oilInterval;
+  const oilRemain=oilDue-v.odometer;
+  if(oilRemain<=500)alerts.push({text:`Oil change ${oilRemain<=0?'OVERDUE by '+Math.abs(oilRemain)+'km':'due in '+oilRemain+'km'}`,overdue:oilRemain<=0});
+  const tyreDue=(v.tyreKm||0)+(v.tyreInterval||40000);
+  const tyreRemain=tyreDue-v.odometer;
+  if(tyreRemain<=2000)alerts.push({text:`Tyre replacement ${tyreRemain<=0?'OVERDUE by '+Math.abs(tyreRemain)+'km':'due in '+tyreRemain+'km'}`,overdue:tyreRemain<=0});
+  return alerts;
+}
+
+// ════════════════════════════════════════════════════════
+// ── DEMO DATA SEED ──
+// ════════════════════════════════════════════════════════
+window.seedDemoData=async function(){
+  if(!confirm('This will add demo data for presentation. Continue?'))return;
+  const today=new Date();
+  const d=(offset)=>{const x=new Date(today);x.setDate(x.getDate()-offset);return x.toISOString().slice(0,10);};
+
+  // Vehicles
+  const vs=[
+    {vno:'MH-34-AB-1234',type:'Truck',model:'Tata 407',year:'2021',insurance:d(-200),insuranceCo:'New India Assurance',fitness:d(-100),permit:d(-50),status:'Active',financeStatus:'emi',emi:'18000',financeProvider:'Shriram Finance',odometer:84500,oilKm:82000,oilInterval:5000,tyreKm:60000,tyreInterval:40000},
+    {vno:'MH-34-CD-5678',type:'Truck',model:'Ashok Leyland',year:'2019',insurance:d(-180),insuranceCo:'HDFC Ergo',fitness:d(-90),permit:d(-60),status:'Active',financeStatus:'clear',emi:0,financeProvider:'',odometer:142000,oilKm:140000,oilInterval:5000,tyreKm:100000,tyreInterval:40000},
+    {vno:'MH-34-EF-9012',type:'Crane',model:'KATO 25T',year:'2020',insurance:d(-300),insuranceCo:'United India',fitness:d(-200),permit:d(-120),status:'Active',financeStatus:'emi',emi:'32000',financeProvider:'HDFC Bank',odometer:0,oilKm:0,oilInterval:5000,tyreKm:0,tyreInterval:0},
+    {vno:'MH-34-GH-3456',type:'Pickup',model:'Bolero',year:'2022',insurance:d(-400),insuranceCo:'New India Assurance',fitness:d(-300),permit:d(-250),status:'Active',financeStatus:'clear',emi:0,financeProvider:'',odometer:38000,oilKm:36000,oilInterval:3000,tyreKm:20000,tyreInterval:50000},
+  ];
+  for(const v of vs)await addR('vehicles',{...v,createdAt:Date.now()});
+
+  // Staff
+  const staff=[
+    {name:'Ramesh Yadav',role:'Driver',rate:700,phone:'9876543210'},
+    {name:'Suresh Kumar',role:'Driver',rate:650,phone:'9765432109'},
+    {name:'Mahesh Bhoi',role:'Crane Operator',rate:900,phone:'9654321098'},
+    {name:'Prakash Thakur',role:'Labour',rate:400,phone:'9543210987'},
+    {name:'Dinesh Raut',role:'Helper',rate:350,phone:'9432109876'},
+    {name:'Nilesh Meshram',role:'Mechanic',rate:750,phone:'9321098765'},
+  ];
+  const staffIds=[];
+  for(const s of staff){const id=await addR('staff',{...s,attendance:{},createdAt:Date.now()});staffIds.push(id);}
+
+  // Advances
+  await addR('advances',{date:d(45),staffId:staffIds[0]||'s1',staffName:'Ramesh Yadav',amount:5000,recovered:0,balance:5000,notes:'Medical emergency',createdAt:Date.now()});
+  await addR('advances',{date:d(20),staffId:staffIds[2]||'s3',staffName:'Mahesh Bhoi',amount:8000,recovered:0,balance:8000,notes:'Festival advance',createdAt:Date.now()});
+
+  // Tenders
+  const tid=await addR('tenders',{number:'GDC/2025/TBR/001',dept:'Maharashtra Forest Department',division:'Gadchiroli Division',species:'Teak & Mixed Hardwood',quantity:850,royalty:4200,value:3570000,status:'Active',emd:178500,payment:1200000,startDate:d(120),endDate:d(-90),createdAt:Date.now()});
+  const tid2=await addR('tenders',{number:'CHP/2025/TBR/042',dept:'Maharashtra Forest Department',division:'Chandrapur Division',species:'Bamboo & Teak',quantity:420,royalty:2800,value:1176000,status:'Completed',emd:58800,payment:1176000,startDate:d(240),endDate:d(60),createdAt:Date.now()});
+
+  // Diesel fills
+  const dFills=[
+    {date:d(2),vehicle:'MH-34-AB-1234',litres:120,rate:92.5,total:11100,station:'Indian Oil, Gadchiroli',odometer:84500},
+    {date:d(5),vehicle:'MH-34-CD-5678',litres:140,rate:92,total:12880,station:'HP Petrol, Chandrapur',odometer:141800},
+    {date:d(8),vehicle:'MH-34-AB-1234',litres:110,rate:91.8,total:10098,station:'Indian Oil, Nagpur',odometer:83900},
+    {date:d(15),vehicle:'MH-34-EF-9012',litres:80,rate:93,total:7440,station:'BPCL, Gadchiroli',odometer:0},
+    {date:d(22),vehicle:'MH-34-CD-5678',litres:130,rate:92.2,total:11986,station:'Indian Oil, Wardha',odometer:141200},
+    {date:d(30),vehicle:'MH-34-AB-1234',litres:125,rate:91.5,total:11438,station:'HP Petrol, Nagpur',odometer:83200},
+  ];
+  const dslIds=[];
+  for(const df of dFills){const id=await addR('diesel',{...df,linkedTripId:null,createdAt:Date.now()});dslIds.push(id);await addR('expenses',{date:df.date,amount:df.total,category:'Fuel & Oil',desc:`Diesel: ${df.litres}L @ ₹${df.rate}/L — ${df.vehicle}`,paidTo:df.station,mode:'Cash',autoLinked:true,linkedVehicle:df.vehicle,dieselId:id,createdAt:Date.now()});}
+
+  // Trips
+  const routes=[
+    {source:'Gadchiroli Depot',dest:'Nagpur Yard'},{source:'Chandrapur Forest',dest:'Nagpur Yard'},
+    {source:'Bhamragarh Range',dest:'Gadchiroli Depot'},{source:'Gadchiroli Depot',dest:'Wardha Yard'},
+    {source:'Chandrapur Forest',dest:'Chandrapur Yard'},{source:'Etapalli Range',dest:'Nagpur Yard'},
+  ];
+  const tripData=[
+    {date:d(1),vehicle:'MH-34-AB-1234',driver:'Ramesh Yadav',qty:28,revenue:42000,payStatus:'pending',tenderId:tid,routeIdx:0,dslIdx:0},
+    {date:d(3),vehicle:'MH-34-CD-5678',driver:'Suresh Kumar',qty:32,revenue:48000,payStatus:'received',tenderId:tid,routeIdx:1,dslIdx:1},
+    {date:d(6),vehicle:'MH-34-AB-1234',driver:'Ramesh Yadav',qty:25,revenue:37500,payStatus:'partial',payReceived:20000,payPending:17500,tenderId:tid,routeIdx:0,dslIdx:2},
+    {date:d(10),vehicle:'MH-34-CD-5678',driver:'Suresh Kumar',qty:30,revenue:45000,payStatus:'received',tenderId:tid2,routeIdx:4,dslIdx:4},
+    {date:d(14),vehicle:'MH-34-AB-1234',driver:'Ramesh Yadav',qty:22,revenue:33000,payStatus:'pending',tenderId:tid,routeIdx:2,dslIdx:null},
+    {date:d(18),vehicle:'MH-34-CD-5678',driver:'Suresh Kumar',qty:35,revenue:52500,payStatus:'received',tenderId:tid2,routeIdx:1,dslIdx:null},
+    {date:d(22),vehicle:'MH-34-AB-1234',driver:'Ramesh Yadav',qty:29,revenue:43500,payStatus:'pending',tenderId:tid,routeIdx:5,dslIdx:5},
+    {date:d(28),vehicle:'MH-34-CD-5678',driver:'Suresh Kumar',qty:31,revenue:46500,payStatus:'received',tenderId:tid2,routeIdx:4,dslIdx:null},
+    {date:d(35),vehicle:'MH-34-AB-1234',driver:'Ramesh Yadav',qty:27,revenue:40500,payStatus:'received',tenderId:tid,routeIdx:0,dslIdx:null},
+    {date:d(42),vehicle:'MH-34-EF-9012',driver:'Mahesh Bhoi',qty:0,revenue:28000,payStatus:'received',tenderId:null,routeIdx:3,dslIdx:3},
+  ];
+  for(const t of tripData){
+    const r=routes[t.routeIdx];
+    const td={date:t.date,vehicle:t.vehicle,driver:t.driver,qty:t.qty,revenue:t.revenue,source:r.source,dest:r.dest,payStatus:t.payStatus,payReceived:t.payReceived||0,payPending:t.payPending||0,tenderId:t.tenderId||null,dieselId:null,createdAt:Date.now()};
+    const tid3=await addR('trips',td);
+    if(t.dslIdx!==null&&dslIds[t.dslIdx]){await updR('diesel',dslIds[t.dslIdx],{linkedTripId:tid3});await updR('trips',tid3,{dieselId:dslIds[t.dslIdx]});}
+  }
+
+  // Expenses
+  const exps=[
+    {date:d(4),amount:8500,category:'Spare Parts',desc:'Rear brake pads + drums',paidTo:'Gupta Auto Parts',mode:'Cash'},
+    {date:d(9),amount:3200,category:'Maintenance',desc:'Engine tune-up MH-34-AB-1234',paidTo:'Raju Garage',mode:'UPI'},
+    {date:d(12),amount:15000,category:'Staff Wages',desc:'Wages advance Oct batch',paidTo:'',mode:'Cash'},
+    {date:d(16),amount:1800,category:'Toll / Tax',desc:'Nagpur-Gadchiroli NH tollway',paidTo:'NHAI',mode:'Cash'},
+    {date:d(19),amount:6400,category:'Mechanic (External)',desc:'Hydraulic cylinder repair crane',paidTo:'Shah Engineering',mode:'Bank Transfer'},
+    {date:d(25),amount:2200,category:'Staff Groceries',desc:'Monthly ration — 6 staff',paidTo:'Ramji Kirana',mode:'Cash'},
+    {date:d(32),amount:4800,category:'Lubricants',desc:'Engine oil, brake fluid bulk',paidTo:'Castrol Distributor',mode:'UPI'},
+    {date:d(38),amount:1200,category:'Toll / Tax',desc:'Chandrapur bypass toll',paidTo:'MSRDC',mode:'Cash'},
+    {date:d(45),amount:9000,category:'Labour Cost',desc:'Loading/unloading Gadchiroli lot',paidTo:'Contractor Mohan',mode:'Cash'},
+  ];
+  for(const e of exps)await addR('expenses',{...e,createdAt:Date.now()});
+
+  // Hired vehicles
+  const hired=[
+    {date:d(7),type:'Truck',owner:'Vijay Transporters',vno:'MH-34-ZZ-7890',work:'Extra load Gadchiroli–Nagpur',gross:15000,advance:5000,balance:10000},
+    {date:d(15),type:'Crane',owner:'Mahindra Cranes Ltd',vno:'MH-34-YY-4321',work:'Tree felling Bhamragarh',gross:22000,advance:10000,balance:12000},
+    {date:d(28),type:'Tractor',owner:'Bhaurao Nimkar',vno:'MH-34-XX-1122',work:'Skidding timber Etapalli',gross:8500,advance:3000,balance:5500},
+  ];
+  for(const h of hired)await addR('hired',{...h,createdAt:Date.now()});
+
+  toast('✅ Demo data loaded! Dashboard will update shortly.');
+};
 
 // ── DRIVER SCREEN ──
 function renderDriverScreen(){
