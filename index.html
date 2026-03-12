@@ -3518,7 +3518,6 @@ window.seedDemoData=async function(){
   ];
   for(const h of hired)await addR('hired',{...h,createdAt:Date.now()});
 
-  localStorage.setItem('srt_demo_loaded','1');
   toast('✅ Demo data loaded! Dashboard will update shortly.');
 };
 
@@ -3526,13 +3525,12 @@ window.seedDemoData=async function(){
 // ── DEMO DATA UNLOAD ──
 // ════════════════════════════════════════════════════════
 window.unloadDemoData=async function(){
-  if(!localStorage.getItem('srt_demo_loaded')){
-    toast('ℹ️ No demo data loaded.');return;
-  }
-  if(!confirm('Remove all demo data? Your real data will not be affected.'))return;
-
   const demoVnos=['MH-34-AB-1234','MH-34-CD-5678','MH-34-EF-9012','MH-34-GH-3456'];
   const demoStaffNames=['Ramesh Yadav','Suresh Kumar','Mahesh Bhoi','Prakash Thakur','Dinesh Raut','Nilesh Meshram'];
+  const hasDemoVehicle=D.vehicles.some(v=>demoVnos.includes(v.vno));
+  const hasDemoStaff=D.staff.some(s=>demoStaffNames.includes(s.name));
+  if(!hasDemoVehicle&&!hasDemoStaff){toast('ℹ️ No demo data found.');return;}
+  if(!confirm('Remove all demo data? Your real data will not be affected.'))return;
   const demoPaidTo=['Gupta Auto Parts','Raju Garage','Shah Engineering','Ramji Kirana','Castrol Distributor','NHAI','MSRDC','Contractor Mohan'];
   const demoHiredOwners=['Vijay Transporters','Mahindra Cranes Ltd','Bhaurao Nimkar'];
   const demoTenderNos=['GDC/2025/TBR/001','CHP/2025/TBR/042'];
@@ -3573,7 +3571,6 @@ window.unloadDemoData=async function(){
     if(demoHiredOwners.includes(h.owner)){await delR('hired',h.id);removed++;}
   }
 
-  localStorage.removeItem('srt_demo_loaded');
   toast('✅ Demo data removed — '+removed+' entries deleted.');
 };
 
