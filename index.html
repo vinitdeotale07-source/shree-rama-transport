@@ -1022,8 +1022,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100
     </div>
     <div class="card" style="margin-top:14px" id="demo-card">
       <div class="card-title">🎯 Demo / Presentation Data</div>
-      <p style="font-size:.74rem;color:var(--t3);margin-bottom:14px;line-height:1.6">Load realistic sample data to demonstrate the app. Use only on a fresh / test account.</p>
-      <button class="btn btn-secondary" onclick="seedDemoData()">🎯 Load Demo Data</button>
+      <p style="font-size:.74rem;color:var(--t3);margin-bottom:14px;line-height:1.6">Load realistic sample data to demonstrate the app. Use only on a fresh / test account. Unload removes only the demo entries — your real data stays untouched.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-secondary" onclick="seedDemoData()">🎯 Load Demo Data</button>
+        <button class="btn btn-secondary" style="color:var(--neg);border-color:var(--neg)" onclick="unloadDemoData()">🗑️ Unload Demo Data</button>
+      </div>
     </div>
     <div class="card" style="margin-top:14px">
       <div class="card-title">💾 Backup & Restore</div>
@@ -3515,7 +3518,63 @@ window.seedDemoData=async function(){
   ];
   for(const h of hired)await addR('hired',{...h,createdAt:Date.now()});
 
+  localStorage.setItem('srt_demo_loaded','1');
   toast('✅ Demo data loaded! Dashboard will update shortly.');
+};
+
+// ════════════════════════════════════════════════════════
+// ── DEMO DATA UNLOAD ──
+// ════════════════════════════════════════════════════════
+window.unloadDemoData=async function(){
+  if(!localStorage.getItem('srt_demo_loaded')){
+    toast('ℹ️ No demo data loaded.');return;
+  }
+  if(!confirm('Remove all demo data? Your real data will not be affected.'))return;
+
+  const demoVnos=['MH-34-AB-1234','MH-34-CD-5678','MH-34-EF-9012','MH-34-GH-3456'];
+  const demoStaffNames=['Ramesh Yadav','Suresh Kumar','Mahesh Bhoi','Prakash Thakur','Dinesh Raut','Nilesh Meshram'];
+  const demoPaidTo=['Gupta Auto Parts','Raju Garage','Shah Engineering','Ramji Kirana','Castrol Distributor','NHAI','MSRDC','Contractor Mohan'];
+  const demoHiredOwners=['Vijay Transporters','Mahindra Cranes Ltd','Bhaurao Nimkar'];
+  const demoTenderNos=['GDC/2025/TBR/001','CHP/2025/TBR/042'];
+  const demoStations=['Indian Oil, Gadchiroli','HP Petrol, Chandrapur','Indian Oil, Nagpur','BPCL, Gadchiroli','Indian Oil, Wardha','HP Petrol, Nagpur'];
+
+  let removed=0;
+
+  // Vehicles
+  for(const v of [...D.vehicles]){
+    if(demoVnos.includes(v.vno)){await delR('vehicles',v.id);removed++;}
+  }
+  // Staff
+  for(const s of [...D.staff]){
+    if(demoStaffNames.includes(s.name)){await delR('staff',s.id);removed++;}
+  }
+  // Advances (by staff name)
+  for(const a of [...D.advances]){
+    if(demoStaffNames.includes(a.staffName)){await delR('advances',a.id);removed++;}
+  }
+  // Tenders
+  for(const t of [...D.tenders]){
+    if(demoTenderNos.includes(t.number)){await delR('tenders',t.id);removed++;}
+  }
+  // Diesel (by station or vehicle)
+  for(const d of [...D.diesel]){
+    if(demoVnos.includes(d.vehicle)||demoStations.includes(d.station)){await delR('diesel',d.id);removed++;}
+  }
+  // Trips (by vehicle)
+  for(const t of [...D.trips]){
+    if(demoVnos.includes(t.vehicle)){await delR('trips',t.id);removed++;}
+  }
+  // Expenses (by paidTo or auto-linked diesel)
+  for(const e of [...D.expenses]){
+    if(demoPaidTo.includes(e.paidTo)||e.autoLinked){await delR('expenses',e.id);removed++;}
+  }
+  // Hired
+  for(const h of [...D.hired]){
+    if(demoHiredOwners.includes(h.owner)){await delR('hired',h.id);removed++;}
+  }
+
+  localStorage.removeItem('srt_demo_loaded');
+  toast('✅ Demo data removed — '+removed+' entries deleted.');
 };
 
 // ── DRIVER SCREEN ──
